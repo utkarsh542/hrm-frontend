@@ -10,18 +10,23 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   };
 
   const token = typeof window !== 'undefined' ? localStorage.getItem('hrms_token') : null;
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  console.log("Fetching URL:", url);
   const res = await fetch(url, { ...options, headers });
-  
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: 'Request failed' }));
     throw new Error(err.detail || `HTTP ${res.status}`);
   }
-  
   return res.json();
+}
+
+function uploadRequest(endpoint: string, formData: FormData) {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('hrms_token') : null;
+  return fetch(`${API_BASE}${endpoint}`, {
+    method: 'POST',
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: formData,
+  }).then(r => r.json());
 }
 
 export const api = {
@@ -58,6 +63,9 @@ export const api = {
   scheduleInterview: (data: any) => request('/interviews/', { method: 'POST', body: JSON.stringify(data) }),
   updateInterview: (id: number, data: any) => request(`/interviews/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   runAiInterview: (id: number) => request(`/interviews/${id}/ai-interview`, { method: 'POST' }),
+  startInterviewSession: (id: number) => request(`/interviews/${id}/start-session`, { method: 'POST' }),
+  evaluateAnswer: (data: any) => request('/interviews/evaluate-answer', { method: 'POST', body: JSON.stringify(data) }),
+  finalEvaluation: (data: any) => request('/interviews/final-evaluation', { method: 'POST', body: JSON.stringify(data) }),
 
   // Employees
   getEmployees: (params?: string) => request(`/employees/${params ? `?${params}` : ''}`),
@@ -65,6 +73,8 @@ export const api = {
   createEmployee: (data: any) => request('/employees/', { method: 'POST', body: JSON.stringify(data) }),
   updateEmployee: (id: number, data: any) => request(`/employees/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   getDepartments: () => request('/employees/departments/all'),
+  getOrgChart: () => request('/employees/org-chart'),
+  getEmployeeTimeline: (id: number) => request(`/employees/${id}/timeline`),
 
   // Attendance & Leaves
   checkIn: (employeeId: number) => request('/attendance/check-in', { method: 'POST', body: JSON.stringify({ employee_id: employeeId }) }),
@@ -88,6 +98,45 @@ export const api = {
   updateReview: (id: number, data: any) => request(`/performance/reviews/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   getGoals: (employeeId?: number) => request(`/performance/goals${employeeId ? `?employee_id=${employeeId}` : ''}`),
   createGoal: (data: any) => request('/performance/goals', { method: 'POST', body: JSON.stringify(data) }),
+  submit360Feedback: (reviewId: number, data: any) =>
+    request(`/performance/reviews/${reviewId}/peer-feedback`, { method: 'POST', body: JSON.stringify(data) }),
+  submitSelfReview: (reviewId: number, selfReview: string) =>
+    request(`/performance/reviews/${reviewId}/self-review`, { method: 'POST', body: JSON.stringify({ review_id: reviewId, self_review: selfReview }) }),
+  get360Summary: (reviewId: number) => request(`/performance/reviews/${reviewId}/360-summary`),
+
+  // AI Copilot & Intelligence
+  aiChat: (message: string) =>
+    request('/ai/chat', { method: 'POST', body: JSON.stringify({ message }) }),
+  generateJD: (data: any) =>
+    request('/ai/generate-jd', { method: 'POST', body: JSON.stringify(data) }),
+  getAttritionRisk: () => request('/ai/attrition-risk'),
+  writeReview: (data: any) =>
+    request('/ai/write-review', { method: 'POST', body: JSON.stringify(data) }),
+  generateJDForJob: (jobId: number) =>
+    request(`/jobs/generate-jd?job_id=${jobId}`, { method: 'POST' }),
+
+  // Documents
+  getDocuments: (params?: string) => request(`/documents/${params ? `?${params}` : ''}`),
+  uploadDocument: (formData: FormData) => uploadRequest('/documents/upload', formData),
+  downloadDocument: (id: number) => `http://localhost:8000/api/documents/${id}/download`,
+  deleteDocument: (id: number) => request(`/documents/${id}`, { method: 'DELETE' }),
+  getDocumentStats: () => request('/documents/stats/summary'),
+
+  // Expenses
+  getExpenses: (params?: string) => request(`/expenses/${params ? `?${params}` : ''}`),
+  createExpense: (data: any) => request('/expenses/', { method: 'POST', body: JSON.stringify(data) }),
+  actionExpense: (id: number, data: any) => request(`/expenses/${id}/action`, { method: 'PUT', body: JSON.stringify(data) }),
+  getExpenseStats: () => request('/expenses/stats/summary'),
+  uploadReceipt: (expenseId: number, formData: FormData) => uploadRequest(`/expenses/${expenseId}/receipt`, formData),
+
+  // Face Attendance
+  faceCheckIn: (data: any) => request('/face-attendance/check-in', { method: 'POST', body: JSON.stringify(data) }),
+  faceCheckOut: (data: any) => request('/face-attendance/check-out', { method: 'POST', body: JSON.stringify(data) }),
+  getFaceTodayRecords: () => request('/face-attendance/today'),
+
+  // Salary Benchmarking
+  getSalaryBenchmarking: () => request('/benchmarking/'),
+  getBenchmarkingSummary: () => request('/benchmarking/summary'),
 
   // Offboarding
   getResignations: () => request('/offboarding/resignations'),
@@ -96,4 +145,8 @@ export const api = {
   calculateSettlement: (id: number) => request(`/offboarding/resignations/${id}/calculate-settlement`, { method: 'POST' }),
   generateExperienceLetter: (id: number) => `http://localhost:8000/api/offboarding/resignations/${id}/generate-experience-letter`,
   generateRelievingLetter: (id: number) => `http://localhost:8000/api/offboarding/resignations/${id}/generate-relieving-letter`,
+
+  // Password Management
+  changePassword: (data: any) => request('/auth/change-password', { method: 'POST', body: JSON.stringify(data) }),
+  resetPasswordAdmin: (userId: number) => request(`/auth/reset-password-admin/${userId}`, { method: 'POST' }),
 };

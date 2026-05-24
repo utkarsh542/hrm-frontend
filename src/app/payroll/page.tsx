@@ -3,8 +3,11 @@ import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import { PayrollRun } from '@/types';
 import { formatCurrency, MONTHS } from '@/lib/utils';
+import { useRole, RoleGuard } from '@/lib/useRole';
+import { Coins, BarChart2, Banknote, TrendingDown, CreditCard, ClipboardList, FileText, Play } from 'lucide-react';
 
 export default function PayrollPage() {
+  const { isAdminOrHR } = useRole();
   const [runs, setRuns] = useState<PayrollRun[]>([]);
   const [loading, setLoading] = useState(true);
   const [showRunModal, setShowRunModal] = useState(false);
@@ -39,34 +42,48 @@ export default function PayrollPage() {
   return (
     <div className="animate-fade-in">
       <div className="page-header">
-        <h1>💰 Payroll</h1>
-        <button className="btn btn-primary" onClick={() => setShowRunModal(true)}>▶ Run Payroll</button>
+        <h1 style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+          <Coins className="text-primary-light" size={28} /> Payroll
+        </h1>
+        {isAdminOrHR && (
+          <button className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }} onClick={() => setShowRunModal(true)}>
+            <Play size={16} /> Run Payroll
+          </button>
+        )}
       </div>
 
       <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
         <div className="stat-card">
-          <div className="stat-icon blue">📊</div>
+          <div className="stat-icon blue">
+            <BarChart2 size={24} />
+          </div>
           <div className="stat-info">
             <div className="stat-label">Total Runs</div>
             <div className="stat-value">{runs.length}</div>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon green">💵</div>
+          <div className="stat-icon green">
+            <Banknote size={24} />
+          </div>
           <div className="stat-info">
             <div className="stat-label">Last Gross</div>
             <div className="stat-value">{runs[0] ? formatCurrency(runs[0].total_gross) : '₹0'}</div>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon red">📉</div>
+          <div className="stat-icon red">
+            <TrendingDown size={24} />
+          </div>
           <div className="stat-info">
             <div className="stat-label">Last Deductions</div>
             <div className="stat-value">{runs[0] ? formatCurrency(runs[0].total_deductions) : '₹0'}</div>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon purple">💰</div>
+          <div className="stat-icon purple">
+            <CreditCard size={24} />
+          </div>
           <div className="stat-info">
             <div className="stat-label">Last Net Payout</div>
             <div className="stat-value">{runs[0] ? formatCurrency(runs[0].total_net) : '₹0'}</div>
@@ -112,9 +129,12 @@ export default function PayrollPage() {
       {/* Payslips Detail */}
       {selectedRun && selectedRun.payslips && selectedRun.payslips.length > 0 && (
         <div className="card animate-scale-in">
-          <h3 style={{ fontSize: 16, marginBottom: 16 }}>
-            📋 Payslips — {MONTHS[selectedRun.month - 1]} {selectedRun.year}
-            <button className="btn btn-ghost btn-sm" style={{ marginLeft: 12 }} onClick={() => setSelectedRun(null)}>✕ Close</button>
+          <h3 style={{ fontSize: 16, marginBottom: 16, display: 'inline-flex', alignItems: 'center', gap: 8, width: '100%', justifyContent: 'space-between' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <ClipboardList className="text-primary-light" size={20} />
+              Payslips — {MONTHS[selectedRun.month - 1]} {selectedRun.year}
+            </span>
+            <button className="btn btn-ghost btn-sm" onClick={() => setSelectedRun(null)}>✕ Close</button>
           </h3>
           <div className="table-container">
             <table className="data-table">
@@ -147,8 +167,8 @@ export default function PayrollPage() {
                     <td>{formatCurrency(ps.tds)}</td>
                     <td style={{ fontWeight: 700 }}>{formatCurrency(ps.net_salary)}</td>
                     <td>
-                      <a href={api.downloadPayslip(ps.id)} target="_blank" className="btn btn-sm btn-primary" style={{ textDecoration: 'none' }}>
-                        📄 PDF
+                      <a href={api.downloadPayslip(ps.id)} target="_blank" className="btn btn-sm btn-primary" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                        <FileText size={14} /> PDF
                       </a>
                     </td>
                   </tr>
@@ -184,8 +204,8 @@ export default function PayrollPage() {
             </div>
             <div className="modal-footer">
               <button className="btn btn-secondary" onClick={() => setShowRunModal(false)}>Cancel</button>
-              <button className="btn btn-primary" onClick={handleRunPayroll} disabled={processing}>
-                {processing ? 'Processing...' : '▶ Run Payroll'}
+              <button className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }} onClick={handleRunPayroll} disabled={processing}>
+                {processing ? 'Processing...' : <><Play size={16} /> Run Payroll</>}
               </button>
             </div>
           </div>

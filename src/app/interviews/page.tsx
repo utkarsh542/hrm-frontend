@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import { Interview } from '@/types';
 import { formatDateTime, getStatusBadgeClass } from '@/lib/utils';
+import { Target, Calendar, CheckCircle2, Bot } from 'lucide-react';
 
 export default function InterviewsPage() {
   const [interviews, setInterviews] = useState<Interview[]>([]);
@@ -29,26 +30,37 @@ export default function InterviewsPage() {
   return (
     <div className="animate-fade-in">
       <div className="page-header">
-        <h1>🎯 Interviews</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ color: '#6c63ff', display: 'flex', alignItems: 'center' }}>
+            <Target size={28} strokeWidth={2} />
+          </div>
+          <h1 style={{ margin: 0 }}>Interviews</h1>
+        </div>
       </div>
 
       <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
         <div className="stat-card">
-          <div className="stat-icon blue">📅</div>
+          <div className="stat-icon blue" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Calendar size={18} strokeWidth={2} />
+          </div>
           <div className="stat-info">
             <div className="stat-label">Scheduled</div>
             <div className="stat-value">{interviews.filter(i => i.status === 'scheduled').length}</div>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon green">✅</div>
+          <div className="stat-icon green" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <CheckCircle2 size={18} strokeWidth={2} />
+          </div>
           <div className="stat-info">
             <div className="stat-label">Completed</div>
             <div className="stat-value">{interviews.filter(i => i.status === 'completed').length}</div>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon purple">🤖</div>
+          <div className="stat-icon purple" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Bot size={18} strokeWidth={2} />
+          </div>
           <div className="stat-info">
             <div className="stat-label">AI Interviews</div>
             <div className="stat-value">{interviews.filter(i => i.ai_score).length}</div>
@@ -90,8 +102,9 @@ export default function InterviewsPage() {
                 <td><span className={`badge ${getStatusBadgeClass(interview.status)}`}>{interview.status}</span></td>
                 <td>
                   {interview.status === 'scheduled' && (
-                    <button className="btn btn-sm btn-primary" onClick={() => handleAiInterview(interview.id)}>
-                      🤖 AI Interview
+                    <button className="btn btn-sm btn-primary" onClick={() => handleAiInterview(interview.id)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                      <Bot size={13} />
+                      <span>AI Interview</span>
                     </button>
                   )}
                   {interview.recommendation && (

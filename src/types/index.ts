@@ -105,6 +105,7 @@ export interface Employee {
   sick_leave_balance: number;
   earned_leave_balance: number;
   onboarding_status: string;
+  reporting_manager_id?: number;
   avatar_url?: string;
   is_active: boolean;
   created_at: string;

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { api } from '@/lib/api';
 import { Job } from '@/types';
 import { formatCurrency, formatDate, getStatusBadgeClass } from '@/lib/utils';
+import { Briefcase, ClipboardList, Users, Building2, Plus } from 'lucide-react';
 
 export default function RecruitmentPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -41,27 +42,37 @@ export default function RecruitmentPage() {
   return (
     <div className="animate-fade-in">
       <div className="page-header">
-        <h1>💼 Job Postings</h1>
-        <button className="btn btn-primary" onClick={() => setShowCreateModal(true)}>+ Create Job</button>
+        <h1 style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+          <Briefcase className="text-primary-light" size={28} /> Job Postings
+        </h1>
+        <button className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }} onClick={() => setShowCreateModal(true)}>
+          <Plus size={16} /> Create Job
+        </button>
       </div>
 
       <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
         <div className="stat-card">
-          <div className="stat-icon green">📋</div>
+          <div className="stat-icon green">
+            <ClipboardList size={24} />
+          </div>
           <div className="stat-info">
             <div className="stat-label">Open Jobs</div>
             <div className="stat-value">{jobs.filter(j => j.status === 'open').length}</div>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon blue">👤</div>
+          <div className="stat-icon blue">
+            <Users size={24} />
+          </div>
           <div className="stat-info">
             <div className="stat-label">Total Applications</div>
             <div className="stat-value">{jobs.reduce((s, j) => s + j.applications_count, 0)}</div>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon purple">🏢</div>
+          <div className="stat-icon purple">
+            <Building2 size={24} />
+          </div>
           <div className="stat-info">
             <div className="stat-label">Total Openings</div>
             <div className="stat-value">{jobs.filter(j => j.status === 'open').reduce((s, j) => s + j.openings, 0)}</div>

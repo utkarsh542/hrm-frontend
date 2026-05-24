@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import { Pipeline } from '@/types';
 import { getScoreClass } from '@/lib/utils';
+import { Users } from 'lucide-react';
 
 const STAGES = [
   { key: 'applied', label: 'Applied', color: '#3b82f6' },
@@ -38,7 +39,9 @@ export default function CandidatesPipelinePage() {
   return (
     <div className="animate-fade-in">
       <div className="page-header">
-        <h1>👤 Candidate Pipeline</h1>
+        <h1 style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+          <Users className="text-primary-light" size={28} /> Candidate Pipeline
+        </h1>
         <div className="page-header-actions">
           <span style={{ color: 'var(--text-tertiary)', fontSize: 13 }}>
             {Object.values(pipeline).flat().length} total candidates

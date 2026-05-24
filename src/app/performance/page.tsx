@@ -3,9 +3,12 @@ import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import { PerformanceReview, Goal } from '@/types';
 import { getStatusBadgeClass } from '@/lib/utils';
+import { useRole, RoleGuard } from '@/lib/useRole';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { Star, FileText, CheckCircle2, Target, BarChart3, Award, Plus } from 'lucide-react';
 
 export default function PerformancePage() {
+  const { isAdminHROrManager, isAdminOrHR } = useRole();
   const [reviews, setReviews] = useState<PerformanceReview[]>([]);
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
@@ -28,33 +31,48 @@ export default function PerformancePage() {
   return (
     <div className="animate-fade-in">
       <div className="page-header">
-        <h1>⭐ Performance</h1>
+        <h1 style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+          <Award className="text-primary-light" size={28} /> Performance
+        </h1>
+        <RoleGuard roles={['admin', 'hr', 'manager']}>
+          <button className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <Plus size={16} /> Start Review
+          </button>
+        </RoleGuard>
       </div>
 
       <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
         <div className="stat-card">
-          <div className="stat-icon purple">📝</div>
+          <div className="stat-icon purple">
+            <FileText size={24} />
+          </div>
           <div className="stat-info">
             <div className="stat-label">Total Reviews</div>
             <div className="stat-value">{reviews.length}</div>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon green">✅</div>
+          <div className="stat-icon green">
+            <CheckCircle2 size={24} />
+          </div>
           <div className="stat-info">
             <div className="stat-label">Completed</div>
             <div className="stat-value">{reviews.filter(r => r.status === 'completed').length}</div>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon blue">🎯</div>
+          <div className="stat-icon blue">
+            <Target size={24} />
+          </div>
           <div className="stat-info">
             <div className="stat-label">Active Goals</div>
             <div className="stat-value">{goals.filter(g => g.status === 'in_progress').length}</div>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon orange">⭐</div>
+          <div className="stat-icon orange">
+            <Star size={24} />
+          </div>
           <div className="stat-info">
             <div className="stat-label">Avg Rating</div>
             <div className="stat-value">
@@ -66,20 +84,23 @@ export default function PerformancePage() {
         </div>
       </div>
 
-      {/* Rating Chart */}
-      {ratingData.length > 0 && (
-        <div className="chart-card" style={{ marginBottom: 24 }}>
-          <h3>📊 Employee Ratings</h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={ratingData}>
-              <XAxis dataKey="name" tick={{ fill: '#a0a0b8', fontSize: 12 }} />
-              <YAxis domain={[0, 5]} tick={{ fill: '#6b6b85', fontSize: 12 }} />
-              <Tooltip contentStyle={{ background: '#1e1e35', border: '1px solid #2a2a45', borderRadius: 8, color: '#f0f0f5' }} />
-              <Bar dataKey="rating" fill="#6c63ff" radius={[6, 6, 0, 0]} barSize={40} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      )}
+      <RoleGuard roles={['admin', 'hr', 'manager']}>
+        {ratingData.length > 0 && (
+          <div className="chart-card" style={{ marginBottom: 24 }}>
+            <h3 style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+              <BarChart3 className="text-primary-light" size={18} /> Employee Ratings
+            </h3>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={ratingData}>
+                <XAxis dataKey="name" tick={{ fill: '#a0a0b8', fontSize: 12 }} />
+                <YAxis domain={[0, 5]} tick={{ fill: '#6b6b85', fontSize: 12 }} />
+                <Tooltip contentStyle={{ background: '#1e1e35', border: '1px solid #2a2a45', borderRadius: 8, color: '#f0f0f5' }} />
+                <Bar dataKey="rating" fill="#6c63ff" radius={[6, 6, 0, 0]} barSize={40} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )}
+      </RoleGuard>
 
       <div className="tabs">
         <button className={`tab ${tab === 'reviews' ? 'active' : ''}`} onClick={() => setTab('reviews')}>Performance Reviews</button>
