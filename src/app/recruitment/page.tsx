@@ -84,6 +84,7 @@ export default function RecruitmentPage() {
         <table className="data-table">
           <thead>
             <tr>
+              <th>Job ID</th>
               <th>Job Title</th>
               <th>Department</th>
               <th>Location</th>
@@ -98,6 +99,7 @@ export default function RecruitmentPage() {
           <tbody>
             {jobs.map(job => (
               <tr key={job.id} style={{ cursor: 'pointer' }}>
+                <td style={{ fontWeight: 700, color: 'var(--text-tertiary)' }}>{job.id}</td>
                 <td style={{ fontWeight: 600 }}>{job.title}</td>
                 <td>{job.department}</td>
                 <td>{job.location}</td>

@@ -64,6 +64,7 @@ const navSections: NavSection[] = [
       { label: 'Face Attendance', icon: <ScanFace size={iconSize} strokeWidth={iconStroke} />, href: '/face-attendance', roles: ['admin', 'hr', 'manager'] },
       { label: 'Leaves', icon: <Palmtree size={iconSize} strokeWidth={iconStroke} />, href: '/attendance/leaves', roles: ['admin', 'hr', 'manager', 'employee'] },
       { label: 'Documents', icon: <FolderOpen size={iconSize} strokeWidth={iconStroke} />, href: '/documents', roles: ['admin', 'hr', 'manager', 'employee'] },
+      { label: 'Activities', icon: <CalendarDays size={iconSize} strokeWidth={iconStroke} />, href: '/activities', roles: ['admin', 'hr', 'manager', 'employee'] },
     ],
   },
   {

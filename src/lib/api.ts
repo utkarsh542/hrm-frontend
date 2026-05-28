@@ -1,6 +1,6 @@
 /* API client for communicating with FastAPI backend */
 
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = 'http://127.0.0.1:8000/api';
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_BASE}${endpoint}`;
@@ -90,7 +90,7 @@ export const api = {
   getPayrollRuns: () => request('/payroll/runs'),
   runPayroll: (month: number, year: number) => request('/payroll/run', { method: 'POST', body: JSON.stringify({ month, year }) }),
   getEmployeePayslips: (employeeId: number) => request(`/payroll/payslips/${employeeId}`),
-  downloadPayslip: (payslipId: number) => `http://localhost:8000/api/payroll/payslips/${payslipId}/download`,
+  downloadPayslip: (payslipId: number) => `http://127.0.0.1:8000/api/payroll/payslips/${payslipId}/download`,
 
   // Performance
   getReviews: (employeeId?: number) => request(`/performance/reviews${employeeId ? `?employee_id=${employeeId}` : ''}`),
@@ -107,6 +107,8 @@ export const api = {
   // AI Copilot & Intelligence
   aiChat: (message: string) =>
     request('/ai/chat', { method: 'POST', body: JSON.stringify({ message }) }),
+  queryDocs: (query: string) =>
+    request<any>('/ai/query-docs', { method: 'POST', body: JSON.stringify({ query }) }),
   generateJD: (data: any) =>
     request('/ai/generate-jd', { method: 'POST', body: JSON.stringify(data) }),
   getAttritionRisk: () => request('/ai/attrition-risk'),
@@ -114,13 +116,29 @@ export const api = {
     request('/ai/write-review', { method: 'POST', body: JSON.stringify(data) }),
   generateJDForJob: (jobId: number) =>
     request(`/jobs/generate-jd?job_id=${jobId}`, { method: 'POST' }),
+  parseResume: (formData: FormData) =>
+    uploadRequest('/resume/parse', formData),
+  parseAndCreateCandidate: (formData: FormData, jobId?: string) =>
+    uploadRequest(`/resume/parse-and-create${jobId ? `?job_id=${jobId}` : ''}`, formData),
 
   // Documents
   getDocuments: (params?: string) => request(`/documents/${params ? `?${params}` : ''}`),
   uploadDocument: (formData: FormData) => uploadRequest('/documents/upload', formData),
-  downloadDocument: (id: number) => `http://localhost:8000/api/documents/${id}/download`,
+  downloadDocument: (id: number) => `http://127.0.0.1:8000/api/documents/${id}/download`,
   deleteDocument: (id: number) => request(`/documents/${id}`, { method: 'DELETE' }),
   getDocumentStats: () => request('/documents/stats/summary'),
+
+  // Search & Notifications
+  unifiedSearch: (q: string) => request<any>(`/search/?q=${encodeURIComponent(q)}`),
+  getNotifications: (userId: number, limit?: number) => request<any>(`/notifications/?user_id=${userId}${limit ? `&limit=${limit}` : ''}`),
+  getUnreadNotificationCount: (userId: number) => request<any>(`/notifications/unread-count?user_id=${userId}`),
+  markNotificationRead: (id: number) => request<any>(`/notifications/${id}/read`, { method: 'PUT' }),
+  markAllNotificationsRead: (userId: number) => request<any>(`/notifications/read-all?user_id=${userId}`, { method: 'PUT' }),
+
+  // Corporate Activities & Event Planner
+  getActivities: (category?: string) => request<any>(`/activities/${category ? `?category=${category}` : ''}`),
+  createActivity: (data: any) => request<any>('/activities/', { method: 'POST', body: JSON.stringify(data) }),
+  deleteActivity: (id: number) => request<any>(`/activities/${id}`, { method: 'DELETE' }),
 
   // Expenses
   getExpenses: (params?: string) => request(`/expenses/${params ? `?${params}` : ''}`),
@@ -143,8 +161,8 @@ export const api = {
   submitResignation: (data: any) => request('/offboarding/resignations', { method: 'POST', body: JSON.stringify(data) }),
   updateResignation: (id: number, data: any) => request(`/offboarding/resignations/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   calculateSettlement: (id: number) => request(`/offboarding/resignations/${id}/calculate-settlement`, { method: 'POST' }),
-  generateExperienceLetter: (id: number) => `http://localhost:8000/api/offboarding/resignations/${id}/generate-experience-letter`,
-  generateRelievingLetter: (id: number) => `http://localhost:8000/api/offboarding/resignations/${id}/generate-relieving-letter`,
+  generateExperienceLetter: (id: number) => `http://127.0.0.1:8000/api/offboarding/resignations/${id}/generate-experience-letter`,
+  generateRelievingLetter: (id: number) => `http://127.0.0.1:8000/api/offboarding/resignations/${id}/generate-relieving-letter`,
 
   // Password Management
   changePassword: (data: any) => request('/auth/change-password', { method: 'POST', body: JSON.stringify(data) }),

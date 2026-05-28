@@ -5,7 +5,8 @@ import { useRole } from '@/lib/useRole';
 import { 
   FileText, Clipboard, DollarSign, Award, LogOut, Lock, BookOpen, 
   UserSquare2, CreditCard, Landmark, Star, AlertTriangle, Folder, 
-  Search, Upload, Download, Trash2, User, Paperclip
+  Search, Upload, Download, Trash2, User, Paperclip, Sparkles,
+  Bot, Send, Loader2, ChevronDown, ChevronUp, HelpCircle
 } from 'lucide-react';
 
 const CATEGORIES = [
@@ -57,6 +58,25 @@ export default function DocumentsPage() {
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState({ title: '', category: 'other', description: '', is_confidential: false, tags: '' });
+
+  // RAG States
+  const [ragQuery, setRagQuery] = useState('');
+  const [ragLoading, setRagLoading] = useState(false);
+  const [ragResult, setRagResult] = useState<any>(null);
+
+  const handleRagSearch = async () => {
+    if (!ragQuery.trim()) return;
+    setRagLoading(true);
+    setRagResult(null);
+    try {
+      const res = await api.queryDocs(ragQuery);
+      setRagResult(res);
+    } catch (e: any) {
+      alert("Error querying documents: " + e.message);
+    } finally {
+      setRagLoading(false);
+    }
+  };
 
   const fetchDocs = async () => {
     try {
@@ -122,6 +142,176 @@ export default function DocumentsPage() {
         </div>
         {isAdminOrHR && (
           <button className="btn btn-primary" onClick={() => setShowUpload(true)}>+ Upload Document</button>
+        )}
+      </div>
+
+      {/* 🔮 Interactive "Ask HR Policies / Query Docs" RAG Panel */}
+      <div 
+        className="card animate-fade-in"
+        style={{
+          background: 'linear-gradient(135deg, rgba(108,99,255,0.05) 0%, rgba(16,185,129,0.02) 100%)',
+          border: '1px solid rgba(108,99,255,0.2)',
+          borderRadius: 16,
+          padding: 24,
+          marginBottom: 24,
+          boxShadow: '0 8px 32px 0 rgba(108,99,255,0.05)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+          <div style={{
+            width: 38,
+            height: 38,
+            borderRadius: 10,
+            background: 'rgba(108,99,255,0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#6c63ff',
+            flexShrink: 0
+          }}>
+            <Sparkles size={18} strokeWidth={2.5} />
+          </div>
+          <div>
+            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
+              Ask HR Policies & Corporate Docs
+              <span style={{ fontSize: 10, background: 'rgba(108,99,255,0.2)', color: '#6c63ff', padding: '2px 8px', borderRadius: 12, fontWeight: 800 }}>AI RAG ENGINE</span>
+            </h3>
+            <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--text-tertiary)' }}>
+              Query policy manuals, handbooks, and documents with instant, cited answers.
+            </p>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+          <div style={{ position: 'relative', flex: 1 }}>
+            <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)' }}>
+              <HelpCircle size={16} />
+            </span>
+            <input
+              type="text"
+              className="filter-input"
+              value={ragQuery}
+              onChange={e => setRagQuery(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleRagSearch()}
+              placeholder="Ask a policy question... (e.g., 'What is our leave rollover policy?')"
+              style={{
+                width: '100%',
+                paddingLeft: 38,
+                paddingRight: 14,
+                height: 44,
+                borderRadius: 10,
+                border: '1px solid var(--border)',
+                background: 'var(--bg-input)',
+                color: 'var(--text-primary)',
+                fontSize: 14,
+              }}
+            />
+          </div>
+          <button 
+            className="btn btn-primary"
+            onClick={handleRagSearch}
+            disabled={ragLoading || !ragQuery.trim()}
+            style={{
+              height: 44,
+              padding: '0 20px',
+              borderRadius: 10,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              fontSize: 14,
+              fontWeight: 600,
+              boxShadow: '0 4px 14px rgba(108,99,255,0.3)',
+            }}
+          >
+            {ragLoading ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              <Send size={16} />
+            )}
+            <span>{ragLoading ? 'Searching...' : 'Ask AI'}</span>
+          </button>
+        </div>
+
+        {/* Loading Indicator */}
+        {ragLoading && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 20, padding: 16, background: 'rgba(255,255,255,0.02)', borderRadius: 12, border: '1px dashed var(--border)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Loader2 size={16} style={{ color: '#6c63ff', animation: 'spin 1s linear infinite' }} />
+              <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>Scanning documents and generating answer...</span>
+            </div>
+            <div style={{ height: 6, background: 'var(--bg-input)', borderRadius: 3, overflow: 'hidden' }}>
+              <div className="progress-bar-fill" style={{ width: '60%', height: '100%', background: '#6c63ff', borderRadius: 3, animation: 'pulse 1.5s infinite ease-in-out' }}></div>
+            </div>
+          </div>
+        )}
+
+        {/* RAG Answer Display */}
+        {ragResult && (
+          <div 
+            className="animate-fade-in"
+            style={{
+              marginTop: 20,
+              background: 'var(--bg-input)',
+              border: '1px solid var(--border)',
+              borderRadius: 12,
+              padding: 18,
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10, color: '#6c63ff', fontSize: 13, fontWeight: 700 }}>
+              <Bot size={16} />
+              <span>AI-GENERATED ANSWER</span>
+            </div>
+            <p 
+              style={{
+                margin: 0,
+                fontSize: 14,
+                lineHeight: 1.6,
+                color: 'var(--text-primary)',
+                whiteSpace: 'pre-wrap',
+              }}
+            >
+              {ragResult.answer}
+            </p>
+
+            {/* References */}
+            {ragResult.references && ragResult.references.length > 0 && (
+              <div style={{ borderTop: '1px solid var(--border)', marginTop: 16, paddingTop: 14 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                  CITATIONS & REFERENCED DOCUMENT SNIPPETS
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {ragResult.references.map((ref: any, idx: number) => (
+                    <div 
+                      key={idx}
+                      style={{
+                        padding: 12,
+                        borderRadius: 8,
+                        background: 'rgba(255,255,255,0.02)',
+                        border: '1px solid var(--border)',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                        <span style={{ fontSize: 11, background: 'rgba(108,99,255,0.15)', color: '#6c63ff', padding: '2px 6px', borderRadius: 4, fontWeight: 700 }}>
+                          #{idx + 1}
+                        </span>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
+                          {ref.title}
+                        </span>
+                        {ref.file_name && (
+                          <span style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
+                            ({ref.file_name})
+                          </span>
+                        )}
+                      </div>
+                      <p style={{ margin: 0, fontSize: 12, color: 'var(--text-secondary)', fontStyle: 'italic', lineHeight: 1.4 }}>
+                        "{ref.snippet}"
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </div>
 

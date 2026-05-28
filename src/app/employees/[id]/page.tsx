@@ -32,7 +32,7 @@ export default function EmployeeProfilePage() {
       try {
         const [emp, tl, depts]: any = await Promise.all([
           api.getEmployee(Number(id)),
-          fetch(`http://localhost:8000/api/employees/${id}/timeline`).then(r => r.json()),
+          api.getEmployeeTimeline(Number(id)),
           api.getDepartments(),
         ]);
         setEmployee(emp);

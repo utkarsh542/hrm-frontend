@@ -17,7 +17,8 @@ function getPayloadFromToken() {
 export function useRole() {
   const payload = useMemo(() => getPayloadFromToken(), []);
   
-  const role = (payload?.role as Role) ?? 'employee';
+  const rawRole = payload?.role ?? 'employee';
+  const role = (typeof rawRole === 'string' ? rawRole.toLowerCase() : 'employee') as Role;
   const email = payload?.sub ?? '';
   const userId = payload?.user_id ?? null;
 

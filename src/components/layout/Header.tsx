@@ -3,12 +3,11 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { User } from '@/types';
 import { getInitials } from '@/lib/utils';
+import { api } from '@/lib/api';
 import {
   Search, Bell, Shield, UserCog, Crown, UserCircle,
   LogOut, User as UserIcon, Briefcase, Target, Lock,
 } from 'lucide-react';
-
-const API_BASE = 'http://localhost:8000/api';
 
 interface HeaderProps {
   sidebarCollapsed: boolean;
@@ -95,8 +94,8 @@ export default function Header({ sidebarCollapsed, currentUser, onLogout }: Head
 
   useEffect(() => {
     if (currentUser?.id) {
-      fetch(`${API_BASE}/notifications/unread-count?user_id=${currentUser.id}`)
-        .then(r => r.json()).then(d => setUnreadCount(d.count || 0)).catch(() => {});
+      api.getUnreadNotificationCount(currentUser.id)
+        .then(d => setUnreadCount(d.count || 0)).catch(() => {});
     }
   }, [currentUser?.id]);
 
@@ -106,8 +105,7 @@ export default function Header({ sidebarCollapsed, currentUser, onLogout }: Head
     if (query.length < 2) { setSearchResults([]); setShowSearch(false); return; }
     searchTimeoutRef.current = setTimeout(async () => {
       try {
-        const res = await fetch(`${API_BASE}/search/?q=${encodeURIComponent(query)}`);
-        const data = await res.json();
+        const data = await api.unifiedSearch(query);
         setSearchResults(data.results || []);
         setShowSearch(true);
       } catch (e) { console.error(e); }
@@ -117,18 +115,16 @@ export default function Header({ sidebarCollapsed, currentUser, onLogout }: Head
   const loadNotifications = async () => {
     if (!currentUser?.id) return;
     try {
-      const res = await fetch(`${API_BASE}/notifications/?user_id=${currentUser.id}&limit=20`);
-      const data = await res.json();
+      const data = await api.getNotifications(currentUser.id, 20);
       setNotifications(data);
     } catch (e) { console.error(e); }
   };
 
   const markAsRead = async (id: number) => {
     try {
-      await fetch(`${API_BASE}/notifications/${id}/read`, { method: 'PUT' });
+      await api.markNotificationRead(id);
       setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
-      const r = await fetch(`${API_BASE}/notifications/unread-count?user_id=${currentUser?.id}`);
-      const d = await r.json();
+      const d = await api.getUnreadNotificationCount(currentUser?.id as number);
       setUnreadCount(d.count || 0);
     } catch (e) { console.error(e); }
   };
@@ -136,7 +132,7 @@ export default function Header({ sidebarCollapsed, currentUser, onLogout }: Head
   const markAllAsRead = async () => {
     if (!currentUser?.id) return;
     try {
-      await fetch(`${API_BASE}/notifications/read-all?user_id=${currentUser.id}`, { method: 'PUT' });
+      await api.markAllNotificationsRead(currentUser.id);
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
       setUnreadCount(0);
     } catch (e) { console.error(e); }
@@ -147,178 +143,180 @@ export default function Header({ sidebarCollapsed, currentUser, onLogout }: Head
   const RoleIcon = cfg.Icon;
 
   return (
-    <header className={`header ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
-      <div className="header-left">
-        <div className="header-search" ref={searchRef} style={{ position: 'relative' }}>
-          <span className="search-icon"><Search size={16} strokeWidth={2} /></span>
-          <input type="text" placeholder="Search employees, jobs, candidates..."
-            value={searchQuery} onChange={e => handleSearch(e.target.value)}
-            onFocus={() => searchResults.length > 0 && setShowSearch(true)} />
-          {showSearch && searchResults.length > 0 && (
-            <div style={{
-              position: 'absolute', top: '110%', left: 0, right: 0, zIndex: 300,
-              background: 'var(--bg-card)', border: '1px solid var(--border)',
-              borderRadius: 12, boxShadow: '0 12px 40px rgba(0,0,0,0.5)', overflow: 'hidden',
-            }}>
-              {searchResults.map((r, i) => {
-                const SIcon = typeIcons[r.type] || UserIcon;
-                return (
-                  <div key={i} onClick={() => { router.push(r.link); setShowSearch(false); setSearchQuery(''); }}
-                    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px',
-                      cursor: 'pointer', borderBottom: '1px solid var(--border)', transition: 'background 0.15s' }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-input)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                    <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(108,99,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6c63ff' }}>
-                      <SIcon size={16} strokeWidth={2} />
+    <>
+      <header className={`header ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+        <div className="header-left">
+          <div className="header-search" ref={searchRef} style={{ position: 'relative' }}>
+            <span className="search-icon"><Search size={16} strokeWidth={2} /></span>
+            <input type="text" placeholder="Search employees, jobs, candidates..."
+              value={searchQuery} onChange={e => handleSearch(e.target.value)}
+              onFocus={() => searchResults.length > 0 && setShowSearch(true)} />
+            {showSearch && searchResults.length > 0 && (
+              <div style={{
+                position: 'absolute', top: '110%', left: 0, right: 0, zIndex: 300,
+                background: 'var(--bg-card)', border: '1px solid var(--border)',
+                borderRadius: 12, boxShadow: '0 12px 40px rgba(0,0,0,0.5)', overflow: 'hidden',
+              }}>
+                {searchResults.map((r, i) => {
+                  const SIcon = typeIcons[r.type] || UserIcon;
+                  return (
+                    <div key={i} onClick={() => { router.push(r.link); setShowSearch(false); setSearchQuery(''); }}
+                      style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px',
+                        cursor: 'pointer', borderBottom: '1px solid var(--border)', transition: 'background 0.15s' }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-input)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                      <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(108,99,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6c63ff' }}>
+                        <SIcon size={16} strokeWidth={2} />
+                      </div>
+                      <div>
+                        <div style={{ fontWeight: 600, fontSize: 13 }}>{r.title}</div>
+                        <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{r.subtitle}</div>
+                      </div>
+                      <span style={{ marginLeft: 'auto', padding: '2px 8px', borderRadius: 6, fontSize: 10,
+                        fontWeight: 700, background: 'rgba(108,99,255,0.15)', color: '#6c63ff' }}>{r.type}</span>
                     </div>
-                    <div>
-                      <div style={{ fontWeight: 600, fontSize: 13 }}>{r.title}</div>
-                      <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{r.subtitle}</div>
-                    </div>
-                    <span style={{ marginLeft: 'auto', padding: '2px 8px', borderRadius: 6, fontSize: 10,
-                      fontWeight: 700, background: 'rgba(108,99,255,0.15)', color: '#6c63ff' }}>{r.type}</span>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="header-right">
-        {/* Role badge */}
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 7,
-          padding: '5px 12px', borderRadius: 20,
-          background: cfg.bg, border: `1.5px solid ${cfg.color}44`,
-          fontSize: 12, fontWeight: 700, color: cfg.color,
-        }}>
-          <RoleIcon size={14} strokeWidth={2} />
-          <span>{cfg.label}</span>
-        </div>
-
-        {/* Notifications */}
-        <div style={{ position: 'relative' }} ref={notifRef}>
-          <button className="header-icon-btn" title="Notifications"
-            onClick={() => { setShowNotifs(!showNotifs); if (!showNotifs) loadNotifications(); }}>
-            <Bell size={18} strokeWidth={2} />
-            {unreadCount > 0 && <span className="badge-dot"></span>}
-          </button>
-          {showNotifs && (
-            <div style={{
-              position: 'absolute', right: 0, top: '110%', width: 340, maxHeight: 400,
-              background: 'var(--bg-card)', border: '1px solid var(--border)',
-              borderRadius: 16, boxShadow: '0 16px 48px rgba(0,0,0,0.5)', overflow: 'auto', zIndex: 200,
-            }}>
-              <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontWeight: 700 }}>Notifications</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  {unreadCount > 0 && (
-                    <button 
-                      onClick={markAllAsRead}
-                      style={{ background: 'none', border: 'none', color: '#6c63ff', fontSize: 11, fontWeight: 600, cursor: 'pointer', padding: 0 }}
-                      onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
-                      onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
-                    >
-                      Mark all as read
-                    </button>
-                  )}
-                  {unreadCount > 0 && <span style={{ padding: '2px 8px', borderRadius: 10, background: 'rgba(108,99,255,0.15)', color: '#6c63ff', fontSize: 11, fontWeight: 700 }}>{unreadCount} new</span>}
-                </div>
+                  );
+                })}
               </div>
-              {notifications.length === 0 ? (
-                <div style={{ padding: 24, textAlign: 'center', color: 'var(--text-secondary)', fontSize: 13 }}>No notifications yet</div>
-              ) : notifications.map(n => (
-                <div key={n.id} 
-                  onClick={() => !n.is_read && markAsRead(n.id)}
-                  style={{ padding: '10px 16px', borderBottom: '1px solid var(--border)', cursor: n.is_read ? 'default' : 'pointer',
-                    background: n.is_read ? 'transparent' : 'rgba(108,99,255,0.05)', transition: 'background 0.2s' }}
-                  onMouseEnter={e => !n.is_read && (e.currentTarget.style.background = 'rgba(108,99,255,0.08)')}
-                  onMouseLeave={e => !n.is_read && (e.currentTarget.style.background = 'rgba(108,99,255,0.05)')}
-                >
-                  <div style={{ fontWeight: n.is_read ? 400 : 700, fontSize: 13 }}>{n.title}</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>{n.message}</div>
-                </div>
-              ))}
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
-        {/* Avatar + dropdown */}
-        <div style={{ position: 'relative' }} ref={menuRef}>
-          <div
-            className="user-avatar"
-            onClick={() => setShowMenu(!showMenu)}
-            style={{ border: `2px solid ${cfg.color}`, cursor: 'pointer' }}
-          >
-            {currentUser ? getInitials(currentUser.full_name) : '?'}
+        <div className="header-right">
+          {/* Role badge */}
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 7,
+            padding: '5px 12px', borderRadius: 20,
+            background: cfg.bg, border: `1.5px solid ${cfg.color}44`,
+            fontSize: 12, fontWeight: 700, color: cfg.color,
+          }}>
+            <RoleIcon size={14} strokeWidth={2} />
+            <span>{cfg.label}</span>
           </div>
 
-          {showMenu && currentUser && (
-            <div style={{
-              position: 'absolute', right: 0, top: '110%',
-              background: 'var(--bg-card)', border: '1px solid var(--border)',
-              borderRadius: 16, padding: 16, minWidth: 220,
-              zIndex: 200, boxShadow: '0 16px 48px rgba(0,0,0,0.5)',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-                <div style={{
-                  width: 42, height: 42, borderRadius: '50%', flexShrink: 0,
-                  background: cfg.bg, border: `2px solid ${cfg.color}`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontWeight: 800, fontSize: 14, color: cfg.color,
-                }}>
-                  {getInitials(currentUser.full_name)}
-                </div>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 14 }}>{currentUser.full_name}</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{currentUser.email}</div>
-                </div>
-              </div>
+          {/* Notifications */}
+          <div style={{ position: 'relative' }} ref={notifRef}>
+            <button className="header-icon-btn" title="Notifications"
+              onClick={() => { setShowNotifs(!showNotifs); if (!showNotifs) loadNotifications(); }}>
+              <Bell size={18} strokeWidth={2} />
+              {unreadCount > 0 && <span className="badge-dot"></span>}
+            </button>
+            {showNotifs && (
               <div style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                padding: '4px 10px', borderRadius: 20, fontSize: 12, fontWeight: 600,
-                background: cfg.bg, color: cfg.color, border: `1px solid ${cfg.color}44`,
-                marginBottom: 14,
+                position: 'absolute', right: 0, top: '110%', width: 340, maxHeight: 400,
+                background: 'var(--bg-card)', border: '1px solid var(--border)',
+                borderRadius: 16, boxShadow: '0 16px 48px rgba(0,0,0,0.5)', overflow: 'auto', zIndex: 200,
               }}>
-                <RoleIcon size={13} strokeWidth={2} /> {cfg.label}
+                <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontWeight: 700 }}>Notifications</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    {unreadCount > 0 && (
+                      <button 
+                        onClick={markAllAsRead}
+                        style={{ background: 'none', border: 'none', color: '#6c63ff', fontSize: 11, fontWeight: 600, cursor: 'pointer', padding: 0 }}
+                        onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+                        onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+                      >
+                        Mark all as read
+                      </button>
+                    )}
+                    {unreadCount > 0 && <span style={{ padding: '2px 8px', borderRadius: 10, background: 'rgba(108,99,255,0.15)', color: '#6c63ff', fontSize: 11, fontWeight: 700 }}>{unreadCount} new</span>}
+                  </div>
+                </div>
+                {notifications.length === 0 ? (
+                  <div style={{ padding: 24, textAlign: 'center', color: 'var(--text-secondary)', fontSize: 13 }}>No notifications yet</div>
+                ) : notifications.map(n => (
+                  <div key={n.id} 
+                    onClick={() => !n.is_read && markAsRead(n.id)}
+                    style={{ padding: '10px 16px', borderBottom: '1px solid var(--border)', cursor: n.is_read ? 'default' : 'pointer',
+                      background: n.is_read ? 'transparent' : 'rgba(108,99,255,0.05)', transition: 'background 0.2s' }}
+                    onMouseEnter={e => !n.is_read && (e.currentTarget.style.background = 'rgba(108,99,255,0.08)')}
+                    onMouseLeave={e => !n.is_read && (e.currentTarget.style.background = 'rgba(108,99,255,0.05)')}
+                  >
+                    <div style={{ fontWeight: n.is_read ? 400 : 700, fontSize: 13 }}>{n.title}</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>{n.message}</div>
+                  </div>
+                ))}
               </div>
-              <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '0 0 12px' }} />
-              <button
-                onClick={() => { setShowMenu(false); setShowPasswordModal(true); }}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 8,
-                  width: '100%', padding: '9px 10px', borderRadius: 8,
-                  background: 'var(--bg-input)', border: '1px solid var(--border)',
-                  color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600,
-                  cursor: 'pointer', fontFamily: 'Inter, sans-serif',
-                  marginBottom: 8,
-                  transition: 'all 0.15s',
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-input)'}
-              >
-                <Lock size={15} strokeWidth={2} /> Change Password
-              </button>
-              <button
-                onClick={() => { setShowMenu(false); onLogout(); }}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 8,
-                  width: '100%', padding: '9px 10px', borderRadius: 8,
-                  background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
-                  color: '#f87171', fontSize: 13, fontWeight: 600,
-                  cursor: 'pointer', fontFamily: 'Inter, sans-serif',
-                  transition: 'all 0.15s',
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.15)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}
-              >
-                <LogOut size={15} strokeWidth={2} /> Sign Out
-              </button>
+            )}
+          </div>
+
+          {/* Avatar + dropdown */}
+          <div style={{ position: 'relative' }} ref={menuRef}>
+            <div
+              className="user-avatar"
+              onClick={() => setShowMenu(!showMenu)}
+              style={{ border: `2px solid ${cfg.color}`, cursor: 'pointer' }}
+            >
+              {currentUser ? getInitials(currentUser.full_name) : '?'}
             </div>
-          )}
+
+            {showMenu && currentUser && (
+              <div style={{
+                position: 'absolute', right: 0, top: '110%',
+                background: 'var(--bg-card)', border: '1px solid var(--border)',
+                borderRadius: 16, padding: 16, minWidth: 220,
+                zIndex: 200, boxShadow: '0 16px 48px rgba(0,0,0,0.5)',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+                  <div style={{
+                    width: 42, height: 42, borderRadius: '50%', flexShrink: 0,
+                    background: cfg.bg, border: `2px solid ${cfg.color}`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontWeight: 800, fontSize: 14, color: cfg.color,
+                  }}>
+                    {getInitials(currentUser.full_name)}
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 14 }}>{currentUser.full_name}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{currentUser.email}</div>
+                  </div>
+                </div>
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  padding: '4px 10px', borderRadius: 20, fontSize: 12, fontWeight: 600,
+                  background: cfg.bg, color: cfg.color, border: `1px solid ${cfg.color}44`,
+                  marginBottom: 14,
+                }}>
+                  <RoleIcon size={13} strokeWidth={2} /> {cfg.label}
+                </div>
+                <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '0 0 12px' }} />
+                <button
+                  onClick={() => { setShowMenu(false); setShowPasswordModal(true); }}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 8,
+                    width: '100%', padding: '9px 10px', borderRadius: 8,
+                    background: 'var(--bg-input)', border: '1px solid var(--border)',
+                    color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600,
+                    cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+                    marginBottom: 8,
+                    transition: 'all 0.15s',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-input)'}
+                >
+                  <Lock size={15} strokeWidth={2} /> Change Password
+                </button>
+                <button
+                  onClick={() => { setShowMenu(false); onLogout(); }}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 8,
+                    width: '100%', padding: '9px 10px', borderRadius: 8,
+                    background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
+                    color: '#f87171', fontSize: 13, fontWeight: 600,
+                    cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+                    transition: 'all 0.15s',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.15)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}
+                >
+                  <LogOut size={15} strokeWidth={2} /> Sign Out
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      </header>
 
       {/* Change Password Modal */}
       {showPasswordModal && (
@@ -351,6 +349,6 @@ export default function Header({ sidebarCollapsed, currentUser, onLogout }: Head
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }

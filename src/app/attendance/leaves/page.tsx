@@ -7,7 +7,7 @@ import { Palmtree, Clock, CheckCircle2, XCircle, Check, X, Plus } from 'lucide-r
 import { useRole } from '@/lib/useRole';
 
 export default function LeavesPage() {
-  const { isAdminOrHR, email } = useRole();
+  const { isAdminOrHR, isAdminHROrManager, email } = useRole();
   const [leaves, setLeaves] = useState<LeaveRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
@@ -22,11 +22,13 @@ export default function LeavesPage() {
 
   const fetchLeaves = async () => {
     try {
-      const data = await api.getLeaves(filter ? `status=${filter}` : '');
+      const [data, emps]: any = await Promise.all([
+        api.getLeaves(filter ? `status=${filter}` : ''),
+        api.getEmployees()
+      ]);
       setLeaves(data as LeaveRequest[]);
 
-      // Fetch employee directory to map current logged-in employee record
-      const emps: any = await api.getEmployees();
+      // Map current logged-in employee record
       const matched = emps.find((e: any) => e.email === email);
       if (matched) {
         setCurrentEmp(matched);
@@ -159,7 +161,7 @@ export default function LeavesPage() {
                 <td style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis' }}>{leave.reason || '—'}</td>
                 <td><span className={`badge ${getStatusBadgeClass(leave.status)}`}>{leave.status}</span></td>
                 <td>
-                  {leave.status === 'pending' && isAdminOrHR && (
+                  {leave.status === 'pending' && isAdminHROrManager && (
                     <div style={{ display: 'flex', gap: 6 }}>
                       <button className="btn btn-sm btn-success" onClick={() => handleAction(leave.id, 'approved')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px 8px' }}>
                         <Check size={14} strokeWidth={2.5} />
