@@ -5,7 +5,7 @@ import {
   SmilePlus, Frown, Meh, Smile, Laugh, Plus,
 } from 'lucide-react';
 
-const API = 'http://127.0.0.1:8000/api';
+const API = 'https://hrm-backend-dtxm.onrender.com/api';
 const hdrs = () => {
   const t = typeof window !== 'undefined' ? localStorage.getItem('hrms_token') : null;
   return { 'Content-Type': 'application/json', ...(t ? { Authorization: `Bearer ${t}` } : {}) } as Record<string, string>;

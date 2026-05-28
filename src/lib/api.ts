@@ -1,6 +1,6 @@
 /* API client for communicating with FastAPI backend */
 
-const API_BASE = 'http://127.0.0.1:8000/api';
+const API_BASE = 'https://hrm-backend-dtxm.onrender.com/api';
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_BASE}${endpoint}`;
@@ -90,7 +90,7 @@ export const api = {
   getPayrollRuns: () => request('/payroll/runs'),
   runPayroll: (month: number, year: number) => request('/payroll/run', { method: 'POST', body: JSON.stringify({ month, year }) }),
   getEmployeePayslips: (employeeId: number) => request(`/payroll/payslips/${employeeId}`),
-  downloadPayslip: (payslipId: number) => `http://127.0.0.1:8000/api/payroll/payslips/${payslipId}/download`,
+  downloadPayslip: (payslipId: number) => `https://hrm-backend-dtxm.onrender.com/api/payroll/payslips/${payslipId}/download`,
 
   // Performance
   getReviews: (employeeId?: number) => request(`/performance/reviews${employeeId ? `?employee_id=${employeeId}` : ''}`),
@@ -124,7 +124,7 @@ export const api = {
   // Documents
   getDocuments: (params?: string) => request(`/documents/${params ? `?${params}` : ''}`),
   uploadDocument: (formData: FormData) => uploadRequest('/documents/upload', formData),
-  downloadDocument: (id: number) => `http://127.0.0.1:8000/api/documents/${id}/download`,
+  downloadDocument: (id: number) => `https://hrm-backend-dtxm.onrender.com/api/documents/${id}/download`,
   deleteDocument: (id: number) => request(`/documents/${id}`, { method: 'DELETE' }),
   getDocumentStats: () => request('/documents/stats/summary'),
 
@@ -161,8 +161,8 @@ export const api = {
   submitResignation: (data: any) => request('/offboarding/resignations', { method: 'POST', body: JSON.stringify(data) }),
   updateResignation: (id: number, data: any) => request(`/offboarding/resignations/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   calculateSettlement: (id: number) => request(`/offboarding/resignations/${id}/calculate-settlement`, { method: 'POST' }),
-  generateExperienceLetter: (id: number) => `http://127.0.0.1:8000/api/offboarding/resignations/${id}/generate-experience-letter`,
-  generateRelievingLetter: (id: number) => `http://127.0.0.1:8000/api/offboarding/resignations/${id}/generate-relieving-letter`,
+  generateExperienceLetter: (id: number) => `https://hrm-backend-dtxm.onrender.com/api/offboarding/resignations/${id}/generate-experience-letter`,
+  generateRelievingLetter: (id: number) => `https://hrm-backend-dtxm.onrender.com/api/offboarding/resignations/${id}/generate-relieving-letter`,
 
   // Password Management
   changePassword: (data: any) => request('/auth/change-password', { method: 'POST', body: JSON.stringify(data) }),
