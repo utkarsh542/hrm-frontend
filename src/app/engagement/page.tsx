@@ -2,10 +2,12 @@
 import { useState, useEffect } from 'react';
 import {
   HeartPulse, ClipboardList, MessageCircle, BarChart3, TrendingUp,
-  SmilePlus, Frown, Meh, Smile, Laugh, Plus,
+  SmilePlus, Frown, Meh, Smile, Laugh, Plus, AlertCircle,
 } from 'lucide-react';
 
-const API = 'https://hrm-backend-dtxm.onrender.com/api';
+import { API_BASE } from '@/lib/api';
+
+const API = API_BASE;
 const hdrs = () => {
   const t = typeof window !== 'undefined' ? localStorage.getItem('hrms_token') : null;
   return { 'Content-Type': 'application/json', ...(t ? { Authorization: `Bearer ${t}` } : {}) } as Record<string, string>;
@@ -31,6 +33,7 @@ export default function EngagementPage() {
   const [surveyDesc, setSurveyDesc] = useState('');
   const [surveyQuestions, setSurveyQuestions] = useState([{ id: 1, text: '', type: 'rating' }]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => { loadAll(); }, []);
 
@@ -59,15 +62,26 @@ export default function EngagementPage() {
   };
 
   const createSurvey = async () => {
+    setError(null);
+    if (!surveyTitle || !surveyTitle.trim()) {
+      setError("Survey Title is required.");
+      return;
+    }
+    if (surveyQuestions.length === 0 || surveyQuestions.some(q => !q.text || !q.text.trim())) {
+      setError("Please provide valid text for all questions.");
+      return;
+    }
+
     try {
       await fetch(`${API}/engagement/surveys`, {
         method: 'POST', headers: hdrs(),
         body: JSON.stringify({ title: surveyTitle, description: surveyDesc, questions: surveyQuestions }),
       });
+      setError(null);
       setShowSurveyModal(false); setSurveyTitle(''); setSurveyDesc('');
       setSurveyQuestions([{ id: 1, text: '', type: 'rating' }]);
       loadAll();
-    } catch (e) { console.error(e); }
+    } catch (e: any) { setError(e.message); }
   };
 
   const tabStyle = (t2: string) => ({
@@ -214,11 +228,31 @@ export default function EngagementPage() {
 
       {/* Create Survey Modal */}
       {showSurveyModal && (
-        <div className="modal-overlay" onClick={() => setShowSurveyModal(false)}>
+        <div className="modal-overlay" onClick={() => { setError(null); setShowSurveyModal(false); }}>
           <div className="modal animate-scale-in" onClick={e => e.stopPropagation()} style={{ maxWidth: 560 }}>
             <h2 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}>
               <ClipboardList size={20} style={{ color: '#6c63ff' }} /> Create Pulse Survey
             </h2>
+            {error && (
+              <div style={{
+                marginBottom: 16,
+                padding: '12px 16px',
+                borderRadius: '12px',
+                background: 'rgba(239, 68, 68, 0.12)',
+                border: '1px solid rgba(239, 68, 68, 0.25)',
+                color: '#fca5a5',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                fontSize: 14,
+                fontWeight: 500,
+                backdropFilter: 'blur(4px)',
+                boxShadow: '0 4px 12px rgba(239, 68, 68, 0.05)'
+              }}>
+                <AlertCircle size={18} style={{ flexShrink: 0, color: '#f87171' }} />
+                <span>{error}</span>
+              </div>
+            )}
             <div className="form-group">
               <label className="form-label">Survey Title</label>
               <input className="form-input" value={surveyTitle} onChange={e => setSurveyTitle(e.target.value)} placeholder="e.g. Q2 Employee Satisfaction" />
@@ -243,7 +277,7 @@ export default function EngagementPage() {
                 onClick={() => setSurveyQuestions(qs => [...qs, { id: qs.length + 1, text: '', type: 'rating' }])}><Plus size={14} /> Add Question</button>
             </div>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 16 }}>
-              <button className="btn btn-secondary" onClick={() => setShowSurveyModal(false)}>Cancel</button>
+              <button className="btn btn-secondary" onClick={() => { setError(null); setShowSurveyModal(false); }}>Cancel</button>
               <button className="btn btn-primary" onClick={createSurvey} disabled={!surveyTitle}>Create Survey</button>
             </div>
           </div>

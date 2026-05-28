@@ -1,6 +1,11 @@
 /* API client for communicating with FastAPI backend */
 
-const API_BASE = 'https://hrm-backend-dtxm.onrender.com/api';
+export const isLocalhost = typeof window !== 'undefined' && 
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+export const API_BASE = isLocalhost 
+  ? 'http://127.0.0.1:8000/api' 
+  : 'https://hrm-backend-dtxm.onrender.com/api';
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_BASE}${endpoint}`;
@@ -77,20 +82,22 @@ export const api = {
   getEmployeeTimeline: (id: number) => request(`/employees/${id}/timeline`),
 
   // Attendance & Leaves
-  checkIn: (employeeId: number) => request('/attendance/check-in', { method: 'POST', body: JSON.stringify({ employee_id: employeeId }) }),
-  checkOut: (employeeId: number) => request('/attendance/check-out', { method: 'POST', body: JSON.stringify({ employee_id: employeeId }) }),
+  checkIn: (employeeId: number, latitude?: number, longitude?: number, imageBase64?: string) => request('/attendance/check-in', { method: 'POST', body: JSON.stringify({ employee_id: employeeId, latitude, longitude, image_base_64: imageBase64 }) }),
+  checkOut: (employeeId: number, latitude?: number, longitude?: number, imageBase64?: string) => request('/attendance/check-out', { method: 'POST', body: JSON.stringify({ employee_id: employeeId, latitude, longitude, image_base_64: imageBase64 }) }),
   getAttendance: (params?: string) => request(`/attendance/records${params ? `?${params}` : ''}`),
   getLeaves: (params?: string) => request(`/attendance/leaves/${params ? `?${params}` : ''}`),
   applyLeave: (data: any) => request('/attendance/leaves/', { method: 'POST', body: JSON.stringify(data) }),
   updateLeave: (id: number, data: any) => request(`/attendance/leaves/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   getLeaveBalance: (employeeId: number) => request(`/attendance/leaves/balance/${employeeId}`),
   getHolidays: () => request('/attendance/holidays/'),
+  getGeofence: () => request('/attendance/geofence'),
+  updateGeofence: (latitude: number, longitude: number, radius: number = 100.0) => request('/attendance/geofence/update', { method: 'POST', body: JSON.stringify({ latitude, longitude, radius }) }),
 
   // Payroll
   getPayrollRuns: () => request('/payroll/runs'),
   runPayroll: (month: number, year: number) => request('/payroll/run', { method: 'POST', body: JSON.stringify({ month, year }) }),
   getEmployeePayslips: (employeeId: number) => request(`/payroll/payslips/${employeeId}`),
-  downloadPayslip: (payslipId: number) => `https://hrm-backend-dtxm.onrender.com/api/payroll/payslips/${payslipId}/download`,
+  downloadPayslip: (payslipId: number) => `${API_BASE}/payroll/payslips/${payslipId}/download`,
 
   // Performance
   getReviews: (employeeId?: number) => request(`/performance/reviews${employeeId ? `?employee_id=${employeeId}` : ''}`),
@@ -124,7 +131,7 @@ export const api = {
   // Documents
   getDocuments: (params?: string) => request(`/documents/${params ? `?${params}` : ''}`),
   uploadDocument: (formData: FormData) => uploadRequest('/documents/upload', formData),
-  downloadDocument: (id: number) => `https://hrm-backend-dtxm.onrender.com/api/documents/${id}/download`,
+  downloadDocument: (id: number) => `${API_BASE}/documents/${id}/download`,
   deleteDocument: (id: number) => request(`/documents/${id}`, { method: 'DELETE' }),
   getDocumentStats: () => request('/documents/stats/summary'),
 
@@ -161,8 +168,8 @@ export const api = {
   submitResignation: (data: any) => request('/offboarding/resignations', { method: 'POST', body: JSON.stringify(data) }),
   updateResignation: (id: number, data: any) => request(`/offboarding/resignations/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   calculateSettlement: (id: number) => request(`/offboarding/resignations/${id}/calculate-settlement`, { method: 'POST' }),
-  generateExperienceLetter: (id: number) => `https://hrm-backend-dtxm.onrender.com/api/offboarding/resignations/${id}/generate-experience-letter`,
-  generateRelievingLetter: (id: number) => `https://hrm-backend-dtxm.onrender.com/api/offboarding/resignations/${id}/generate-relieving-letter`,
+  generateExperienceLetter: (id: number) => `${API_BASE}/offboarding/resignations/${id}/generate-experience-letter`,
+  generateRelievingLetter: (id: number) => `${API_BASE}/offboarding/resignations/${id}/generate-relieving-letter`,
 
   // Password Management
   changePassword: (data: any) => request('/auth/change-password', { method: 'POST', body: JSON.stringify(data) }),

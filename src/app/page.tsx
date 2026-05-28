@@ -60,11 +60,6 @@ export default function DashboardPage() {
             {greetings[role]}
           </p>
         </div>
-        <RoleGuard roles={['admin', 'hr']}>
-          <div className="page-header-actions">
-            <button className="btn btn-primary">+ Post New Job</button>
-          </div>
-        </RoleGuard>
       </div>
 
       {/* ── Admin / HR stats ── */}

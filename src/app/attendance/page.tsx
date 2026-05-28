@@ -1,10 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { api } from '@/lib/api';
 import { Employee, AttendanceRecord } from '@/types';
 import { getInitials, formatDate, getStatusBadgeClass } from '@/lib/utils';
 import { useRole } from '@/lib/useRole';
-import { Calendar, UserCheck, UserMinus, Clock, Users, History, SlidersHorizontal, Info } from 'lucide-react';
+import { Calendar, UserCheck, UserMinus, Clock, Users, History, SlidersHorizontal, Info, MapPin, Camera } from 'lucide-react';
 
 const MONTHS = [
   { value: 1, label: 'January' },
@@ -36,17 +36,35 @@ export default function AttendancePage() {
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>('all');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
 
+  // Face Scan modal & verify state variables
+  const [showFaceScanModal, setShowFaceScanModal] = useState(false);
+  const [scanMode, setScanMode] = useState<'checkin' | 'checkout'>('checkin');
+  const [scanEmployeeId, setScanEmployeeId] = useState<number | null>(null);
+  const [scanning, setScanning] = useState(false);
+  const [scanResult, setScanResult] = useState<{ success: boolean; message: string } | null>(null);
+  
+  // Dynamic Geofence active settings
+  const [activeGeofence, setActiveGeofence] = useState<any>(null);
+  const [syncingGeofence, setSyncingGeofence] = useState(false);
+  
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+
   const today = new Date();
   const todayStr = today.toISOString().split('T')[0];
 
   const fetchData = async (m: number, y: number) => {
     setLoading(true);
     try {
-      const [emps, recs]: any = await Promise.all([
+      const [emps, recs, geo]: any = await Promise.all([
         api.getEmployees(),
         api.getAttendance(`month=${m}&year=${y}`),
+        api.getGeofence().catch(() => null),
       ]);
       setEmployees((emps as Employee[]).filter(e => e.employment_status === 'active'));
+      setRecords(recs as AttendanceRecord[]);
+      if (geo) setActiveGeofence(geo);
       setRecords(recs as AttendanceRecord[]);
     } catch (e) {
       console.error(e);
@@ -85,19 +103,96 @@ export default function AttendancePage() {
   // Employees only see themselves; admin/hr/manager see all
   const displayEmployees = isAdminHROrManager ? employees : employees.filter(e => e.email === email);
 
-  const handleCheckIn = async (empId: number) => {
-    try {
-      await api.checkIn(empId);
-      await fetchData(selectedMonth, selectedYear);
-    } catch (e: any) { alert(e.message); }
+  const getCurrentCoordinates = (): Promise<GeolocationPosition> => {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error("Your browser does not support Geolocation."));
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      });
+    });
   };
 
-  const handleCheckOut = async (empId: number) => {
+  // Trigger webcam face scanner
+  const triggerFaceScan = async (empId: number, mode: 'checkin' | 'checkout') => {
+    setScanEmployeeId(empId);
+    setScanMode(mode);
+    setScanResult(null);
+    setShowFaceScanModal(true);
+    setScanning(false);
+    
     try {
-      const result: any = await api.checkOut(empId);
-      alert(`Checked out! Work hours: ${result.work_hours}`);
-      await fetchData(selectedMonth, selectedYear);
-    } catch (e: any) { alert(e.message); }
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } });
+      streamRef.current = stream;
+      setTimeout(() => {
+        if (videoRef.current) videoRef.current.srcObject = stream;
+      }, 150);
+    } catch {
+      setScanResult({ success: false, message: 'Webcam access denied. Please verify camera connections & permissions.' });
+    }
+  };
+
+  const closeFaceScan = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(t => t.stop());
+      streamRef.current = null;
+    }
+    setShowFaceScanModal(false);
+    setScanEmployeeId(null);
+    setScanResult(null);
+  };
+
+  const executeFaceCheck = async () => {
+    if (!scanEmployeeId || !videoRef.current || !canvasRef.current) return;
+    setScanning(true);
+    setScanResult(null);
+    try {
+      // 1. Fetch Geolocation
+      const position = await getCurrentCoordinates().catch(() => {
+        throw new Error("Location permission denied or unavailable. Geolocation is mandatory for verification.");
+      });
+      const { latitude, longitude } = position.coords;
+
+      // 2. Capture Frame from Video
+      const canvas = canvasRef.current;
+      canvas.width = 320;
+      canvas.height = 240;
+      canvas.getContext('2d')?.drawImage(videoRef.current, 0, 0, 320, 240);
+      const imageBase64 = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
+
+      // 3. Post to API
+      let res: any;
+      if (scanMode === 'checkin') {
+        res = await api.checkIn(scanEmployeeId, latitude, longitude, imageBase64);
+      } else {
+        res = await api.checkOut(scanEmployeeId, latitude, longitude, imageBase64);
+      }
+
+      setScanResult({ success: true, message: res.message || "Face matched & verified!" });
+      
+      // Keep modal open briefly to show premium success animation
+      setTimeout(() => {
+        closeFaceScan();
+        fetchData(selectedMonth, selectedYear);
+      }, 1500);
+
+    } catch (e: any) {
+      setScanResult({ success: false, message: e.message || "Verification failed" });
+    } finally {
+      setScanning(false);
+    }
+  };
+
+  const handleCheckIn = (empId: number) => {
+    triggerFaceScan(empId, 'checkin');
+  };
+
+  const handleCheckOut = (empId: number) => {
+    triggerFaceScan(empId, 'checkout');
   };
 
   if (loading) return <div className="loading-page"><div className="spinner"></div></div>;
@@ -223,10 +318,34 @@ export default function AttendancePage() {
                       <td style={{ fontFamily: 'monospace', color: 'var(--primary-light)' }}>{emp.employee_id}</td>
                       <td>{emp.department_name}</td>
                       <td style={{ fontSize: 13 }}>
-                        {rec?.check_in ? new Date(rec.check_in).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '—'}
+                        {rec?.check_in ? (
+                          <div>
+                            <div>{new Date(rec.check_in).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
+                            {rec.check_in_address && (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4, color: 'var(--text-tertiary)', fontSize: 11 }}>
+                                <MapPin size={11} style={{ color: 'var(--primary-light)' }} />
+                                <span title={`${rec.check_in_address} (lat: ${rec.check_in_lat}, lon: ${rec.check_in_lon})`} style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: 140, cursor: 'help' }}>
+                                  {rec.check_in_district}, {rec.check_in_state}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        ) : '—'}
                       </td>
                       <td style={{ fontSize: 13 }}>
-                        {rec?.check_out ? new Date(rec.check_out).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '—'}
+                        {rec?.check_out ? (
+                          <div>
+                            <div>{new Date(rec.check_out).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
+                            {rec.check_out_address && (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4, color: 'var(--text-tertiary)', fontSize: 11 }}>
+                                <MapPin size={11} style={{ color: 'var(--accent-orange)' }} />
+                                <span title={`${rec.check_out_address} (lat: ${rec.check_out_lat}, lon: ${rec.check_out_lon})`} style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: 140, cursor: 'help' }}>
+                                  {rec.check_out_district}, {rec.check_out_state}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        ) : '—'}
                       </td>
                       <td style={{ fontWeight: 600 }}>
                         {rec?.work_hours ? `${rec.work_hours}h` : '—'}
@@ -329,10 +448,34 @@ export default function AttendancePage() {
                       </td>
                     )}
                     <td style={{ fontSize: 13 }}>
-                      {rec.check_in ? new Date(rec.check_in).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '—'}
+                      {rec.check_in ? (
+                        <div>
+                          <div>{new Date(rec.check_in).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
+                          {rec.check_in_address && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4, color: 'var(--text-tertiary)', fontSize: 11 }}>
+                              <MapPin size={11} style={{ color: 'var(--primary-light)' }} />
+                              <span title={`${rec.check_in_address} (lat: ${rec.check_in_lat}, lon: ${rec.check_in_lon})`} style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: 140, cursor: 'help' }}>
+                                {rec.check_in_district}, {rec.check_in_state}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      ) : '—'}
                     </td>
                     <td style={{ fontSize: 13 }}>
-                      {rec.check_out ? new Date(rec.check_out).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '—'}
+                      {rec.check_out ? (
+                        <div>
+                          <div>{new Date(rec.check_out).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
+                          {rec.check_out_address && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4, color: 'var(--text-tertiary)', fontSize: 11 }}>
+                              <MapPin size={11} style={{ color: 'var(--accent-orange)' }} />
+                              <span title={`${rec.check_out_address} (lat: ${rec.check_out_lat}, lon: ${rec.check_out_lon})`} style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: 140, cursor: 'help' }}>
+                                {rec.check_out_district}, {rec.check_out_state}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      ) : '—'}
                     </td>
                     <td style={{ fontWeight: 700 }}>
                       {rec.work_hours ? `${rec.work_hours}h` : '—'}
@@ -358,6 +501,110 @@ export default function AttendancePage() {
             </table>
           </div>
         </>
+      )}
+
+      {/* Integrated Face Verification webcam scanner modal */}
+      {showFaceScanModal && (
+        <div className="modal-overlay" onClick={closeFaceScan}>
+          <div className="modal-content animate-scale-in" style={{ maxWidth: 420, textAlign: 'center' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 style={{ display: 'flex', alignItems: 'center', gap: 8, margin: 0, fontSize: 18 }}>
+                <Camera size={20} className="text-primary-light" />
+                <span>Face Security Verification</span>
+              </h2>
+              <button className="modal-close" onClick={closeFaceScan}>✕</button>
+            </div>
+            
+            <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '24px 20px' }}>
+              <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
+                Please align your face in the center of the camera scan frame to complete your <strong>{scanMode === 'checkin' ? 'Check-In' : 'Check-Out'}</strong>.
+              </div>
+              
+              <div style={{ position: 'relative', width: 280, height: 210, margin: '0 auto', borderRadius: 20, overflow: 'hidden', border: '2px solid var(--border)', background: '#0a0a14' }}>
+                <video ref={videoRef} autoPlay playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <canvas ref={canvasRef} style={{ display: 'none' }} />
+                
+                {/* Circular face target scanning outline overlay */}
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  pointerEvents: 'none'
+                }}>
+                  <div style={{
+                    width: 170,
+                    height: 170,
+                    borderRadius: '50%',
+                    border: '2px dashed var(--primary-light)',
+                    boxShadow: '0 0 0 9999px rgba(10, 10, 20, 0.45)'
+                  }}></div>
+                </div>
+                
+                {/* Biometrics scanning green horizontal line animation */}
+                {scanning && (
+                  <div style={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    height: 3,
+                    background: 'var(--accent-green)',
+                    boxShadow: '0 0 10px var(--accent-green)',
+                    animation: 'scannerLine 2s infinite ease-in-out',
+                    top: 0
+                  }} />
+                )}
+              </div>
+              
+              {/* Scan result display */}
+              {scanResult && (
+                <div style={{
+                  padding: '12px 16px',
+                  borderRadius: 12,
+                  fontSize: 13,
+                  background: scanResult.success ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
+                  border: `1px solid ${scanResult.success ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'}`,
+                  color: scanResult.success ? 'var(--accent-green)' : '#f87171',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8
+                }}>
+                  <span style={{ fontWeight: 600 }}>{scanResult.message}</span>
+                </div>
+              )}
+            </div>
+            
+            <div className="modal-footer" style={{ justifyContent: 'center', gap: 12 }}>
+              <button 
+                type="button" 
+                className="btn btn-primary" 
+                onClick={executeFaceCheck}
+                disabled={scanning || (scanResult?.success ?? false)}
+                style={{ minWidth: 150 }}
+              >
+                {scanning ? 'Verifying Identity...' : scanResult?.success ? 'Success!' : 'Capture & Verify'}
+              </button>
+              <button 
+                type="button" 
+                className="btn btn-secondary" 
+                onClick={closeFaceScan}
+                disabled={scanning}
+              >
+                Cancel
+              </button>
+            </div>
+
+            <style dangerouslySetInnerHTML={{__html: `
+              @keyframes scannerLine {
+                0% { top: 0%; }
+                50% { top: 100%; }
+                100% { top: 0%; }
+              }
+            `}} />
+          </div>
+        </div>
       )}
     </div>
   );

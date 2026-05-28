@@ -5,7 +5,7 @@ import { api } from '@/lib/api';
 import { Employee } from '@/types';
 import { formatCurrency, formatDate, getStatusBadgeClass, getInitials } from '@/lib/utils';
 import { useRole, RoleGuard } from '@/lib/useRole';
-import { Users, UserCheck, Clock, Building2, Copy, Check, ShieldCheck, Mail, Lock } from 'lucide-react';
+import { Users, UserCheck, Clock, Building2, Copy, Check, ShieldCheck, Mail, Lock, AlertCircle } from 'lucide-react';
 
 export default function EmployeesPage() {
   const router = useRouter();
@@ -31,6 +31,7 @@ export default function EmployeesPage() {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedPass, setCopiedPass] = useState(false);
   const [copiedAll, setCopiedAll] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {
     try {
@@ -47,8 +48,44 @@ export default function EmployeesPage() {
   useEffect(() => { fetchData(); }, [search]);
 
   const handleCreate = async () => {
+    setError(null);
+    // Required fields check
+    if (!formData.full_name.trim()) {
+      setError("Full Name is required.");
+      return;
+    }
+    if (!formData.email.trim()) {
+      setError("Email address is required.");
+      return;
+    }
+    
+    // Email pattern check
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(formData.email.trim())) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    if (!formData.designation.trim()) {
+      setError("Designation is required.");
+      return;
+    }
+    if (formData.department_id === 0) {
+      setError("Please select a department.");
+      return;
+    }
+    if (formData.ctc <= 0) {
+      setError("Annual CTC must be a positive number.");
+      return;
+    }
+    if (!formData.joining_date) {
+      setError("Joining Date is required.");
+      return;
+    }
+
     try {
       await api.createEmployee(formData);
+      setError(null);
       setShowCreateModal(false);
       
       // Capture credentials info for displaying to the admin/manager
@@ -67,7 +104,7 @@ export default function EmployeesPage() {
       });
 
       fetchData();
-    } catch (e: any) { alert(e.message); }
+    } catch (e: any) { setError(e.message); }
   };
 
   if (loading) return <div className="loading-page"><div className="spinner"></div></div>;
@@ -82,7 +119,7 @@ export default function EmployeesPage() {
           <h1 style={{ margin: 0 }}>Employee Directory</h1>
         </div>
         {isAdminOrHR && (
-          <button className="btn btn-primary" onClick={() => setShowCreateModal(true)}>+ Add Employee</button>
+          <button className="btn btn-primary" onClick={() => { setError(null); setShowCreateModal(true); }}>+ Add Employee</button>
         )}
       </div>
 
@@ -173,13 +210,33 @@ export default function EmployeesPage() {
 
       {/* Create Employee Modal */}
       {showCreateModal && (
-        <div className="modal-overlay" onClick={() => setShowCreateModal(false)}>
+        <div className="modal-overlay" onClick={() => { setError(null); setShowCreateModal(false); }}>
           <div className="modal-content" style={{ maxWidth: 700 }} onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Add New Employee</h2>
-              <button className="modal-close" onClick={() => setShowCreateModal(false)}>✕</button>
+              <button className="modal-close" onClick={() => { setError(null); setShowCreateModal(false); }}>✕</button>
             </div>
             <div className="modal-body">
+              {error && (
+                <div style={{
+                  marginBottom: 16,
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  background: 'rgba(239, 68, 68, 0.12)',
+                  border: '1px solid rgba(239, 68, 68, 0.25)',
+                  color: '#fca5a5',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  fontSize: 14,
+                  fontWeight: 500,
+                  backdropFilter: 'blur(4px)',
+                  boxShadow: '0 4px 12px rgba(239, 68, 68, 0.05)'
+                }}>
+                  <AlertCircle size={18} style={{ flexShrink: 0, color: '#f87171' }} />
+                  <span>{error}</span>
+                </div>
+              )}
               <div className="form-row">
                 <div className="form-group">
                   <label className="form-label">Full Name *</label>
@@ -230,7 +287,7 @@ export default function EmployeesPage() {
               </div>
             </div>
             <div className="modal-footer">
-              <button className="btn btn-secondary" onClick={() => setShowCreateModal(false)}>Cancel</button>
+              <button className="btn btn-secondary" onClick={() => { setError(null); setShowCreateModal(false); }}>Cancel</button>
               <button className="btn btn-primary" onClick={handleCreate}>Add Employee</button>
             </div>
           </div>

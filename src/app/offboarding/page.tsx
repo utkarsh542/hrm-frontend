@@ -65,6 +65,10 @@ export default function OffboardingPage() {
       alert("Please provide a reason for resignation.");
       return;
     }
+    if (Number(resignForm.notice_period_days) <= 0) {
+      alert("Notice period must be at least 1 day.");
+      return;
+    }
     setSubmitting(true);
     try {
       await api.submitResignation({

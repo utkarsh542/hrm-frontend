@@ -14,6 +14,8 @@ interface SidebarProps {
   collapsed: boolean;
   onToggle: () => void;
   currentUser: User | null;
+  mobileOpen?: boolean;
+  setMobileOpen?: (open: boolean) => void;
 }
 
 type Role = 'admin' | 'hr' | 'manager' | 'employee';
@@ -61,7 +63,6 @@ const navSections: NavSection[] = [
       { label: 'Onboarding', icon: <Rocket size={iconSize} strokeWidth={iconStroke} />, href: '/onboarding', roles: ['admin', 'hr', 'manager'] },
       { label: 'Org Chart', icon: <Building2 size={iconSize} strokeWidth={iconStroke} />, href: '/org-chart', roles: ['admin', 'hr', 'manager', 'employee'] },
       { label: 'Attendance', icon: <CalendarDays size={iconSize} strokeWidth={iconStroke} />, href: '/attendance', roles: ['admin', 'hr', 'manager', 'employee'] },
-      { label: 'Face Attendance', icon: <ScanFace size={iconSize} strokeWidth={iconStroke} />, href: '/face-attendance', roles: ['admin', 'hr', 'manager'] },
       { label: 'Leaves', icon: <Palmtree size={iconSize} strokeWidth={iconStroke} />, href: '/attendance/leaves', roles: ['admin', 'hr', 'manager', 'employee'] },
       { label: 'Documents', icon: <FolderOpen size={iconSize} strokeWidth={iconStroke} />, href: '/documents', roles: ['admin', 'hr', 'manager', 'employee'] },
       { label: 'Activities', icon: <CalendarDays size={iconSize} strokeWidth={iconStroke} />, href: '/activities', roles: ['admin', 'hr', 'manager', 'employee'] },
@@ -102,7 +103,13 @@ const navSections: NavSection[] = [
   },
 ];
 
-export default function Sidebar({ collapsed, onToggle, currentUser }: SidebarProps) {
+export default function Sidebar({ 
+  collapsed, 
+  onToggle, 
+  currentUser,
+  mobileOpen,
+  setMobileOpen 
+}: SidebarProps) {
   const pathname = usePathname();
   const role = (currentUser?.role ?? 'employee') as Role;
 
@@ -134,7 +141,7 @@ export default function Sidebar({ collapsed, onToggle, currentUser }: SidebarPro
   };
 
   return (
-    <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
+    <aside className={`sidebar ${collapsed ? 'collapsed' : ''} ${mobileOpen ? 'open' : ''}`}>
       <div className="sidebar-logo">
         <div className="logo-icon">H</div>
         <span className="logo-text">HRMS</span>
@@ -181,6 +188,7 @@ export default function Sidebar({ collapsed, onToggle, currentUser }: SidebarPro
                 key={item.href}
                 href={item.href}
                 className={`nav-item ${isActive(item.href) ? 'active' : ''}`}
+                onClick={() => setMobileOpen && setMobileOpen(false)}
               >
                 <span className="nav-icon">{item.icon}</span>
                 <span className="nav-label">{item.label}</span>

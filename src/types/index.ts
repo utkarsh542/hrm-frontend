@@ -120,6 +120,16 @@ export interface AttendanceRecord {
   check_out?: string;
   work_hours: number;
   employee_name: string;
+  check_in_lat?: number;
+  check_in_lon?: number;
+  check_out_lat?: number;
+  check_out_lon?: number;
+  check_in_address?: string;
+  check_out_address?: string;
+  check_in_district?: string;
+  check_in_state?: string;
+  check_out_district?: string;
+  check_out_state?: string;
 }
 
 export interface LeaveRequest {

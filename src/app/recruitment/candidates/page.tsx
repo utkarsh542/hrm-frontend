@@ -12,6 +12,7 @@ const STAGES = [
   { key: 'interview', label: 'Interview', color: '#06b6d4' },
   { key: 'offered', label: 'Offered', color: '#10b981' },
   { key: 'hired', label: 'Hired', color: '#22c55e' },
+  { key: 'joined', label: 'Joined', color: '#14b8a6' },
   { key: 'rejected', label: 'Rejected', color: '#ef4444' },
 ];
 

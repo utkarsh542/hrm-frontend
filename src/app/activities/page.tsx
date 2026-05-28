@@ -5,7 +5,7 @@ import { useRole } from '@/lib/useRole';
 import {
   CalendarDays, GraduationCap, PartyPopper, Briefcase,
   Palmtree, Folder, Plus, Loader2, Send, Trash2,
-  Clock, MapPin, ExternalLink, HelpCircle
+  Clock, MapPin, ExternalLink, HelpCircle, AlertCircle
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
@@ -26,6 +26,7 @@ export default function ActivitiesPage() {
   const [selectedCat, setSelectedCat] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   const [form, setForm] = useState({
     title: '',
@@ -51,8 +52,9 @@ export default function ActivitiesPage() {
   }, [selectedCat]);
 
   const handleCreate = async () => {
-    if (!form.title || !form.scheduled_at) {
-      alert("Please fill in all required fields (Title & Date/Time).");
+    setError(null);
+    if (!form.title || !form.title.trim() || !form.scheduled_at) {
+      setError("Please fill in all required fields (Title & Date/Time).");
       return;
     }
     setSaving(true);
@@ -64,11 +66,12 @@ export default function ActivitiesPage() {
         scheduled_at: new Date(form.scheduled_at).toISOString(),
         location: form.location || undefined
       });
+      setError(null);
       setShowModal(false);
       setForm({ title: '', category: 'event', description: '', scheduled_at: '', location: '' });
       fetchActivities();
     } catch (e: any) {
-      alert("Error planning activity: " + e.message);
+      setError("Error planning activity: " + e.message);
     } finally {
       setSaving(false);
     }
@@ -76,11 +79,13 @@ export default function ActivitiesPage() {
 
   const handleDelete = async (id: number) => {
     if (!confirm("Are you sure you want to cancel this planned activity?")) return;
+    setError(null);
     try {
       await api.deleteActivity(id);
       fetchActivities();
     } catch (e: any) {
-      alert("Error deleting activity: " + e.message);
+      setError("Error deleting activity: " + e.message);
+      setTimeout(() => setError(null), 5000);
     }
   };
 
@@ -120,13 +125,34 @@ export default function ActivitiesPage() {
         {isAdminHROrManager && (
           <button 
             className="btn btn-primary" 
-            onClick={() => setShowModal(true)}
+            onClick={() => { setError(null); setShowModal(true); }}
             style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
           >
             <Plus size={16} /> Plan Corporate Activity
           </button>
         )}
       </div>
+
+      {error && !showModal && (
+        <div style={{
+          marginBottom: 16,
+          padding: '12px 16px',
+          borderRadius: '12px',
+          background: 'rgba(239, 68, 68, 0.12)',
+          border: '1px solid rgba(239, 68, 68, 0.25)',
+          color: '#fca5a5',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+          fontSize: 14,
+          fontWeight: 500,
+          backdropFilter: 'blur(4px)',
+          boxShadow: '0 4px 12px rgba(239, 68, 68, 0.05)'
+        }}>
+          <AlertCircle size={18} style={{ flexShrink: 0, color: '#f87171' }} />
+          <span>{error}</span>
+        </div>
+      )}
 
       {/* Categories Filter list */}
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 24 }}>
@@ -292,13 +318,33 @@ export default function ActivitiesPage() {
 
       {/* Plan Activity Modal */}
       {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+        <div className="modal-overlay" onClick={() => { setError(null); setShowModal(false); }}>
           <div className="modal-content" style={{ maxWidth: 520 }} onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Plan Corporate Activity</h2>
-              <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
+              <button className="modal-close" onClick={() => { setError(null); setShowModal(false); }}>✕</button>
             </div>
             <div className="modal-body">
+              {error && (
+                <div style={{
+                  marginBottom: 16,
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  background: 'rgba(239, 68, 68, 0.12)',
+                  border: '1px solid rgba(239, 68, 68, 0.25)',
+                  color: '#fca5a5',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  fontSize: 14,
+                  fontWeight: 500,
+                  backdropFilter: 'blur(4px)',
+                  boxShadow: '0 4px 12px rgba(239, 68, 68, 0.05)'
+                }}>
+                  <AlertCircle size={18} style={{ flexShrink: 0, color: '#f87171' }} />
+                  <span>{error}</span>
+                </div>
+              )}
               <div className="form-group">
                 <label className="form-label">Activity Title *</label>
                 <input 
@@ -361,7 +407,7 @@ export default function ActivitiesPage() {
               </div>
             </div>
             <div className="modal-footer">
-              <button className="btn btn-secondary" onClick={() => setShowModal(false)} disabled={saving}>Cancel</button>
+              <button className="btn btn-secondary" onClick={() => { setError(null); setShowModal(false); }} disabled={saving}>Cancel</button>
               <button 
                 className="btn btn-primary" 
                 onClick={handleCreate} 

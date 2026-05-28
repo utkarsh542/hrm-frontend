@@ -4,12 +4,13 @@ import Link from 'next/link';
 import { api } from '@/lib/api';
 import { Job } from '@/types';
 import { formatCurrency, formatDate, getStatusBadgeClass } from '@/lib/utils';
-import { Briefcase, ClipboardList, Users, Building2, Plus } from 'lucide-react';
+import { Briefcase, ClipboardList, Users, Building2, Plus, AlertCircle } from 'lucide-react';
 
 export default function RecruitmentPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: '', department: '', location: '', job_type: 'full_time',
     experience_min: 0, experience_max: 5, salary_min: 0, salary_max: 0,
@@ -27,14 +28,56 @@ export default function RecruitmentPage() {
   useEffect(() => { fetchJobs(); }, []);
 
   const handleCreate = async () => {
+    setError(null);
+    // Required fields check
+    if (!formData.title.trim()) {
+      setError("Job Title is required.");
+      return;
+    }
+    if (!formData.department.trim()) {
+      setError("Department is required.");
+      return;
+    }
+    if (!formData.location.trim()) {
+      setError("Location is required.");
+      return;
+    }
+    if (!formData.description.trim()) {
+      setError("Job Description is required.");
+      return;
+    }
+
+    // Numbers and logical bounds check
+    if (formData.experience_min < 0 || formData.experience_max < 0) {
+      setError("Experience cannot be negative.");
+      return;
+    }
+    if (formData.experience_min > formData.experience_max) {
+      setError("Min Experience cannot exceed Max Experience.");
+      return;
+    }
+    if (formData.salary_min < 0 || formData.salary_max < 0) {
+      setError("Salary range cannot contain negative values.");
+      return;
+    }
+    if (formData.salary_min > formData.salary_max) {
+      setError("Min Salary cannot exceed Max Salary.");
+      return;
+    }
+    if (formData.openings <= 0) {
+      setError("Number of openings must be at least 1.");
+      return;
+    }
+
     try {
       await api.createJob(formData);
+      setError(null);
       setShowCreateModal(false);
       setFormData({ title: '', department: '', location: '', job_type: 'full_time',
         experience_min: 0, experience_max: 5, salary_min: 0, salary_max: 0,
         description: '', requirements: '', skills: '', openings: 1 });
       fetchJobs();
-    } catch (e: any) { alert(e.message); }
+    } catch (e: any) { setError(e.message); }
   };
 
   if (loading) return <div className="loading-page"><div className="spinner"></div></div>;
@@ -45,7 +88,7 @@ export default function RecruitmentPage() {
         <h1 style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
           <Briefcase className="text-primary-light" size={28} /> Job Postings
         </h1>
-        <button className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }} onClick={() => setShowCreateModal(true)}>
+        <button className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }} onClick={() => { setError(null); setShowCreateModal(true); }}>
           <Plus size={16} /> Create Job
         </button>
       </div>
@@ -117,13 +160,33 @@ export default function RecruitmentPage() {
 
       {/* Create Job Modal */}
       {showCreateModal && (
-        <div className="modal-overlay" onClick={() => setShowCreateModal(false)}>
+        <div className="modal-overlay" onClick={() => { setError(null); setShowCreateModal(false); }}>
           <div className="modal-content" style={{ maxWidth: 700 }} onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Create Job Posting</h2>
-              <button className="modal-close" onClick={() => setShowCreateModal(false)}>✕</button>
+              <button className="modal-close" onClick={() => { setError(null); setShowCreateModal(false); }}>✕</button>
             </div>
             <div className="modal-body">
+              {error && (
+                <div style={{
+                  marginBottom: 16,
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  background: 'rgba(239, 68, 68, 0.12)',
+                  border: '1px solid rgba(239, 68, 68, 0.25)',
+                  color: '#fca5a5',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  fontSize: 14,
+                  fontWeight: 500,
+                  backdropFilter: 'blur(4px)',
+                  boxShadow: '0 4px 12px rgba(239, 68, 68, 0.05)'
+                }}>
+                  <AlertCircle size={18} style={{ flexShrink: 0, color: '#f87171' }} />
+                  <span>{error}</span>
+                </div>
+              )}
               <div className="form-row">
                 <div className="form-group">
                   <label className="form-label">Job Title *</label>
@@ -183,7 +246,7 @@ export default function RecruitmentPage() {
               </div>
             </div>
             <div className="modal-footer">
-              <button className="btn btn-secondary" onClick={() => setShowCreateModal(false)}>Cancel</button>
+              <button className="btn btn-secondary" onClick={() => { setError(null); setShowCreateModal(false); }}>Cancel</button>
               <button className="btn btn-primary" onClick={handleCreate}>Create Job</button>
             </div>
           </div>

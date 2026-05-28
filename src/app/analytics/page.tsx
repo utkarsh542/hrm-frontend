@@ -5,7 +5,9 @@ import {
   Building2, Sparkles, CheckCircle, AlertTriangle, Target,
 } from 'lucide-react';
 
-const API = 'https://hrm-backend-dtxm.onrender.com/api';
+import { API_BASE } from '@/lib/api';
+
+const API = API_BASE;
 const hdrs = () => {
   const t = typeof window !== 'undefined' ? localStorage.getItem('hrms_token') : null;
   return { 'Content-Type': 'application/json', ...(t ? { Authorization: `Bearer ${t}` } : {}) } as Record<string, string>;

@@ -6,13 +6,14 @@ import { getInitials } from '@/lib/utils';
 import { api } from '@/lib/api';
 import {
   Search, Bell, Shield, UserCog, Crown, UserCircle,
-  LogOut, User as UserIcon, Briefcase, Target, Lock,
+  LogOut, User as UserIcon, Briefcase, Target, Lock, Menu,
 } from 'lucide-react';
 
 interface HeaderProps {
   sidebarCollapsed: boolean;
   currentUser: User | null;
   onLogout: () => void;
+  onToggleMobileSidebar?: () => void;
 }
 
 type Role = 'admin' | 'hr' | 'manager' | 'employee';
@@ -37,7 +38,12 @@ const typeIcons: Record<string, any> = {
   job: Briefcase,
 };
 
-export default function Header({ sidebarCollapsed, currentUser, onLogout }: HeaderProps) {
+export default function Header({ 
+  sidebarCollapsed, 
+  currentUser, 
+  onLogout,
+  onToggleMobileSidebar 
+}: HeaderProps) {
   const [showMenu, setShowMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
@@ -146,6 +152,26 @@ export default function Header({ sidebarCollapsed, currentUser, onLogout }: Head
     <>
       <header className={`header ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
         <div className="header-left">
+          {onToggleMobileSidebar && (
+            <button 
+              className="mobile-menu-btn" 
+              onClick={onToggleMobileSidebar}
+              style={{
+                background: 'transparent',
+                border: '1px solid var(--border)',
+                color: 'var(--text-secondary)',
+                borderRadius: 'var(--radius-md)',
+                width: 40,
+                height: 40,
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: 'all 0.15s',
+              }}
+            >
+              <Menu size={18} />
+            </button>
+          )}
           <div className="header-search" ref={searchRef} style={{ position: 'relative' }}>
             <span className="search-icon"><Search size={16} strokeWidth={2} /></span>
             <input type="text" placeholder="Search employees, jobs, candidates..."

@@ -6,7 +6,7 @@ import { formatCurrency, formatDate } from '@/lib/utils';
 
 import { 
   CreditCard, Clock, CheckCircle2, DollarSign, BarChart2, Check, X,
-  Plane, Utensils, Hotel, Laptop, BookOpen, HeartPulse, Globe, Smartphone, Folder
+  Plane, Utensils, Hotel, Laptop, BookOpen, HeartPulse, Globe, Smartphone, Folder, AlertCircle
 } from 'lucide-react';
 
 const CATEGORIES = [
@@ -56,6 +56,7 @@ export default function ExpensesPage() {
   const [statusFilter, setStatusFilter] = useState('');
   const [showCreate, setShowCreate] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({
     employee_id: 1, title: '', category: 'travel',
     amount: '', expense_date: new Date().toISOString().split('T')[0], description: '',
@@ -74,22 +75,36 @@ export default function ExpensesPage() {
   useEffect(() => { fetchAll(); }, [statusFilter]);
 
   const handleCreate = async () => {
-    if (!form.title || !form.amount) { alert('Title and amount are required.'); return; }
+    setError(null);
+    if (!form.title || !form.title.trim() || !form.amount) { 
+      setError('Title and amount are required.'); 
+      return; 
+    }
+    const amt = parseFloat(form.amount);
+    if (isNaN(amt) || amt <= 0) {
+      setError('Expense amount must be a positive number.');
+      return;
+    }
     setSaving(true);
     try {
       await api.createExpense({ ...form, amount: parseFloat(form.amount) });
+      setError(null);
       setShowCreate(false);
       setForm({ employee_id: 1, title: '', category: 'travel', amount: '', expense_date: new Date().toISOString().split('T')[0], description: '' });
       fetchAll();
-    } catch (e: any) { alert(e.message); }
+    } catch (e: any) { setError(e.message); }
     finally { setSaving(false); }
   };
 
   const handleAction = async (id: number, action: string, approvedBy = 1) => {
+    setError(null);
     try {
       await api.actionExpense(id, { action, approved_by: approvedBy });
       fetchAll();
-    } catch (e: any) { alert(e.message); }
+    } catch (e: any) {
+      setError(e.message);
+      setTimeout(() => setError(null), 5000);
+    }
   };
 
   if (loading) return <div className="loading-page"><div className="spinner"></div></div>;
@@ -103,8 +118,29 @@ export default function ExpensesPage() {
           </div>
           <h1 style={{ margin: 0 }}>Expense Management</h1>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowCreate(true)}>+ Submit Expense</button>
+        <button className="btn btn-primary" onClick={() => { setError(null); setShowCreate(true); }}>+ Submit Expense</button>
       </div>
+
+      {error && !showCreate && (
+        <div style={{
+          marginBottom: 16,
+          padding: '12px 16px',
+          borderRadius: '12px',
+          background: 'rgba(239, 68, 68, 0.12)',
+          border: '1px solid rgba(239, 68, 68, 0.25)',
+          color: '#fca5a5',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+          fontSize: 14,
+          fontWeight: 500,
+          backdropFilter: 'blur(4px)',
+          boxShadow: '0 4px 12px rgba(239, 68, 68, 0.05)'
+        }}>
+          <AlertCircle size={18} style={{ flexShrink: 0, color: '#f87171' }} />
+          <span>{error}</span>
+        </div>
+      )}
 
       {/* Stats */}
       <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
@@ -205,13 +241,33 @@ export default function ExpensesPage() {
 
       {/* Create Modal */}
       {showCreate && (
-        <div className="modal-overlay" onClick={() => setShowCreate(false)}>
+        <div className="modal-overlay" onClick={() => { setError(null); setShowCreate(false); }}>
           <div className="modal-content" style={{ maxWidth: 500 }} onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Submit Expense</h2>
-              <button className="modal-close" onClick={() => setShowCreate(false)}>✕</button>
+              <button className="modal-close" onClick={() => { setError(null); setShowCreate(false); }}>✕</button>
             </div>
             <div className="modal-body">
+              {error && (
+                <div style={{
+                  marginBottom: 16,
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  background: 'rgba(239, 68, 68, 0.12)',
+                  border: '1px solid rgba(239, 68, 68, 0.25)',
+                  color: '#fca5a5',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  fontSize: 14,
+                  fontWeight: 500,
+                  backdropFilter: 'blur(4px)',
+                  boxShadow: '0 4px 12px rgba(239, 68, 68, 0.05)'
+                }}>
+                  <AlertCircle size={18} style={{ flexShrink: 0, color: '#f87171' }} />
+                  <span>{error}</span>
+                </div>
+              )}
               <div className="form-group">
                 <label className="form-label">Title *</label>
                 <input className="form-input" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="e.g. Client dinner — Bangalore" />
@@ -238,7 +294,7 @@ export default function ExpensesPage() {
               </div>
             </div>
             <div className="modal-footer">
-              <button className="btn btn-secondary" onClick={() => setShowCreate(false)}>Cancel</button>
+              <button className="btn btn-secondary" onClick={() => { setError(null); setShowCreate(false); }}>Cancel</button>
               <button className="btn btn-primary" onClick={handleCreate} disabled={saving}>
                 {saving ? 'Submitting...' : 'Submit Expense'}
               </button>

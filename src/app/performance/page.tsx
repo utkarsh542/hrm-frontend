@@ -8,18 +8,104 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recha
 import { Star, FileText, CheckCircle2, Target, BarChart3, Award, Plus } from 'lucide-react';
 
 export default function PerformancePage() {
-  const { isAdminHROrManager, isAdminOrHR } = useRole();
+  const { isAdminHROrManager, isAdminOrHR, role } = useRole();
   const [reviews, setReviews] = useState<PerformanceReview[]>([]);
   const [goals, setGoals] = useState<Goal[]>([]);
+  const [employees, setEmployees] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<'reviews' | 'goals'>('reviews');
 
+  // Modal controls
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [selectedReview, setSelectedReview] = useState<PerformanceReview | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Forms data
+  const [reviewForm, setReviewForm] = useState({
+    employee_id: '',
+    cycle: 'annual',
+    period: new Date().getFullYear().toString(),
+  });
+
+  const [updateForm, setUpdateForm] = useState({
+    technical_rating: 3,
+    communication_rating: 3,
+    leadership_rating: 3,
+    teamwork_rating: 3,
+    innovation_rating: 3,
+    manager_review: '',
+    recommendation: 'none',
+  });
+
+  const loadData = async () => {
+    try {
+      const promises: Promise<any>[] = [api.getReviews(), api.getGoals()];
+      if (isAdminHROrManager) {
+        promises.push(api.getEmployees());
+      }
+      const [r, g, emps] = await Promise.all(promises);
+      setReviews(r as PerformanceReview[]);
+      setGoals(g as Goal[]);
+      if (emps) setEmployees(emps.filter((e: any) => e.is_active));
+    } catch (e) {
+      console.error("Error loading performance metrics:", e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    Promise.all([api.getReviews(), api.getGoals()])
-      .then(([r, g]) => { setReviews(r as PerformanceReview[]); setGoals(g as Goal[]); })
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
+    loadData();
+  }, [role]);
+
+  const handleStartReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!reviewForm.employee_id || !reviewForm.period) {
+      alert("Please select an employee and specify a review period.");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await api.createReview({
+        employee_id: Number(reviewForm.employee_id),
+        cycle: reviewForm.cycle,
+        period: reviewForm.period,
+      });
+      setShowReviewModal(false);
+      setReviewForm({ employee_id: '', cycle: 'annual', period: new Date().getFullYear().toString() });
+      await loadData();
+      alert("Performance review cycle initiated successfully!");
+    } catch (err: any) {
+      alert("Failed to start review: " + err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleCompleteReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedReview) return;
+    if (!updateForm.manager_review || !updateForm.manager_review.trim()) {
+      alert("Please provide the manager's review remarks and feedback before completing the review.");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await api.updateReview(selectedReview.id, {
+        ...updateForm,
+        status: 'completed',
+      });
+      setShowUpdateModal(false);
+      setSelectedReview(null);
+      await loadData();
+      alert("Performance scorecard submitted and finalized successfully!");
+    } catch (err: any) {
+      alert("Failed to submit performance review: " + err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   if (loading) return <div className="loading-page"><div className="spinner"></div></div>;
 
@@ -35,7 +121,11 @@ export default function PerformancePage() {
           <Award className="text-primary-light" size={28} /> Performance
         </h1>
         <RoleGuard roles={['admin', 'hr', 'manager']}>
-          <button className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <button 
+            className="btn btn-primary" 
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+            onClick={() => setShowReviewModal(true)}
+          >
             <Plus size={16} /> Start Review
           </button>
         </RoleGuard>
@@ -122,6 +212,7 @@ export default function PerformancePage() {
                 <th>Overall</th>
                 <th>Recommendation</th>
                 <th>Status</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -145,6 +236,28 @@ export default function PerformancePage() {
                     )}
                   </td>
                   <td><span className={`badge ${getStatusBadgeClass(r.status)}`}>{r.status}</span></td>
+                  <td>
+                    {r.status === 'pending' && isAdminHROrManager && (
+                      <button 
+                        className="btn btn-sm btn-primary"
+                        onClick={() => {
+                          setSelectedReview(r);
+                          setUpdateForm({
+                            technical_rating: r.technical_rating || 3,
+                            communication_rating: r.communication_rating || 3,
+                            leadership_rating: r.leadership_rating || 3,
+                            teamwork_rating: r.teamwork_rating || 3,
+                            innovation_rating: r.innovation_rating || 3,
+                            manager_review: r.manager_review || '',
+                            recommendation: r.recommendation || 'none',
+                          });
+                          setShowUpdateModal(true);
+                        }}
+                      >
+                        Complete
+                      </button>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -175,6 +288,145 @@ export default function PerformancePage() {
               <span className={`badge ${getStatusBadgeClass(g.status)}`}>{g.status.replace('_', ' ')}</span>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* ── START REVIEW CYCLE MODAL ── */}
+      {showReviewModal && (
+        <div className="modal-overlay" onClick={() => setShowReviewModal(false)}>
+          <div className="modal-content animate-scale-in" style={{ maxWidth: 450 }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Start Performance Review</h2>
+              <button className="modal-close" onClick={() => setShowReviewModal(false)}>✕</button>
+            </div>
+            <form onSubmit={handleStartReview}>
+              <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div className="form-group">
+                  <label className="form-label">Employee to Review *</label>
+                  <select 
+                    className="form-select" 
+                    value={reviewForm.employee_id} 
+                    onChange={e => setReviewForm({ ...reviewForm, employee_id: e.target.value })}
+                    required
+                  >
+                    <option value="">-- Select Employee --</option>
+                    {employees.map(e => (
+                      <option key={e.id} value={e.id}>{e.full_name} ({e.designation})</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                  <div className="form-group">
+                    <label className="form-label">Review Cycle</label>
+                    <select 
+                      className="form-select" 
+                      value={reviewForm.cycle} 
+                      onChange={e => setReviewForm({ ...reviewForm, cycle: e.target.value })}
+                    >
+                      <option value="annual">Annual Review</option>
+                      <option value="mid_year">Mid-Year Review</option>
+                      <option value="quarterly">Quarterly Review</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Period / Year *</label>
+                    <input 
+                      className="form-input" 
+                      value={reviewForm.period} 
+                      onChange={e => setReviewForm({ ...reviewForm, period: e.target.value })}
+                      placeholder="e.g. 2026"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={() => setShowReviewModal(false)}>Cancel</button>
+                <button type="submit" className="btn btn-primary" disabled={submitting || !reviewForm.employee_id}>
+                  {submitting ? 'Initiating...' : 'Start Cycle'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── COMPLETE REVIEW SCORECARD MODAL ── */}
+      {showUpdateModal && selectedReview && (
+        <div className="modal-overlay" onClick={() => setShowUpdateModal(false)}>
+          <div className="modal-content animate-scale-in" style={{ maxWidth: 500 }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Complete Performance Review</h2>
+              <button className="modal-close" onClick={() => setShowUpdateModal(false)}>✕</button>
+            </div>
+            <form onSubmit={handleCompleteReview}>
+              <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 16, maxHeight: '70vh', overflowY: 'auto' }}>
+                <div style={{ background: 'var(--bg-input)', border: '1px solid var(--border)', borderRadius: 10, padding: 12, fontSize: 13 }}>
+                  <div>Employee: <strong style={{ color: 'var(--text-primary)' }}>{selectedReview.employee_name}</strong></div>
+                  <div style={{ marginTop: 2, color: 'var(--text-secondary)' }}>Cycle: {selectedReview.cycle} · Period: {selectedReview.period}</div>
+                </div>
+
+                {[
+                  { field: 'technical_rating', label: 'Technical Knowledge Rating' },
+                  { field: 'communication_rating', label: 'Communication & Soft Skills' },
+                  { field: 'leadership_rating', label: 'Leadership & Project Ownership' },
+                  { field: 'teamwork_rating', label: 'Team Collaboration & Trust' },
+                  { field: 'innovation_rating', label: 'Innovation & Problem Solving' },
+                ].map(({ field, label }) => (
+                  <div className="form-group" key={field} style={{ marginBottom: 12 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 4 }}>
+                      <span className="form-label" style={{ margin: 0, fontWeight: 500 }}>{label}</span>
+                      <strong style={{ color: 'var(--primary-light)' }}>{(updateForm as any)[field]} / 5</strong>
+                    </div>
+                    <input 
+                      type="range" 
+                      min="1" 
+                      max="5" 
+                      step="0.5" 
+                      value={(updateForm as any)[field]} 
+                      onChange={e => setUpdateForm({ ...updateForm, [field]: Number(e.target.value) })}
+                      style={{ width: '100%', accentColor: 'var(--primary)', cursor: 'pointer' }}
+                    />
+                  </div>
+                ))}
+
+                <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12 }}>
+                  <div className="form-group">
+                    <label className="form-label">Recommendation</label>
+                    <select 
+                      className="form-select" 
+                      value={updateForm.recommendation} 
+                      onChange={e => setUpdateForm({ ...updateForm, recommendation: e.target.value })}
+                    >
+                      <option value="none">No Recommendation</option>
+                      <option value="promote">Recommend Promotion</option>
+                      <option value="increment">Recommend Salary Increment</option>
+                      <option value="pip">Recommend Performance Improvement Plan (PIP)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Manager Review & Detailed Comments *</label>
+                  <textarea
+                    className="form-textarea"
+                    value={updateForm.manager_review}
+                    onChange={e => setUpdateForm({ ...updateForm, manager_review: e.target.value })}
+                    placeholder="Provide a comprehensive summary of strengths, areas of improvement, and general assessment..."
+                    rows={4}
+                    style={{ fontFamily: 'inherit', resize: 'vertical' }}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={() => setShowUpdateModal(false)}>Cancel</button>
+                <button type="submit" className="btn btn-primary" disabled={submitting}>
+                  {submitting ? 'Submitting...' : 'Finalize & Complete'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

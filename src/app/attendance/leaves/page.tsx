@@ -3,11 +3,11 @@ import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import { LeaveRequest } from '@/types';
 import { formatDate, getStatusBadgeClass } from '@/lib/utils';
-import { Palmtree, Clock, CheckCircle2, XCircle, Check, X, Plus } from 'lucide-react';
+import { Palmtree, Clock, CheckCircle2, XCircle, Check, X, Plus, AlertCircle } from 'lucide-react';
 import { useRole } from '@/lib/useRole';
 
 export default function LeavesPage() {
-  const { isAdminOrHR, isAdminHROrManager, email } = useRole();
+  const { isAdminOrHR, isAdminHROrManager, email, role } = useRole();
   const [leaves, setLeaves] = useState<LeaveRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
@@ -19,6 +19,8 @@ export default function LeavesPage() {
   const [reason, setReason] = useState('');
   const [balances, setBalances] = useState<any>(null);
   const [currentEmp, setCurrentEmp] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const fetchLeaves = async () => {
     try {
@@ -45,17 +47,26 @@ export default function LeavesPage() {
     try {
       await api.updateLeave(id, { status });
       fetchLeaves();
-    } catch (e: any) { alert(e.message); }
+    } catch (e: any) {
+      setError(e.message);
+      setTimeout(() => setError(null), 5000);
+    }
   };
 
   const handleApplyLeave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!startDate || !endDate || !reason) {
-      alert('Please fill out all fields.');
+    setError(null);
+    setSuccess(null);
+    if (!startDate || !endDate || !reason || !reason.trim()) {
+      setError('Please fill out all fields with valid information.');
+      return;
+    }
+    if (new Date(startDate) > new Date(endDate)) {
+      setError('Start date cannot be after end date.');
       return;
     }
     if (!currentEmp) {
-      alert('Error: Employee profile not found.');
+      setError('Error: Employee profile not found.');
       return;
     }
     setSubmitting(true);
@@ -67,15 +78,18 @@ export default function LeavesPage() {
         end_date: endDate,
         reason: reason,
       });
-      setShowApplyModal(false);
+      setSuccess('Leave request submitted successfully!');
       setStartDate('');
       setEndDate('');
       setReason('');
       setLeaveType('casual');
       fetchLeaves();
-      alert('Leave request submitted successfully!');
+      setTimeout(() => {
+        setSuccess(null);
+        setShowApplyModal(false);
+      }, 1500);
     } catch (err: any) {
-      alert(err.message || 'Failed to submit leave request.');
+      setError(err.message || 'Failed to submit leave request.');
     } finally {
       setSubmitting(false);
     }
@@ -92,9 +106,11 @@ export default function LeavesPage() {
           </div>
           <h1 style={{ margin: 0 }}>Leave Management</h1>
         </div>
-        <button className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }} onClick={() => setShowApplyModal(true)}>
-          <Plus size={16} /> Apply Leave
-        </button>
+        {role !== 'admin' && (
+          <button className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }} onClick={() => { setError(null); setSuccess(null); setShowApplyModal(true); }}>
+            <Plus size={16} /> Apply Leave
+          </button>
+        )}
       </div>
 
       <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
@@ -161,16 +177,37 @@ export default function LeavesPage() {
                 <td style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis' }}>{leave.reason || '—'}</td>
                 <td><span className={`badge ${getStatusBadgeClass(leave.status)}`}>{leave.status}</span></td>
                 <td>
-                  {leave.status === 'pending' && isAdminHROrManager && (
-                    <div style={{ display: 'flex', gap: 6 }}>
-                      <button className="btn btn-sm btn-success" onClick={() => handleAction(leave.id, 'approved')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px 8px' }}>
-                        <Check size={14} strokeWidth={2.5} />
+                  <div style={{ display: 'flex', gap: 6 }}>
+                    {leave.status === 'pending' && isAdminHROrManager && (
+                      <>
+                        <button className="btn btn-sm btn-success" onClick={() => handleAction(leave.id, 'approved')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px 8px' }} title="Approve">
+                          <Check size={14} strokeWidth={2.5} />
+                        </button>
+                        <button className="btn btn-sm btn-danger" onClick={() => handleAction(leave.id, 'rejected')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px 8px' }} title="Reject">
+                          <X size={14} strokeWidth={2.5} />
+                        </button>
+                      </>
+                    )}
+                    {(leave.status === 'pending' || leave.status === 'approved') && 
+                     (leave.employee_id === currentEmp?.id || isAdminOrHR) && (
+                      <button 
+                        className="btn btn-sm btn-secondary" 
+                        onClick={() => handleAction(leave.id, 'cancelled')} 
+                        style={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          gap: 4, 
+                          fontSize: 11, 
+                          padding: '4px 10px', 
+                          background: 'rgba(239,68,68,0.1)', 
+                          color: '#f87171', 
+                          border: '1px solid rgba(239,68,68,0.2)' 
+                        }}
+                      >
+                        Cancel
                       </button>
-                      <button className="btn btn-sm btn-danger" onClick={() => handleAction(leave.id, 'rejected')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px 8px' }}>
-                        <X size={14} strokeWidth={2.5} />
-                      </button>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
@@ -187,14 +224,52 @@ export default function LeavesPage() {
 
       {/* Apply Leave Modal */}
       {showApplyModal && (
-        <div className="modal-overlay" onClick={() => setShowApplyModal(false)}>
+        <div className="modal-overlay" onClick={() => { setError(null); setSuccess(null); setShowApplyModal(false); }}>
           <div className="modal-content" style={{ maxWidth: 450 }} onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Request Time Off</h2>
-              <button className="modal-close" onClick={() => setShowApplyModal(false)}>✕</button>
+              <button className="modal-close" onClick={() => { setError(null); setSuccess(null); setShowApplyModal(false); }}>✕</button>
             </div>
             <form onSubmit={handleApplyLeave}>
               <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {error && (
+                  <div style={{
+                    padding: '12px 16px',
+                    borderRadius: '12px',
+                    background: 'rgba(239, 68, 68, 0.12)',
+                    border: '1px solid rgba(239, 68, 68, 0.25)',
+                    color: '#fca5a5',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    fontSize: 14,
+                    fontWeight: 500,
+                    backdropFilter: 'blur(4px)',
+                    boxShadow: '0 4px 12px rgba(239, 68, 68, 0.05)'
+                  }}>
+                    <AlertCircle size={18} style={{ flexShrink: 0, color: '#f87171' }} />
+                    <span>{error}</span>
+                  </div>
+                )}
+                {success && (
+                  <div style={{
+                    padding: '12px 16px',
+                    borderRadius: '12px',
+                    background: 'rgba(16, 185, 129, 0.12)',
+                    border: '1px solid rgba(16, 185, 129, 0.25)',
+                    color: '#a7f3d0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    fontSize: 14,
+                    fontWeight: 500,
+                    backdropFilter: 'blur(4px)',
+                    boxShadow: '0 4px 12px rgba(16, 185, 129, 0.05)'
+                  }}>
+                    <CheckCircle2 size={18} style={{ flexShrink: 0, color: '#34d399' }} />
+                    <span>{success}</span>
+                  </div>
+                )}
                 {balances && (
                   <div style={{
                     background: 'var(--bg-input)', border: '1px solid var(--border)',
@@ -250,7 +325,7 @@ export default function LeavesPage() {
                 </div>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowApplyModal(false)}>Cancel</button>
+                <button type="button" className="btn btn-secondary" onClick={() => { setError(null); setSuccess(null); setShowApplyModal(false); }}>Cancel</button>
                 <button type="submit" className="btn btn-primary" disabled={submitting}>
                   {submitting ? 'Submitting...' : 'Submit Request'}
                 </button>
