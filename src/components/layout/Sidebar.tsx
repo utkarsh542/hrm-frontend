@@ -52,7 +52,6 @@ const navSections: NavSection[] = [
       { label: 'Job Postings', icon: <Briefcase size={iconSize} strokeWidth={iconStroke} />, href: '/recruitment', roles: ['admin', 'hr', 'manager'] },
       { label: 'Candidates', icon: <UserSearch size={iconSize} strokeWidth={iconStroke} />, href: '/recruitment/candidates', roles: ['admin', 'hr', 'manager'] },
       { label: 'Smart Hire AI', icon: <Sparkles size={iconSize} strokeWidth={iconStroke} />, href: '/recruitment/smart-hire', roles: ['admin', 'hr'] },
-      { label: 'Interviews', icon: <Target size={iconSize} strokeWidth={iconStroke} />, href: '/interviews', roles: ['admin', 'hr', 'manager'] },
     ],
   },
   {
@@ -115,7 +114,10 @@ export default function Sidebar({
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
-    return pathname.startsWith(href);
+    // Sibling pages shouldn't highlight parent routes with identical prefixes
+    if (href === '/recruitment') return pathname === '/recruitment';
+    if (href === '/attendance') return pathname === '/attendance';
+    return pathname === href || pathname.startsWith(href + '/');
   };
 
   const visibleSections = navSections

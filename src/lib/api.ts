@@ -61,6 +61,9 @@ export const api = {
   getApplications: (params?: string) => request(`/candidates/applications/all${params ? `?${params}` : ''}`),
   createApplication: (data: any) => request('/candidates/applications/', { method: 'POST', body: JSON.stringify(data) }),
   updateApplication: (id: number, data: any) => request(`/candidates/applications/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  sendOffer: (appId: number, data: { ctc: number; joining_date: string; probation_months?: number; valid_until: string }) =>
+    request<any>(`/candidates/applications/${appId}/send-offer`, { method: 'POST', body: JSON.stringify(data) }),
+  deleteApplication: (id: number) => request<any>(`/candidates/applications/${id}`, { method: 'DELETE' }),
   getPipeline: () => request('/candidates/applications/pipeline'),
 
   // Interviews
@@ -82,8 +85,8 @@ export const api = {
   getEmployeeTimeline: (id: number) => request(`/employees/${id}/timeline`),
 
   // Attendance & Leaves
-  checkIn: (employeeId: number, latitude?: number, longitude?: number, imageBase64?: string) => request('/attendance/check-in', { method: 'POST', body: JSON.stringify({ employee_id: employeeId, latitude, longitude, image_base_64: imageBase64 }) }),
-  checkOut: (employeeId: number, latitude?: number, longitude?: number, imageBase64?: string) => request('/attendance/check-out', { method: 'POST', body: JSON.stringify({ employee_id: employeeId, latitude, longitude, image_base_64: imageBase64 }) }),
+  checkIn: (employeeId: number, latitude?: number, longitude?: number, imageBase64?: string) => request('/attendance/check-in', { method: 'POST', body: JSON.stringify({ employee_id: employeeId, latitude, longitude, image_base_64: imageBase64, image_base64: imageBase64 }) }),
+  checkOut: (employeeId: number, latitude?: number, longitude?: number, imageBase64?: string) => request('/attendance/check-out', { method: 'POST', body: JSON.stringify({ employee_id: employeeId, latitude, longitude, image_base_64: imageBase64, image_base64: imageBase64 }) }),
   getAttendance: (params?: string) => request(`/attendance/records${params ? `?${params}` : ''}`),
   getLeaves: (params?: string) => request(`/attendance/leaves/${params ? `?${params}` : ''}`),
   applyLeave: (data: any) => request('/attendance/leaves/', { method: 'POST', body: JSON.stringify(data) }),

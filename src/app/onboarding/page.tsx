@@ -1,9 +1,9 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   ClipboardList, RotateCw, CheckCircle, BarChart3, Sparkles,
   FileText, BookOpen, KeyRound, Handshake, Monitor, ChevronDown,
-  AlertTriangle, Clock,
+  AlertTriangle, Clock, Search, X,
 } from 'lucide-react';
 
 import { API_BASE } from '@/lib/api';
@@ -40,6 +40,22 @@ export default function OnboardingPage() {
   const [employees, setEmployees] = useState<any[]>([]);
   const [selectedEmpId, setSelectedEmpId] = useState<number>(0);
   const [generating, setGenerating] = useState(false);
+
+  // Custom searchable employee dropdown states
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedEmp, setSelectedEmp] = useState<any>(null);
+
+  useEffect(() => {
+    const clickOutsideHandler = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', clickOutsideHandler);
+    return () => document.removeEventListener('mousedown', clickOutsideHandler);
+  }, []);
 
   useEffect(() => { loadPlans(); }, []);
 
@@ -107,7 +123,7 @@ export default function OnboardingPage() {
           </h1>
           <p style={{ color: 'var(--text-secondary)', margin: '4px 0 0' }}>AI-powered onboarding plans for new employees</p>
         </div>
-        <button className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 6 }} onClick={() => { setShowModal(true); loadEmployees(); }}>
+        <button className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 6 }} onClick={() => { setShowModal(true); loadEmployees(); setSearchTerm(''); setSelectedEmp(null); setSelectedEmpId(0); setShowDropdown(false); }}>
           <Sparkles size={16} /> Generate AI Plan
         </button>
       </div>
@@ -185,10 +201,43 @@ export default function OnboardingPage() {
                       const cat = categoryConfig[task.category] || categoryConfig.training;
                       const CatIcon = cat.Icon;
                       return (
-                        <div key={task.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', borderRadius: 10, background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-                          <input type="checkbox" checked={task.status === 'completed'}
-                            onChange={() => updateTask(task.id, task.status === 'completed' ? 'pending' : 'completed')}
-                            style={{ width: 18, height: 18, accentColor: '#6c63ff', cursor: 'pointer' }} />
+                        <div key={task.id} style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 12,
+                          padding: '14px 18px',
+                          borderRadius: 12,
+                          background: task.status === 'completed' ? 'rgba(108, 99, 255, 0.03)' : 'var(--bg-card)',
+                          border: task.status === 'completed' ? '1px dashed rgba(108, 99, 255, 0.3)' : '1px solid var(--border)',
+                          transition: 'all 0.25s ease',
+                          opacity: task.status === 'completed' ? 0.85 : 1,
+                          boxShadow: task.status === 'completed' ? 'none' : '0 2px 8px rgba(0,0,0,0.1)'
+                        }}>
+                          <button
+                            type="button"
+                            onClick={() => updateTask(task.id, task.status === 'completed' ? 'pending' : 'completed')}
+                            style={{
+                              width: 22,
+                              height: 22,
+                              borderRadius: '50%',
+                              border: task.status === 'completed' ? '2px solid var(--primary-light)' : '2px solid var(--text-tertiary)',
+                              background: task.status === 'completed' ? 'var(--primary-light)' : 'transparent',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              cursor: 'pointer',
+                              padding: 0,
+                              flexShrink: 0,
+                              transition: 'all 0.2s ease',
+                              boxShadow: task.status === 'completed' ? '0 0 10px rgba(108, 99, 255, 0.45)' : 'none',
+                            }}
+                          >
+                            {task.status === 'completed' && (
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                            )}
+                          </button>
                           <span style={{ padding: '3px 8px', borderRadius: 6, background: cat.bg, color: cat.color, fontSize: 10, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
                             <CatIcon size={11} /> {cat.label}
                           </span>
@@ -196,8 +245,8 @@ export default function OnboardingPage() {
                             <Clock size={10} /> Day {task.due_day}
                           </span>
                           <div style={{ flex: 1 }}>
-                            <div style={{ fontWeight: 600, fontSize: 14, textDecoration: task.status === 'completed' ? 'line-through' : 'none', opacity: task.status === 'completed' ? 0.6 : 1 }}>{task.title}</div>
-                            {task.description && <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>{task.description}</div>}
+                            <div style={{ fontWeight: 600, fontSize: 14, textDecoration: task.status === 'completed' ? 'line-through' : 'none', opacity: task.status === 'completed' ? 0.6 : 1, transition: 'all 0.2s' }}>{task.title}</div>
+                            {task.description && <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2, opacity: task.status === 'completed' ? 0.6 : 1 }}>{task.description}</div>}
                           </div>
                           <span style={{ padding: '2px 8px', borderRadius: 6, fontSize: 10, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 3,
                             background: task.priority === 'high' ? 'rgba(239,68,68,0.15)' : task.priority === 'medium' ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.15)',
@@ -219,19 +268,187 @@ export default function OnboardingPage() {
       {/* Generate Plan Modal */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal animate-scale-in" onClick={e => e.stopPropagation()} style={{ maxWidth: 480 }}>
-            <h2 style={{ margin: '0 0 8px', display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Sparkles size={22} style={{ color: '#6c63ff' }} /> Generate AI Onboarding Plan
-            </h2>
-            <p style={{ color: 'var(--text-secondary)', margin: '0 0 20px', fontSize: 14 }}>Select an employee to generate a personalized 30-day onboarding plan</p>
-            <div className="form-group">
-              <label className="form-label">Select Employee</label>
-              <select className="form-input" value={selectedEmpId} onChange={e => setSelectedEmpId(Number(e.target.value))}>
-                <option value={0}>-- Select Employee --</option>
-                {employees.map((emp: any) => <option key={emp.id} value={emp.id}>{emp.full_name} — {emp.designation}</option>)}
-              </select>
+          <div className="modal-content animate-scale-in" onClick={e => e.stopPropagation()} style={{ maxWidth: 520, padding: 0 }}>
+            <div className="modal-header" style={{ padding: '24px 28px', borderBottom: '1px solid var(--border)' }}>
+              <h2 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8, fontSize: 18, fontWeight: 700 }}>
+                <Sparkles size={22} style={{ color: '#6c63ff' }} /> Generate AI Onboarding Plan
+              </h2>
+              <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
             </div>
-            <div style={{ display: 'flex', gap: 10, marginTop: 20, justifyContent: 'flex-end' }}>
+            <div className="modal-body" style={{ padding: '24px 28px 12px' }}>
+              <p style={{ color: 'var(--text-secondary)', margin: '0 0 24px', fontSize: 14, lineHeight: 1.5 }}>
+                Select an employee from the active database to automatically generate a personalized, high-impact 30-day onboarding plan.
+              </p>
+            <div className="form-group" style={{ position: 'relative', marginBottom: 24 }} ref={dropdownRef}>
+              <label className="form-label" style={{ fontWeight: 600 }}>Select Employee</label>
+              
+              {/* Searchable input trigger field - Rectangular with comfortable paddings */}
+              <div style={{ position: 'relative' }}>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="Search employee by name or role..."
+                  value={searchTerm}
+                  onFocus={() => setShowDropdown(true)}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setShowDropdown(true);
+                    if (selectedEmp && e.target.value !== selectedEmp.full_name) {
+                      setSelectedEmp(null);
+                      setSelectedEmpId(0);
+                    }
+                  }}
+                  style={{
+                    paddingLeft: 44, // Generous padding to completely clear the Search icon
+                    paddingRight: 40, // Generous padding to clear the Clear icon
+                    background: 'var(--bg-input)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 6, // Sleek rectangular border, no highly curved side capsules
+                    width: '100%',
+                    height: 42,
+                    fontSize: 14,
+                    color: 'var(--text-primary)',
+                    fontFamily: 'Inter, sans-serif'
+                  }}
+                />
+                
+                {/* Search vector icon */}
+                <span style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)', pointerEvents: 'none', display: 'flex', alignItems: 'center' }}>
+                  <Search size={16} />
+                </span>
+                
+                {/* Clear / Toggle arrow */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (selectedEmp || searchTerm) {
+                      setSearchTerm('');
+                      setSelectedEmp(null);
+                      setSelectedEmpId(0);
+                    } else {
+                      setShowDropdown(!showDropdown);
+                    }
+                  }}
+                  style={{
+                    position: 'absolute',
+                    right: 16,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--text-tertiary)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: 0
+                  }}
+                >
+                  {(selectedEmp || searchTerm) ? <X size={15} /> : <ChevronDown size={15} style={{ transform: showDropdown ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />}
+                </button>
+              </div>
+
+              {/* Rich Rectangular Dropdown Panel */}
+              {showDropdown && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  right: 0,
+                  marginTop: 6, // Clean breathing space separating input and panel
+                  background: '#151525',
+                  border: '1px solid var(--border)',
+                  borderRadius: 6, // Match sleek rectangular style
+                  boxShadow: '0 12px 32px rgba(0, 0, 0, 0.45)',
+                  maxHeight: 180, // Nicely bounded height preventing screen overflow
+                  overflowY: 'auto',
+                  zIndex: 350,
+                  padding: 8, // Generous padding to prevent items from touching borders
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 4
+                }}>
+                  {employees.filter((emp: any) => 
+                    emp.full_name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                    (emp.designation && emp.designation.toLowerCase().includes(searchTerm.toLowerCase()))
+                  ).length > 0 ? (
+                    employees.filter((emp: any) => 
+                      emp.full_name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                      (emp.designation && emp.designation.toLowerCase().includes(searchTerm.toLowerCase()))
+                    ).map((emp: any) => {
+                      const isSelected = selectedEmpId === emp.id;
+                      return (
+                        <div
+                          key={emp.id}
+                          onClick={() => {
+                            setSelectedEmp(emp);
+                            setSelectedEmpId(emp.id);
+                            setSearchTerm(emp.full_name);
+                            setShowDropdown(false);
+                          }}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 12,
+                            padding: '10px 14px', // Generous internal padding to push text away from edges
+                            borderRadius: 6, // Match rectangular shape
+                            cursor: 'pointer',
+                            background: isSelected ? 'rgba(108, 99, 255, 0.15)' : 'transparent',
+                            border: isSelected ? '1px solid rgba(108, 99, 255, 0.25)' : '1px solid transparent',
+                            transition: 'all 0.15s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (!isSelected) e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!isSelected) e.currentTarget.style.background = 'transparent';
+                          }}
+                        >
+                          {/* Rich Employee Avatar initials */}
+                          <div style={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: '50%',
+                            background: isSelected ? 'var(--primary-light)' : 'rgba(108, 99, 255, 0.12)',
+                            color: isSelected ? '#ffffff' : '#6c63ff',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: 11,
+                            fontWeight: 800,
+                            flexShrink: 0
+                          }}>
+                            {emp.full_name.split(' ').map((n: any) => n[0]).join('').slice(0, 2).toUpperCase()}
+                          </div>
+                          
+                          {/* Rich Employee Meta info */}
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: 13, fontWeight: 700, color: '#ffffff', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                              {emp.full_name}
+                            </div>
+                            <div style={{ fontSize: 11, color: 'var(--text-secondary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', marginTop: 2 }}>
+                              {emp.designation || 'Active Employee'}
+                            </div>
+                          </div>
+                          
+                          {/* Checked Indicator */}
+                          {isSelected && (
+                            <span style={{ color: 'var(--primary-light)', display: 'flex', alignItems: 'center' }}>
+                              <CheckCircle size={14} fill="rgba(108, 99, 255, 0.1)" />
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div style={{ padding: '16px 12px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 12 }}>
+                      No matching employees found
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            </div>
+            <div className="modal-footer" style={{ padding: '20px 28px 24px', borderTop: '1px solid var(--border)', marginTop: 0 }}>
               <button className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
               <button className="btn btn-primary" onClick={generatePlan} disabled={!selectedEmpId || generating} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 {generating ? <><RotateCw size={14} className="animate-spin" /> Generating...</> : <><Sparkles size={14} /> Generate Plan</>}

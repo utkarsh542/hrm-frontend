@@ -79,11 +79,15 @@ export interface Interview {
   meeting_link?: string;
   ai_score?: number;
   ai_feedback?: string;
+  technical_score?: number;
+  communication_score?: number;
+  cultural_fit_score?: number;
   overall_score?: number;
   recommendation?: string;
   feedback?: string;
   candidate_name: string;
   job_title: string;
+  round_number?: number;
 }
 
 export interface Employee {

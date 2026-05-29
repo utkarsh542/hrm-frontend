@@ -1,12 +1,11 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { User } from '@/types';
 import { getInitials } from '@/lib/utils';
 import { api } from '@/lib/api';
 import {
-  Search, Bell, Shield, UserCog, Crown, UserCircle,
-  LogOut, User as UserIcon, Briefcase, Target, Lock, Menu,
+  Bell, Shield, UserCog, Crown, UserCircle,
+  LogOut, Lock, Menu,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -25,18 +24,9 @@ const ROLE_CONFIG: Record<Role, { label: string; color: string; bg: string; Icon
   employee: { label: 'Employee',      color: '#10b981', bg: 'rgba(16,185,129,0.12)', Icon: UserCircle },
 };
 
-interface SearchResult {
-  type: string; id: number; title: string; subtitle: string; link: string; icon: string;
-}
 interface NotifItem {
   id: number; title: string; message: string; type: string; is_read: boolean; created_at: string;
 }
-
-const typeIcons: Record<string, any> = {
-  employee: UserIcon,
-  candidate: Target,
-  job: Briefcase,
-};
 
 export default function Header({ 
   sidebarCollapsed, 
@@ -45,17 +35,11 @@ export default function Header({
   onToggleMobileSidebar 
 }: HeaderProps) {
   const [showMenu, setShowMenu] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [showSearch, setShowSearch] = useState(false);
   const [notifications, setNotifications] = useState<NotifItem[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [showNotifs, setShowNotifs] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const searchRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
-  const searchTimeoutRef = useRef<any>(null);
 
   // Password change states
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -91,7 +75,6 @@ export default function Header({
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) setShowMenu(false);
-      if (searchRef.current && !searchRef.current.contains(e.target as Node)) setShowSearch(false);
       if (notifRef.current && !notifRef.current.contains(e.target as Node)) setShowNotifs(false);
     };
     document.addEventListener('mousedown', handler);
@@ -104,19 +87,6 @@ export default function Header({
         .then(d => setUnreadCount(d.count || 0)).catch(() => {});
     }
   }, [currentUser?.id]);
-
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
-    if (query.length < 2) { setSearchResults([]); setShowSearch(false); return; }
-    searchTimeoutRef.current = setTimeout(async () => {
-      try {
-        const data = await api.unifiedSearch(query);
-        setSearchResults(data.results || []);
-        setShowSearch(true);
-      } catch (e) { console.error(e); }
-    }, 300);
-  };
 
   const loadNotifications = async () => {
     if (!currentUser?.id) return;
@@ -172,40 +142,6 @@ export default function Header({
               <Menu size={18} />
             </button>
           )}
-          <div className="header-search" ref={searchRef} style={{ position: 'relative' }}>
-            <span className="search-icon"><Search size={16} strokeWidth={2} /></span>
-            <input type="text" placeholder="Search employees, jobs, candidates..."
-              value={searchQuery} onChange={e => handleSearch(e.target.value)}
-              onFocus={() => searchResults.length > 0 && setShowSearch(true)} />
-            {showSearch && searchResults.length > 0 && (
-              <div style={{
-                position: 'absolute', top: '110%', left: 0, right: 0, zIndex: 300,
-                background: 'var(--bg-card)', border: '1px solid var(--border)',
-                borderRadius: 12, boxShadow: '0 12px 40px rgba(0,0,0,0.5)', overflow: 'hidden',
-              }}>
-                {searchResults.map((r, i) => {
-                  const SIcon = typeIcons[r.type] || UserIcon;
-                  return (
-                    <div key={i} onClick={() => { router.push(r.link); setShowSearch(false); setSearchQuery(''); }}
-                      style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px',
-                        cursor: 'pointer', borderBottom: '1px solid var(--border)', transition: 'background 0.15s' }}
-                      onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-input)'}
-                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                      <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(108,99,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6c63ff' }}>
-                        <SIcon size={16} strokeWidth={2} />
-                      </div>
-                      <div>
-                        <div style={{ fontWeight: 600, fontSize: 13 }}>{r.title}</div>
-                        <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{r.subtitle}</div>
-                      </div>
-                      <span style={{ marginLeft: 'auto', padding: '2px 8px', borderRadius: 6, fontSize: 10,
-                        fontWeight: 700, background: 'rgba(108,99,255,0.15)', color: '#6c63ff' }}>{r.type}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
         </div>
 
         <div className="header-right">

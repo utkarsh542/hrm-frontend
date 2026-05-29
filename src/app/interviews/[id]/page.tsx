@@ -202,6 +202,7 @@ export default function LiveInterviewPage() {
             Interview Details
           </h3>
           {[
+            ['Interview Round', `Round ${session?.round_number || 1}`],
             ['Questions', `${questions.length} questions`],
             ['Type', session?.interview_type?.replace('_', ' ') || 'Technical'],
             ['Time per question', '2 minutes'],

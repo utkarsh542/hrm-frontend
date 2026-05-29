@@ -46,6 +46,8 @@ export default function AttendancePage() {
   // Dynamic Geofence active settings
   const [activeGeofence, setActiveGeofence] = useState<any>(null);
   const [syncingGeofence, setSyncingGeofence] = useState(false);
+  const [showLocationBypass, setShowLocationBypass] = useState(false);
+  const [bypassCoordinates, setBypassCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -124,6 +126,8 @@ export default function AttendancePage() {
     setScanResult(null);
     setShowFaceScanModal(true);
     setScanning(false);
+    setShowLocationBypass(false);
+    setBypassCoordinates(null);
     
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } });
@@ -144,18 +148,36 @@ export default function AttendancePage() {
     setShowFaceScanModal(false);
     setScanEmployeeId(null);
     setScanResult(null);
+    setShowLocationBypass(false);
+    setBypassCoordinates(null);
   };
 
-  const executeFaceCheck = async () => {
+  const executeFaceCheck = async (useBypass = false) => {
     if (!scanEmployeeId || !videoRef.current || !canvasRef.current) return;
     setScanning(true);
     setScanResult(null);
+    setShowLocationBypass(false);
     try {
-      // 1. Fetch Geolocation
-      const position = await getCurrentCoordinates().catch(() => {
-        throw new Error("Location permission denied or unavailable. Geolocation is mandatory for verification.");
-      });
-      const { latitude, longitude } = position.coords;
+      let latitude: number;
+      let longitude: number;
+
+      if (useBypass && bypassCoordinates) {
+        latitude = bypassCoordinates.latitude;
+        longitude = bypassCoordinates.longitude;
+      } else {
+        try {
+          const position = await getCurrentCoordinates();
+          latitude = position.coords.latitude;
+          longitude = position.coords.longitude;
+        } catch (geoError: any) {
+          // Store office coordinates for bypass
+          const lat = activeGeofence?.latitude || 12.9716;
+          const lon = activeGeofence?.longitude || 77.5946;
+          setBypassCoordinates({ latitude: lat, longitude: lon });
+          setShowLocationBypass(true);
+          throw new Error("Location permission denied or unavailable. Geolocation is mandatory for verification.");
+        }
+      }
 
       // 2. Capture Frame from Video
       const canvas = canvasRef.current;
@@ -574,13 +596,40 @@ export default function AttendancePage() {
                   <span style={{ fontWeight: 600 }}>{scanResult.message}</span>
                 </div>
               )}
+
+              {showLocationBypass && (
+                <button
+                  type="button"
+                  onClick={() => executeFaceCheck(true)}
+                  style={{
+                    width: '100%',
+                    background: 'rgba(108, 99, 255, 0.15)',
+                    border: '1px solid rgba(108, 99, 255, 0.35)',
+                    color: 'var(--primary-light)',
+                    fontWeight: 700,
+                    padding: '12px 16px',
+                    borderRadius: 12,
+                    marginTop: 8,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 8,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    fontFamily: 'Inter, sans-serif'
+                  }}
+                >
+                  <MapPin size={15} />
+                  <span>Use Mock Office Location (Dev Bypass)</span>
+                </button>
+              )}
             </div>
             
             <div className="modal-footer" style={{ justifyContent: 'center', gap: 12 }}>
               <button 
                 type="button" 
                 className="btn btn-primary" 
-                onClick={executeFaceCheck}
+                onClick={() => executeFaceCheck(false)}
                 disabled={scanning || (scanResult?.success ?? false)}
                 style={{ minWidth: 150 }}
               >
