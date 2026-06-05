@@ -86,7 +86,7 @@ export default function RecruitmentPage() {
     <div className="animate-fade-in">
       <div className="page-header">
         <h1 style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-          <Briefcase className="text-primary-light" size={28} /> Job Postings
+          <Briefcase style={{ color: 'var(--primary)' }} size={28} /> Job Postings
         </h1>
         <button className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }} onClick={() => { setError(null); setShowCreateModal(true); }}>
           <Plus size={16} /> Create Job

@@ -531,7 +531,7 @@ export default function AttendancePage() {
           <div className="modal-content animate-scale-in" style={{ maxWidth: 420, textAlign: 'center' }} onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h2 style={{ display: 'flex', alignItems: 'center', gap: 8, margin: 0, fontSize: 18 }}>
-                <Camera size={20} className="text-primary-light" />
+                <Camera size={20} style={{ color: 'var(--primary)' }} />
                 <span>Face Security Verification</span>
               </h2>
               <button className="modal-close" onClick={closeFaceScan}>✕</button>

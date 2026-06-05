@@ -43,7 +43,7 @@ export default function PayrollPage() {
     <div className="animate-fade-in">
       <div className="page-header">
         <h1 style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-          <Coins className="text-primary-light" size={28} /> Payroll
+          <Coins style={{ color: 'var(--primary)' }} size={28} /> Payroll
         </h1>
         {isAdminOrHR && (
           <button className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }} onClick={() => setShowRunModal(true)}>
@@ -135,7 +135,7 @@ export default function PayrollPage() {
         <div className="card animate-scale-in">
           <h3 style={{ fontSize: 16, marginBottom: 16, display: 'inline-flex', alignItems: 'center', gap: 8, width: '100%', justifyContent: 'space-between' }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-              <ClipboardList className="text-primary-light" size={20} />
+              <ClipboardList style={{ color: 'var(--primary)' }} size={20} />
               {isAdminOrHR ? `Payslips — ${MONTHS[selectedRun.month - 1]} ${selectedRun.year}` : `My Payslip — ${MONTHS[selectedRun.month - 1]} ${selectedRun.year}`}
             </span>
             <button className="btn btn-ghost btn-sm" onClick={() => setSelectedRun(null)}>✕ Close</button>

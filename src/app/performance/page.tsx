@@ -118,7 +118,7 @@ export default function PerformancePage() {
     <div className="animate-fade-in">
       <div className="page-header">
         <h1 style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-          <Award className="text-primary-light" size={28} /> Performance
+          <Award style={{ color: 'var(--primary)' }} size={28} /> Performance
         </h1>
         <RoleGuard roles={['admin', 'hr', 'manager']}>
           <button 
@@ -178,7 +178,7 @@ export default function PerformancePage() {
         {ratingData.length > 0 && (
           <div className="chart-card" style={{ marginBottom: 24 }}>
             <h3 style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-              <BarChart3 className="text-primary-light" size={18} /> Employee Ratings
+              <BarChart3 style={{ color: 'var(--primary)' }} size={18} /> Employee Ratings
             </h3>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={ratingData}>
