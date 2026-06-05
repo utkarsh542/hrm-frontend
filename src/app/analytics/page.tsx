@@ -43,7 +43,7 @@ export default function AnalyticsPage() {
   const maxCompCTC = compensation?.department_compensation ? Math.max(...compensation.department_compensation.map((d: any) => d.avg_ctc), 1) : 1;
 
   return (
-    <div className="animate-fade-in" style={{ padding: '24px 32px' }}>
+    <div className="animate-fade-in page-container">
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(37,99,235,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)' }}>
@@ -67,7 +67,7 @@ export default function AnalyticsPage() {
 
       {/* Stats Row */}
       {workforce && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16, marginBottom: 28 }}>
+        <div className="stats-grid" style={{ marginBottom: 28 }}>
           {[
             { label: 'Total Employees', value: workforce.active_employees, Icon: Users, color: 'var(--primary)' },
             { label: 'Avg CTC', value: fmt(workforce.avg_ctc), Icon: Wallet, color: '#10b981' },
@@ -90,7 +90,7 @@ export default function AnalyticsPage() {
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 24 }}>
+      <div className="charts-grid" style={{ marginBottom: 24 }}>
         {/* Department Distribution */}
         {workforce?.department_distribution && (
           <div style={{ background: 'var(--bg-card)', borderRadius: 16, padding: 24, border: '1px solid var(--border)' }}>
@@ -114,7 +114,7 @@ export default function AnalyticsPage() {
         {workforce?.gender_distribution && (
           <div style={{ background: 'var(--bg-card)', borderRadius: 16, padding: 24, border: '1px solid var(--border)' }}>
             <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Users size={18} style={{ color: 'var(--primary)' }} /> Gender Distribution</h3>
-            <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginBottom: 16 }}>
+            <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginBottom: 16, flexWrap: 'wrap' }}>
               {[
                 { label: 'Male', count: workforce.gender_distribution.male, color: '#3b82f6' },
                 { label: 'Female', count: workforce.gender_distribution.female, color: '#ec4899' },
@@ -138,7 +138,7 @@ export default function AnalyticsPage() {
         {workforce?.tenure_distribution && (
           <div style={{ background: 'var(--bg-card)', borderRadius: 16, padding: 24, border: '1px solid var(--border)' }}>
             <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Target size={18} style={{ color: 'var(--primary)' }} /> Tenure Distribution</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 12 }}>
               {Object.entries(workforce.tenure_distribution).map(([label, count]) => {
                 const colors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
                 const i = Object.keys(workforce.tenure_distribution).indexOf(label);
@@ -177,7 +177,7 @@ export default function AnalyticsPage() {
       {insights?.insights && insights.insights.length > 0 && (
         <div style={{ background: 'var(--bg-card)', borderRadius: 16, padding: 24, border: '1px solid var(--border)', marginBottom: 24 }}>
           <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Sparkles size={18} style={{ color: 'var(--primary)' }} /> AI-Powered Insights</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 12 }}>
             {insights.insights.map((ins: any, i: number) => {
               const typeC: Record<string, { bg: string; color: string; Icon: any }> = {
                 positive: { bg: 'rgba(16,185,129,0.15)', color: '#10b981', Icon: CheckCircle },
@@ -207,8 +207,8 @@ export default function AnalyticsPage() {
       {hiring?.source_effectiveness && hiring.source_effectiveness.length > 0 && (
         <div style={{ background: 'var(--bg-card)', borderRadius: 16, padding: 24, border: '1px solid var(--border)' }}>
           <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Target size={18} style={{ color: 'var(--primary)' }} /> Hiring Source Effectiveness</h3>
-          <div className="data-table" style={{ borderRadius: 12, overflow: 'hidden' }}>
-            <table>
+          <div className="table-container">
+            <table className="data-table">
               <thead><tr><th>Source</th><th>Applications</th><th>Hired</th><th>Conversion Rate</th></tr></thead>
               <tbody>
                 {hiring.source_effectiveness.map((s: any) => (
