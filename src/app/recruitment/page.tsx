@@ -83,7 +83,7 @@ export default function RecruitmentPage() {
   if (loading) return <div className="loading-page"><div className="spinner"></div></div>;
 
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in page-container">
       <div className="page-header">
         <h1 style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
           <Briefcase style={{ color: 'var(--primary)' }} size={28} /> Job Postings
@@ -93,7 +93,7 @@ export default function RecruitmentPage() {
         </button>
       </div>
 
-      <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+      <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon green">
             <ClipboardList size={24} />
@@ -172,18 +172,18 @@ export default function RecruitmentPage() {
                   marginBottom: 16,
                   padding: '12px 16px',
                   borderRadius: '12px',
-                  background: 'rgba(239, 68, 68, 0.12)',
-                  border: '1px solid rgba(239, 68, 68, 0.25)',
-                  color: '#fca5a5',
+                  background: 'var(--accent-red-light)',
+                  border: '1px solid rgba(220, 38, 38, 0.25)',
+                  color: 'var(--accent-red)',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 10,
                   fontSize: 14,
                   fontWeight: 500,
                   backdropFilter: 'blur(4px)',
-                  boxShadow: '0 4px 12px rgba(239, 68, 68, 0.05)'
+                  boxShadow: 'var(--shadow-sm)'
                 }}>
-                  <AlertCircle size={18} style={{ flexShrink: 0, color: '#f87171' }} />
+                  <AlertCircle size={18} style={{ flexShrink: 0, color: 'var(--accent-red)' }} />
                   <span>{error}</span>
                 </div>
               )}
