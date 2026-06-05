@@ -89,20 +89,73 @@ export default function AICopilot() {
 
           {/* Messages */}
           <div style={{ flex: 1, overflowY: 'auto', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {messages.map((m, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
-                <div style={{
-                  maxWidth: '82%', padding: '8px 12px', borderRadius: 12, fontSize: 13, lineHeight: 1.5,
-                  background: m.role === 'user' ? 'var(--primary)' : 'var(--bg-input)',
-                  color: m.role === 'user' ? '#fff' : 'var(--text-primary)',
-                  borderBottomRightRadius: m.role === 'user' ? 2 : 12,
-                  borderBottomLeftRadius: m.role === 'assistant' ? 2 : 12,
-                  whiteSpace: 'pre-wrap',
-                }}>
-                  {m.content}
+            {messages.map((m, i) => {
+              const renderMessageContent = (content: string) => {
+                if (!content) return null;
+                const lines = content.split('\n');
+                return lines.map((line, lineIdx) => {
+                  let isBullet = false;
+                  let cleanLine = line;
+                  
+                  // Parse bullet points
+                  if (line.trim().startsWith('- ')) {
+                    isBullet = true;
+                    cleanLine = line.trim().substring(2);
+                  } else if (line.trim().startsWith('* ')) {
+                    isBullet = true;
+                    cleanLine = line.trim().substring(2);
+                  }
+
+                  const parts = [];
+                  const boldRegex = /\*\*(.*?)\*\*/g;
+                  let match;
+                  let lastIndex = 0;
+
+                  while ((match = boldRegex.exec(cleanLine)) !== null) {
+                    if (match.index > lastIndex) {
+                      parts.push(cleanLine.substring(lastIndex, match.index));
+                    }
+                    parts.push(<strong key={match.index} style={{ fontWeight: 700 }}>{match[1]}</strong>);
+                    lastIndex = boldRegex.lastIndex;
+                  }
+                  
+                  if (lastIndex < cleanLine.length) {
+                    parts.push(cleanLine.substring(lastIndex));
+                  }
+
+                  const contentNode = parts.length > 0 ? parts : cleanLine;
+
+                  if (isBullet) {
+                    return (
+                      <li key={lineIdx} style={{ marginLeft: 16, marginBottom: 4, listStyleType: 'disc' }}>
+                        {contentNode}
+                      </li>
+                    );
+                  }
+
+                  return (
+                    <div key={lineIdx} style={{ minHeight: '1.2em', marginBottom: lineIdx < lines.length - 1 ? 6 : 0 }}>
+                      {contentNode}
+                    </div>
+                  );
+                });
+              };
+
+              return (
+                <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
+                  <div style={{
+                    maxWidth: '82%', padding: '8px 12px', borderRadius: 12, fontSize: 13, lineHeight: 1.5,
+                    background: m.role === 'user' ? 'var(--primary)' : 'var(--bg-input)',
+                    color: m.role === 'user' ? '#fff' : 'var(--text-primary)',
+                    borderBottomRightRadius: m.role === 'user' ? 2 : 12,
+                    borderBottomLeftRadius: m.role === 'assistant' ? 2 : 12,
+                    whiteSpace: 'pre-wrap',
+                  }}>
+                    {renderMessageContent(m.content)}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
             {loading && (
               <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
                 <div style={{ padding: '8px 14px', background: 'var(--bg-input)', borderRadius: 12, fontSize: 18 }}>
