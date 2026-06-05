@@ -454,7 +454,7 @@ export default function CandidatesPipelinePage() {
             color: activeTab === 'pipeline' ? 'var(--primary-light)' : 'var(--text-tertiary)',
             border: 'none',
             borderBottom: activeTab === 'pipeline' ? '3px solid var(--primary-light)' : '3px solid transparent',
-            background: activeTab === 'pipeline' ? 'rgba(108, 99, 255, 0.08)' : 'transparent',
+            background: activeTab === 'pipeline' ? 'rgba(37, 99, 235, 0.08)' : 'transparent',
             display: 'inline-flex',
             alignItems: 'center',
             gap: 8,
@@ -474,7 +474,7 @@ export default function CandidatesPipelinePage() {
             color: activeTab === 'interviews' ? 'var(--primary-light)' : 'var(--text-tertiary)',
             border: 'none',
             borderBottom: activeTab === 'interviews' ? '3px solid var(--primary-light)' : '3px solid transparent',
-            background: activeTab === 'interviews' ? 'rgba(108, 99, 255, 0.08)' : 'transparent',
+            background: activeTab === 'interviews' ? 'rgba(37, 99, 235, 0.08)' : 'transparent',
             display: 'inline-flex',
             alignItems: 'center',
             gap: 8,
@@ -618,17 +618,17 @@ export default function CandidatesPipelinePage() {
             marginBottom: 20,
             padding: '16px 20px',
             borderRadius: '16px',
-            background: 'linear-gradient(135deg, rgba(108, 99, 255, 0.08) 0%, rgba(139, 92, 246, 0.03) 100%)',
-            border: '1px solid rgba(108, 99, 255, 0.15)',
-            boxShadow: '0 8px 32px rgba(108, 99, 255, 0.05)',
+            background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(139, 92, 246, 0.03) 100%)',
+            border: '1px solid rgba(37, 99, 235, 0.15)',
+            boxShadow: '0 8px 32px rgba(37, 99, 235, 0.05)',
             backdropFilter: 'blur(10px)',
             position: 'relative',
             overflow: 'hidden'
           }}>
             <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
               <div style={{
-                background: 'rgba(108, 99, 255, 0.15)',
-                color: 'var(--primary-light)',
+                background: 'rgba(37, 99, 235, 0.15)',
+                color: 'var(--primary)',
                 padding: 8,
                 borderRadius: '12px',
                 display: 'flex',
@@ -723,12 +723,12 @@ export default function CandidatesPipelinePage() {
                                       gap: 4, 
                                       padding: '2px 8px', 
                                       borderRadius: '6px', 
-                                      background: r.id === interview.id ? 'rgba(108, 99, 255, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                                      border: r.id === interview.id ? '1px solid rgba(108, 99, 255, 0.45)' : '1px solid rgba(255, 255, 255, 0.06)',
+                                      background: r.id === interview.id ? 'rgba(37, 99, 235, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                                      border: r.id === interview.id ? '1px solid rgba(37, 99, 235, 0.45)' : '1px solid rgba(255, 255, 255, 0.06)',
                                       color: r.id === interview.id ? '#ffffff' : 'var(--text-secondary)',
                                       fontSize: '10px',
                                       fontWeight: r.id === interview.id ? 700 : 500,
-                                      boxShadow: r.id === interview.id ? '0 0 8px rgba(108, 99, 255, 0.2)' : 'none'
+                                      boxShadow: r.id === interview.id ? '0 0 8px rgba(37, 99, 235, 0.2)' : 'none'
                                     }}
                                     title={`${r.interview_type.toUpperCase()} round by ${r.interviewer_name || 'AI'} - ${r.status.toUpperCase()} ${r.overall_score ? `(${r.overall_score}/5)` : ''}`}
                                   >
@@ -773,7 +773,7 @@ export default function CandidatesPipelinePage() {
                                     Human Led
                                   </span>
                                 )}
-                                <button type="button" className="btn btn-sm btn-secondary" onClick={() => openScorecard(interview)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, borderColor: 'rgba(108, 99, 255, 0.4)' }} title="Submit Human Interview Scorecard">
+                                <button type="button" className="btn btn-sm btn-secondary" onClick={() => openScorecard(interview)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, borderColor: 'rgba(37, 99, 235, 0.4)' }} title="Submit Human Interview Scorecard">
                                   <Star size={13} style={{ color: 'var(--accent-orange)' }} />
                                   <span>Scorecard</span>
                                 </button>
@@ -812,7 +812,7 @@ export default function CandidatesPipelinePage() {
       {showDossier && selectedApp && (
         <div className="modal-overlay" onClick={() => setShowDossier(false)}>
           <div className="modal-content" style={{ maxWidth: 900, width: '90%', padding: 0 }} onClick={e => e.stopPropagation()}>
-            <div className="modal-header" style={{ padding: '20px 24px', borderBottom: '1px solid var(--border)', background: 'linear-gradient(135deg, rgba(108, 99, 255, 0.05) 0%, rgba(139, 92, 246, 0.02) 100%)' }}>
+            <div className="modal-header" style={{ padding: '20px 24px', borderBottom: '1px solid var(--border)', background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(139, 92, 246, 0.02) 100%)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{
                   width: 48,
@@ -831,7 +831,7 @@ export default function CandidatesPipelinePage() {
                 <div>
                   <h2 style={{ margin: 0, fontSize: 20 }}>{selectedApp.candidate_name}</h2>
                   <p style={{ margin: '2px 0 0 0', fontSize: 13, color: 'var(--text-tertiary)' }}>
-                    Applying for <strong style={{ color: 'var(--primary-light)' }}>{selectedApp.job_title}</strong> · Stage: <span style={{ textTransform: 'uppercase', fontWeight: 700 }} className="badge badge-primary">{selectedApp.status}</span>
+                    Applying for <strong style={{ color: 'var(--primary)' }}>{selectedApp.job_title}</strong> · Stage: <span style={{ textTransform: 'uppercase', fontWeight: 700 }} className="badge badge-primary">{selectedApp.status}</span>
                   </p>
                 </div>
               </div>
@@ -917,8 +917,8 @@ export default function CandidatesPipelinePage() {
                   <div style={{
                     padding: 16,
                     borderRadius: 16,
-                    background: 'linear-gradient(135deg, rgba(108, 99, 255, 0.05) 0%, rgba(139, 92, 246, 0.02) 100%)',
-                    border: '1px solid rgba(108, 99, 255, 0.15)',
+                    background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(139, 92, 246, 0.02) 100%)',
+                    border: '1px solid rgba(37, 99, 235, 0.15)',
                     display: 'flex',
                     gap: 16,
                     alignItems: 'center'
@@ -941,7 +941,7 @@ export default function CandidatesPipelinePage() {
                     </div>
                     <div style={{ flex: 1 }}>
                       <h4 style={{ margin: '0 0 4px 0', display: 'flex', alignItems: 'center', gap: 6, fontSize: 14 }}>
-                        <Bot size={16} style={{ color: '#6c63ff' }} /> AI Resume Match Analysis
+                        <Bot size={16} style={{ color: 'var(--primary)' }} /> AI Resume Match Analysis
                       </h4>
                       <p style={{ margin: 0, fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>
                         {selectedApp.ai_summary || "The AI screened this candidate's resume and matched their experience structure."}
@@ -953,7 +953,7 @@ export default function CandidatesPipelinePage() {
                 {/* Private Recruiter Desk Notes */}
                 <div className="card" style={{ padding: 18 }}>
                   <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <ClipboardList size={16} style={{ color: '#6c63ff' }} />
+                    <ClipboardList size={16} style={{ color: 'var(--primary)' }} />
                     <span>Recruiter Private Notes & Assessment Dossier</span>
                   </h3>
                   <textarea
@@ -978,7 +978,7 @@ export default function CandidatesPipelinePage() {
                 {/* Candidate Interview Timeline Journey */}
                 <div>
                   <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <Calendar size={16} style={{ color: '#6c63ff' }} />
+                    <Calendar size={16} style={{ color: 'var(--primary)' }} />
                     <span>Interview & Assessment Journey ({candidateInterviews.length})</span>
                   </h3>
                   
@@ -998,7 +998,7 @@ export default function CandidatesPipelinePage() {
                         >
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
                             <div>
-                              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--primary-light)', textTransform: 'uppercase' }}>
+                              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase' }}>
                                 Round {int.round_number || 1} · {int.interview_type.replace('_', ' ')}
                               </span>
                               <h4 style={{ margin: '2px 0 0 0', fontSize: 14, fontWeight: 600 }}>
@@ -1033,7 +1033,7 @@ export default function CandidatesPipelinePage() {
                               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <span style={{ color: 'var(--text-tertiary)' }}>Scheduled: {formatDateTime(int.scheduled_at)}</span>
                                 {int.meeting_link && (
-                                  <a href={int.meeting_link} target="_blank" rel="noreferrer" style={{ fontSize: 12, textDecoration: 'underline', color: 'var(--primary-light)' }}>
+                                  <a href={int.meeting_link} target="_blank" rel="noreferrer" style={{ fontSize: 12, textDecoration: 'underline', color: 'var(--primary)' }}>
                                     Meeting Room Link
                                   </a>
                                 )}
@@ -1076,7 +1076,7 @@ export default function CandidatesPipelinePage() {
                   <button 
                     className="btn btn-info" 
                     onClick={openOfferModal}
-                    style={{ background: 'linear-gradient(135deg, #6c63ff, #8b5cf6)', color: 'white', border: 'none' }}
+                    style={{ background: 'linear-gradient(135deg, var(--primary), #8b5cf6)', color: 'white', border: 'none' }}
                   >
                     Draft Offer & Annexure
                   </button>
@@ -1174,13 +1174,13 @@ export default function CandidatesPipelinePage() {
               {/* Dynamic Compensation Annexure Preview Table */}
               {ctc > 0 && (
                 <div style={{
-                  background: 'rgba(108, 99, 255, 0.05)',
-                  border: '1px solid rgba(108, 99, 255, 0.15)',
+                  background: 'rgba(37, 99, 235, 0.05)',
+                  border: '1px solid rgba(37, 99, 235, 0.15)',
                   borderRadius: 12,
                   padding: 16,
                   marginTop: 8
                 }}>
-                  <h4 style={{ margin: '0 0 12px 0', fontSize: 13, color: 'var(--primary-light)', fontWeight: 700 }}>
+                  <h4 style={{ margin: '0 0 12px 0', fontSize: 13, color: 'var(--primary)', fontWeight: 700 }}>
                     Salary Structure Preview (Annexure)
                   </h4>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 12 }}>

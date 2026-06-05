@@ -71,7 +71,7 @@ const navSections: NavSection[] = [
     title: 'Finance',
     roles: ['admin', 'hr', 'manager', 'employee'],
     items: [
-      { label: 'Payroll', icon: <Wallet size={iconSize} strokeWidth={iconStroke} />, href: '/payroll', roles: ['admin', 'hr'] },
+      { label: 'Payroll', icon: <Wallet size={iconSize} strokeWidth={iconStroke} />, href: '/payroll', roles: ['admin', 'hr', 'manager', 'employee'] },
       { label: 'Expenses', icon: <CreditCard size={iconSize} strokeWidth={iconStroke} />, href: '/expenses', roles: ['admin', 'hr', 'manager', 'employee'] },
       { label: 'Benchmarking', icon: <TrendingUp size={iconSize} strokeWidth={iconStroke} />, href: '/benchmarking', roles: ['admin', 'hr'] },
     ],
@@ -129,10 +129,10 @@ export default function Sidebar({
     .filter(s => s.items.length > 0);
 
   const roleColors: Record<Role, string> = {
-    admin: '#ef4444',
-    hr: '#6c63ff',
-    manager: '#f59e0b',
-    employee: '#10b981',
+    admin: '#DC2626',
+    hr: '#2563EB',
+    manager: '#D97706',
+    employee: '#059669',
   };
 
   const roleLabels: Record<Role, string> = {

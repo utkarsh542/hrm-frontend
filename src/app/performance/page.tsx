@@ -185,7 +185,7 @@ export default function PerformancePage() {
                 <XAxis dataKey="name" tick={{ fill: '#a0a0b8', fontSize: 12 }} />
                 <YAxis domain={[0, 5]} tick={{ fill: '#6b6b85', fontSize: 12 }} />
                 <Tooltip contentStyle={{ background: '#1e1e35', border: '1px solid #2a2a45', borderRadius: 8, color: '#f0f0f5' }} />
-                <Bar dataKey="rating" fill="#6c63ff" radius={[6, 6, 0, 0]} barSize={40} />
+                <Bar dataKey="rating" fill="var(--primary)" radius={[6, 6, 0, 0]} barSize={40} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -279,7 +279,7 @@ export default function PerformancePage() {
               <div style={{ marginBottom: 8 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 4 }}>
                   <span>Progress</span>
-                  <span style={{ fontWeight: 700, color: 'var(--primary-light)' }}>{g.progress}%</span>
+                  <span style={{ fontWeight: 700, color: 'var(--primary)' }}>{g.progress}%</span>
                 </div>
                 <div style={{ height: 6, background: 'var(--bg-input)', borderRadius: 3, overflow: 'hidden' }}>
                   <div style={{ height: '100%', width: `${g.progress}%`, background: 'linear-gradient(90deg, var(--primary), var(--accent-purple))', borderRadius: 3, transition: 'width 0.5s ease' }}></div>
@@ -376,7 +376,7 @@ export default function PerformancePage() {
                   <div className="form-group" key={field} style={{ marginBottom: 12 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 4 }}>
                       <span className="form-label" style={{ margin: 0, fontWeight: 500 }}>{label}</span>
-                      <strong style={{ color: 'var(--primary-light)' }}>{(updateForm as any)[field]} / 5</strong>
+                      <strong style={{ color: 'var(--primary)' }}>{(updateForm as any)[field]} / 5</strong>
                     </div>
                     <input 
                       type="range" 

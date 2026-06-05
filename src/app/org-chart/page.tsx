@@ -29,7 +29,7 @@ function OrgCard({ node, children }: { node: OrgNode; children?: React.ReactNode
         </div>
         <div style={{ fontWeight: 700, fontSize: 13 }}>{node.full_name}</div>
         <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>{node.designation}</div>
-        <div style={{ fontSize: 10, color: 'var(--primary-light)', marginTop: 4 }}>{node.department_name}</div>
+        <div style={{ fontSize: 10, color: 'var(--primary)', marginTop: 4 }}>{node.department_name}</div>
       </div>
       {children && (
         <div style={{ display: 'flex', gap: 16, marginTop: 0, position: 'relative', paddingTop: 24 }}>
@@ -80,7 +80,7 @@ export default function OrgChartPage() {
     <div className="animate-fade-in">
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ color: '#6c63ff', display: 'flex', alignItems: 'center' }}>
+          <div style={{ color: 'var(--primary)', display: 'flex', alignItems: 'center' }}>
             <Network size={28} strokeWidth={2} />
           </div>
           <h1 style={{ margin: 0 }}>Org Chart</h1>

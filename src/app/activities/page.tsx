@@ -10,7 +10,7 @@ import {
 import { formatDate } from '@/lib/utils';
 
 const CATEGORIES = [
-  { value: '', label: 'All Activities', Icon: CalendarDays, color: '#6c63ff', bg: 'rgba(108,99,255,0.12)' },
+  { value: '', label: 'All Activities', Icon: CalendarDays, color: 'var(--primary)', bg: 'rgba(37,99,235,0.12)' },
   { value: 'training', label: 'Training', Icon: GraduationCap, color: '#10b981', bg: 'rgba(16,185,129,0.12)' },
   { value: 'event', label: 'Company Events', Icon: CalendarDays, color: '#3b82f6', bg: 'rgba(59,130,246,0.12)' },
   { value: 'team_building', label: 'Team Building', Icon: PartyPopper, color: '#f59e0b', bg: 'rgba(245,158,11,0.12)' },
@@ -112,7 +112,7 @@ export default function ActivitiesPage() {
       {/* Header */}
       <div className="page-header" style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ color: '#6c63ff', display: 'flex', alignItems: 'center' }}>
+          <div style={{ color: 'var(--primary)', display: 'flex', alignItems: 'center' }}>
             <CalendarDays size={28} strokeWidth={2} />
           </div>
           <div>
@@ -298,7 +298,7 @@ export default function ActivitiesPage() {
                           href={act.location} 
                           target="_blank" 
                           rel="noopener noreferrer" 
-                          style={{ color: '#6c63ff', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4, fontWeight: 600 }}
+                          style={{ color: 'var(--primary)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4, fontWeight: 600 }}
                           onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
                           onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
                         >

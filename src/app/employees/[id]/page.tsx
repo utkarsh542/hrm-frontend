@@ -46,6 +46,8 @@ export default function EmployeeProfilePage() {
           employment_type: emp.employment_type,
           employment_status: emp.employment_status,
           ctc: emp.ctc,
+          official_address: emp.official_address || '',
+          corresponding_address: emp.corresponding_address || '',
         });
       } catch (e) {
         console.error(e);
@@ -81,7 +83,7 @@ export default function EmployeeProfilePage() {
             <span>Back</span>
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ color: '#6c63ff', display: 'flex', alignItems: 'center' }}>
+            <div style={{ color: 'var(--primary)', display: 'flex', alignItems: 'center' }}>
               <User size={24} />
             </div>
             <h1 style={{ margin: 0 }}>Employee Profile</h1>
@@ -105,7 +107,7 @@ export default function EmployeeProfilePage() {
               {employee.designation} · {employee.department_name}
             </div>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <span style={{ fontFamily: 'monospace', color: 'var(--primary-light)', fontSize: 13 }}>{employee.employee_id}</span>
+              <span style={{ fontFamily: 'monospace', color: 'var(--primary)', fontSize: 13 }}>{employee.employee_id}</span>
               <span className={`badge ${getStatusBadgeClass(employee.employment_status)}`}>{employee.employment_status.replace('_', ' ')}</span>
               <span className="badge badge-info">{employee.employment_type.replace('_', ' ')}</span>
               <span className="badge badge-neutral">{employee.onboarding_status}</span>
@@ -122,7 +124,7 @@ export default function EmployeeProfilePage() {
         {/* Personal Info */}
         <div className="card">
           <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Info size={16} style={{ color: '#6c63ff' }} />
+            <Info size={16} style={{ color: 'var(--primary)' }} />
             <span>Personal Info</span>
           </h3>
           <div style={{ display: 'grid', gap: 12 }}>
@@ -138,13 +140,23 @@ export default function EmployeeProfilePage() {
                 <span style={{ fontWeight: 500 }}>{value}</span>
               </div>
             ))}
+            <div style={{ marginTop: 8, paddingTop: 12, borderTop: '1px solid var(--border)' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 12 }}>
+                <span style={{ color: 'var(--text-tertiary)', fontSize: 12 }}>Official Address</span>
+                <span style={{ fontWeight: 500, fontSize: 14, whiteSpace: 'pre-wrap' }}>{employee.official_address || '—'}</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <span style={{ color: 'var(--text-tertiary)', fontSize: 12 }}>Correspondence Address</span>
+                <span style={{ fontWeight: 500, fontSize: 14, whiteSpace: 'pre-wrap' }}>{employee.corresponding_address || '—'}</span>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Leave Balances */}
         <div className="card">
           <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Palmtree size={16} style={{ color: '#6c63ff' }} />
+            <Palmtree size={16} style={{ color: 'var(--primary)' }} />
             <span>Leave Balances</span>
           </h3>
           <div style={{ display: 'grid', gap: 16 }}>
@@ -170,7 +182,7 @@ export default function EmployeeProfilePage() {
       {/* Timeline */}
       <div className="card" style={{ marginTop: 24 }}>
         <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Calendar size={16} style={{ color: '#6c63ff' }} />
+          <Calendar size={16} style={{ color: 'var(--primary)' }} />
           <span>Activity Timeline</span>
         </h3>
         {timeline.length === 0 ? (
@@ -182,7 +194,7 @@ export default function EmployeeProfilePage() {
               return (
                 <div key={i} style={{ display: 'flex', gap: 16, paddingBottom: 20, position: 'relative' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--bg-input)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6c63ff', flexShrink: 0 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--bg-input)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', flexShrink: 0 }}>
                       <EventIcon size={16} />
                     </div>
                     {i < timeline.length - 1 && (
@@ -246,6 +258,24 @@ export default function EmployeeProfilePage() {
                     <option value="terminated">Terminated</option>
                   </select>
                 </div>
+              </div>
+              <div className="form-group" style={{ marginBottom: 12 }}>
+                <label className="form-label">Official Address</label>
+                <textarea 
+                  className="form-input" 
+                  style={{ minHeight: 60, fontFamily: 'inherit', resize: 'vertical' }} 
+                  value={editData.official_address || ''} 
+                  onChange={e => setEditData({ ...editData, official_address: e.target.value })} 
+                />
+              </div>
+              <div className="form-group" style={{ marginBottom: 12 }}>
+                <label className="form-label">Correspondence Address</label>
+                <textarea 
+                  className="form-input" 
+                  style={{ minHeight: 60, fontFamily: 'inherit', resize: 'vertical' }} 
+                  value={editData.corresponding_address || ''} 
+                  onChange={e => setEditData({ ...editData, corresponding_address: e.target.value })} 
+                />
               </div>
             </div>
             <div className="modal-footer">

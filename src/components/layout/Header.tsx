@@ -18,10 +18,10 @@ interface HeaderProps {
 type Role = 'admin' | 'hr' | 'manager' | 'employee';
 
 const ROLE_CONFIG: Record<Role, { label: string; color: string; bg: string; Icon: any }> = {
-  admin:    { label: 'Administrator', color: '#ef4444', bg: 'rgba(239,68,68,0.12)',  Icon: Shield },
-  hr:       { label: 'HR Manager',    color: '#6c63ff', bg: 'rgba(108,99,255,0.12)', Icon: UserCog },
-  manager:  { label: 'Team Manager',  color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', Icon: Crown },
-  employee: { label: 'Employee',      color: '#10b981', bg: 'rgba(16,185,129,0.12)', Icon: UserCircle },
+  admin:    { label: 'Administrator', color: '#DC2626', bg: 'rgba(220,38,38,0.12)',  Icon: Shield },
+  hr:       { label: 'HR Manager',    color: '#2563EB', bg: 'rgba(37,99,235,0.12)', Icon: UserCog },
+  manager:  { label: 'Team Manager',  color: '#D97706', bg: 'rgba(217,119,6,0.12)', Icon: Crown },
+  employee: { label: 'Employee',      color: '#059669', bg: 'rgba(5,150,105,0.12)', Icon: UserCircle },
 };
 
 interface NotifItem {
@@ -167,7 +167,7 @@ export default function Header({
               <div style={{
                 position: 'absolute', right: 0, top: '110%', width: 340, maxHeight: 400,
                 background: 'var(--bg-card)', border: '1px solid var(--border)',
-                borderRadius: 16, boxShadow: '0 16px 48px rgba(0,0,0,0.5)', overflow: 'auto', zIndex: 200,
+                borderRadius: 16, boxShadow: 'var(--shadow-lg)', overflow: 'auto', zIndex: 200,
               }}>
                 <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontWeight: 700 }}>Notifications</span>
@@ -175,14 +175,14 @@ export default function Header({
                     {unreadCount > 0 && (
                       <button 
                         onClick={markAllAsRead}
-                        style={{ background: 'none', border: 'none', color: '#6c63ff', fontSize: 11, fontWeight: 600, cursor: 'pointer', padding: 0 }}
+                        style={{ background: 'none', border: 'none', color: 'var(--primary)', fontSize: 11, fontWeight: 600, cursor: 'pointer', padding: 0 }}
                         onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
                         onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
                       >
                         Mark all as read
                       </button>
                     )}
-                    {unreadCount > 0 && <span style={{ padding: '2px 8px', borderRadius: 10, background: 'rgba(108,99,255,0.15)', color: '#6c63ff', fontSize: 11, fontWeight: 700 }}>{unreadCount} new</span>}
+                    {unreadCount > 0 && <span style={{ padding: '2px 8px', borderRadius: 10, background: 'var(--primary-light)', color: 'var(--primary-dark)', fontSize: 11, fontWeight: 700 }}>{unreadCount} new</span>}
                   </div>
                 </div>
                 {notifications.length === 0 ? (
@@ -191,9 +191,9 @@ export default function Header({
                   <div key={n.id} 
                     onClick={() => !n.is_read && markAsRead(n.id)}
                     style={{ padding: '10px 16px', borderBottom: '1px solid var(--border)', cursor: n.is_read ? 'default' : 'pointer',
-                      background: n.is_read ? 'transparent' : 'rgba(108,99,255,0.05)', transition: 'background 0.2s' }}
-                    onMouseEnter={e => !n.is_read && (e.currentTarget.style.background = 'rgba(108,99,255,0.08)')}
-                    onMouseLeave={e => !n.is_read && (e.currentTarget.style.background = 'rgba(108,99,255,0.05)')}
+                      background: n.is_read ? 'transparent' : 'rgba(37, 99, 235, 0.06)', transition: 'background 0.2s' }}
+                    onMouseEnter={e => !n.is_read && (e.currentTarget.style.background = 'rgba(37, 99, 235, 0.1)')}
+                    onMouseLeave={e => !n.is_read && (e.currentTarget.style.background = 'rgba(37, 99, 235, 0.06)')}
                   >
                     <div style={{ fontWeight: n.is_read ? 400 : 700, fontSize: 13 }}>{n.title}</div>
                     <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>{n.message}</div>
@@ -218,7 +218,7 @@ export default function Header({
                 position: 'absolute', right: 0, top: '110%',
                 background: 'var(--bg-card)', border: '1px solid var(--border)',
                 borderRadius: 16, padding: 16, minWidth: 220,
-                zIndex: 200, boxShadow: '0 16px 48px rgba(0,0,0,0.5)',
+                zIndex: 200, boxShadow: 'var(--shadow-lg)',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
                   <div style={{
@@ -254,7 +254,7 @@ export default function Header({
                     marginBottom: 8,
                     transition: 'all 0.15s',
                   }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                  onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-card-hover)'}
                   onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-input)'}
                 >
                   <Lock size={15} strokeWidth={2} /> Change Password
@@ -264,13 +264,13 @@ export default function Header({
                   style={{
                     display: 'flex', alignItems: 'center', gap: 8,
                     width: '100%', padding: '9px 10px', borderRadius: 8,
-                    background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
-                    color: '#f87171', fontSize: 13, fontWeight: 600,
+                    background: 'var(--accent-red-light)', border: '1px solid rgba(220,38,38,0.2)',
+                    color: 'var(--accent-red)', fontSize: 13, fontWeight: 600,
                     cursor: 'pointer', fontFamily: 'Inter, sans-serif',
                     transition: 'all 0.15s',
                   }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.15)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(220,38,38,0.15)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'var(--accent-red-light)'}
                 >
                   <LogOut size={15} strokeWidth={2} /> Sign Out
                 </button>

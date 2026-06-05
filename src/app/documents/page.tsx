@@ -48,7 +48,8 @@ const ICON_MAP: Record<string, any> = {
 };
 
 export default function DocumentsPage() {
-  const { isAdminOrHR } = useRole();
+  const { isAdminOrHR, email } = useRole();
+  const [currentEmp, setCurrentEmp] = useState<any>(null);
   const [docs, setDocs] = useState<any[]>([]);
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -83,12 +84,25 @@ export default function DocumentsPage() {
       const params = new URLSearchParams();
       if (search) params.set('search', search);
       if (category) params.set('category', category);
-      const [d, s]: any = await Promise.all([
+      
+      const promises: any[] = [
         api.getDocuments(params.toString()),
         api.getDocumentStats(),
-      ]);
-      setDocs(d);
-      setStats(s);
+      ];
+      
+      if (!currentEmp) {
+        promises.push(api.getEmployees());
+      }
+      
+      const results = await Promise.all(promises);
+      setDocs(results[0]);
+      setStats(results[1]);
+      
+      if (results[2]) {
+        const emps = results[2];
+        const matched = emps.find((e: any) => e.email === email);
+        if (matched) setCurrentEmp(matched);
+      }
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
   };
@@ -130,7 +144,7 @@ export default function DocumentsPage() {
     <div className="animate-fade-in">
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ color: '#6c63ff', display: 'flex', alignItems: 'center' }}>
+          <div style={{ color: 'var(--primary)', display: 'flex', alignItems: 'center' }}>
             <Folder size={28} strokeWidth={2} />
           </div>
           <div>
@@ -140,21 +154,19 @@ export default function DocumentsPage() {
             </p>
           </div>
         </div>
-        {isAdminOrHR && (
-          <button className="btn btn-primary" onClick={() => setShowUpload(true)}>+ Upload Document</button>
-        )}
+        <button className="btn btn-primary" onClick={() => setShowUpload(true)}>+ Upload Document</button>
       </div>
 
       {/* 🔮 Interactive "Ask HR Policies / Query Docs" RAG Panel */}
       <div 
         className="card animate-fade-in"
         style={{
-          background: 'linear-gradient(135deg, rgba(108,99,255,0.05) 0%, rgba(16,185,129,0.02) 100%)',
-          border: '1px solid rgba(108,99,255,0.2)',
+          background: 'linear-gradient(135deg, rgba(37,99,235,0.05) 0%, rgba(16,185,129,0.02) 100%)',
+          border: '1px solid rgba(37,99,235,0.2)',
           borderRadius: 16,
           padding: 24,
           marginBottom: 24,
-          boxShadow: '0 8px 32px 0 rgba(108,99,255,0.05)',
+          boxShadow: '0 8px 32px 0 rgba(37,99,235,0.05)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
@@ -162,11 +174,11 @@ export default function DocumentsPage() {
             width: 38,
             height: 38,
             borderRadius: 10,
-            background: 'rgba(108,99,255,0.15)',
+            background: 'rgba(37,99,235,0.15)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#6c63ff',
+            color: 'var(--primary)',
             flexShrink: 0
           }}>
             <Sparkles size={18} strokeWidth={2.5} />
@@ -174,7 +186,7 @@ export default function DocumentsPage() {
           <div>
             <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
               Ask HR Policies & Corporate Docs
-              <span style={{ fontSize: 10, background: 'rgba(108,99,255,0.2)', color: '#6c63ff', padding: '2px 8px', borderRadius: 12, fontWeight: 800 }}>AI RAG ENGINE</span>
+              <span style={{ fontSize: 10, background: 'rgba(37,99,235,0.2)', color: 'var(--primary)', padding: '2px 8px', borderRadius: 12, fontWeight: 800 }}>AI RAG ENGINE</span>
             </h3>
             <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--text-tertiary)' }}>
               Query policy manuals, handbooks, and documents with instant, cited answers.
@@ -220,7 +232,7 @@ export default function DocumentsPage() {
               gap: 8,
               fontSize: 14,
               fontWeight: 600,
-              boxShadow: '0 4px 14px rgba(108,99,255,0.3)',
+              boxShadow: '0 4px 14px rgba(37,99,235,0.3)',
             }}
           >
             {ragLoading ? (
@@ -236,11 +248,11 @@ export default function DocumentsPage() {
         {ragLoading && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 20, padding: 16, background: 'rgba(255,255,255,0.02)', borderRadius: 12, border: '1px dashed var(--border)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Loader2 size={16} style={{ color: '#6c63ff', animation: 'spin 1s linear infinite' }} />
+              <Loader2 size={16} style={{ color: 'var(--primary)', animation: 'spin 1s linear infinite' }} />
               <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>Scanning documents and generating answer...</span>
             </div>
             <div style={{ height: 6, background: 'var(--bg-input)', borderRadius: 3, overflow: 'hidden' }}>
-              <div className="progress-bar-fill" style={{ width: '60%', height: '100%', background: '#6c63ff', borderRadius: 3, animation: 'pulse 1.5s infinite ease-in-out' }}></div>
+              <div className="progress-bar-fill" style={{ width: '60%', height: '100%', background: 'var(--primary)', borderRadius: 3, animation: 'pulse 1.5s infinite ease-in-out' }}></div>
             </div>
           </div>
         )}
@@ -257,7 +269,7 @@ export default function DocumentsPage() {
               padding: 18,
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10, color: '#6c63ff', fontSize: 13, fontWeight: 700 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10, color: 'var(--primary)', fontSize: 13, fontWeight: 700 }}>
               <Bot size={16} />
               <span>AI-GENERATED ANSWER</span>
             </div>
@@ -291,7 +303,7 @@ export default function DocumentsPage() {
                       }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                        <span style={{ fontSize: 11, background: 'rgba(108,99,255,0.15)', color: '#6c63ff', padding: '2px 6px', borderRadius: 4, fontWeight: 700 }}>
+                        <span style={{ fontSize: 11, background: 'rgba(37,99,235,0.15)', color: 'var(--primary)', padding: '2px 6px', borderRadius: 4, fontWeight: 700 }}>
                           #{idx + 1}
                         </span>
                         <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
@@ -361,7 +373,7 @@ export default function DocumentsPage() {
           <div style={{ color: 'var(--text-tertiary)', display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
             <Folder size={48} strokeWidth={1.5} />
           </div>
-          <p>No documents found. {isAdminOrHR && 'Upload your first document.'}</p>
+          <p>No documents found. Upload your first document.</p>
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
@@ -383,7 +395,7 @@ export default function DocumentsPage() {
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 12 }}>
                   <div style={{
                     width: 44, height: 44, borderRadius: 10, flexShrink: 0,
-                    background: 'var(--bg-input)', display: 'flex', color: '#6c63ff',
+                    background: 'var(--bg-input)', display: 'flex', color: 'var(--primary)',
                     alignItems: 'center', justifyContent: 'center',
                   }}>
                     <DocIcon size={20} strokeWidth={2} />
@@ -427,7 +439,7 @@ export default function DocumentsPage() {
                     <Download size={14} />
                     <span>Download</span>
                   </a>
-                  {isAdminOrHR && (
+                  {(isAdminOrHR || (currentEmp && doc.employee_id === currentEmp.id)) && (
                     <button className="btn btn-sm btn-secondary" onClick={() => handleDelete(doc.id)} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '4px 8px' }}>
                       <Trash2 size={14} />
                     </button>

@@ -149,7 +149,7 @@ export default function RecruitmentPage() {
                 <td><span className="badge badge-info">{job.job_type.replace('_', ' ')}</span></td>
                 <td>{job.experience_min}-{job.experience_max} yrs</td>
                 <td>{job.salary_min && job.salary_max ? `${formatCurrency(job.salary_min)} - ${formatCurrency(job.salary_max)}` : 'Not disclosed'}</td>
-                <td><span style={{ fontWeight: 700, color: 'var(--primary-light)' }}>{job.applications_count}</span></td>
+                <td><span style={{ fontWeight: 700, color: 'var(--primary)' }}>{job.applications_count}</span></td>
                 <td><span className={`badge ${getStatusBadgeClass(job.status)}`}>{job.status}</span></td>
                 <td>{formatDate(job.created_at)}</td>
               </tr>

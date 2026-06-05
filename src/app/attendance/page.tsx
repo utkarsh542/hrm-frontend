@@ -64,7 +64,7 @@ export default function AttendancePage() {
         api.getAttendance(`month=${m}&year=${y}`),
         api.getGeofence().catch(() => null),
       ]);
-      setEmployees((emps as Employee[]).filter(e => e.employment_status === 'active'));
+      setEmployees((emps as Employee[]).filter(e => e.is_active));
       setRecords(recs as AttendanceRecord[]);
       if (geo) setActiveGeofence(geo);
       setRecords(recs as AttendanceRecord[]);
@@ -230,7 +230,7 @@ export default function AttendancePage() {
     cursor: 'pointer',
     fontSize: 14,
     fontWeight: 700 as const,
-    background: activeTab === tabId ? '#6c63ff' : 'var(--bg-input)',
+    background: activeTab === tabId ? 'var(--primary)' : 'var(--bg-input)',
     color: activeTab === tabId ? '#fff' : 'var(--text-secondary)',
     transition: 'all 0.2s',
     fontFamily: 'Inter, sans-serif',
@@ -243,7 +243,7 @@ export default function AttendancePage() {
     <div className="animate-fade-in">
       <div className="page-header" style={{ marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ color: '#6c63ff', display: 'flex', alignItems: 'center' }}>
+          <div style={{ color: 'var(--primary)', display: 'flex', alignItems: 'center' }}>
             <Calendar size={28} strokeWidth={2} />
           </div>
           <div>
@@ -337,7 +337,7 @@ export default function AttendancePage() {
                           <span style={{ fontWeight: 600 }}>{emp.full_name}</span>
                         </div>
                       </td>
-                      <td style={{ fontFamily: 'monospace', color: 'var(--primary-light)' }}>{emp.employee_id}</td>
+                      <td style={{ fontFamily: 'monospace', color: 'var(--text-secondary)' }}>{emp.employee_id}</td>
                       <td>{emp.department_name}</td>
                       <td style={{ fontSize: 13 }}>
                         {rec?.check_in ? (
@@ -345,7 +345,7 @@ export default function AttendancePage() {
                             <div>{new Date(rec.check_in).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
                             {rec.check_in_address && (
                               <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4, color: 'var(--text-tertiary)', fontSize: 11 }}>
-                                <MapPin size={11} style={{ color: 'var(--primary-light)' }} />
+                                <MapPin size={11} style={{ color: 'var(--primary)' }} />
                                 <span title={`${rec.check_in_address} (lat: ${rec.check_in_lat}, lon: ${rec.check_in_lon})`} style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: 140, cursor: 'help' }}>
                                   {rec.check_in_district}, {rec.check_in_state}
                                 </span>
@@ -475,7 +475,7 @@ export default function AttendancePage() {
                           <div>{new Date(rec.check_in).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
                           {rec.check_in_address && (
                             <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4, color: 'var(--text-tertiary)', fontSize: 11 }}>
-                              <MapPin size={11} style={{ color: 'var(--primary-light)' }} />
+                              <MapPin size={11} style={{ color: 'var(--primary)' }} />
                               <span title={`${rec.check_in_address} (lat: ${rec.check_in_lat}, lon: ${rec.check_in_lon})`} style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: 140, cursor: 'help' }}>
                                 {rec.check_in_district}, {rec.check_in_state}
                               </span>
@@ -603,9 +603,9 @@ export default function AttendancePage() {
                   onClick={() => executeFaceCheck(true)}
                   style={{
                     width: '100%',
-                    background: 'rgba(108, 99, 255, 0.15)',
-                    border: '1px solid rgba(108, 99, 255, 0.35)',
-                    color: 'var(--primary-light)',
+                    background: 'var(--primary-light)',
+                    border: '1px solid rgba(37, 99, 235, 0.2)',
+                    color: 'var(--primary-dark)',
                     fontWeight: 700,
                     padding: '12px 16px',
                     borderRadius: 12,

@@ -157,7 +157,7 @@ export default function OffboardingPage() {
                 {resignations.map(r => (
                   <tr key={r.id}>
                     <td style={{ fontWeight: 600 }}>{r.employee_name}</td>
-                    <td style={{ fontFamily: 'monospace', color: 'var(--primary-light)' }}>{r.employee_code}</td>
+                    <td style={{ fontFamily: 'monospace', color: 'var(--primary)' }}>{r.employee_code}</td>
                     <td>{r.department}</td>
                     <td>{formatDate(r.resignation_date)}</td>
                     <td>{r.last_working_day ? formatDate(r.last_working_day) : '—'}</td>
@@ -211,7 +211,7 @@ export default function OffboardingPage() {
           {resignations.filter(r => r.status !== 'completed').length > 0 && (
             <div className="card" style={{ marginTop: 24 }}>
               <h3 style={{ fontSize: 15, marginBottom: 16, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 8 }}>
-                <ClipboardList size={16} style={{ color: '#6c63ff' }} />
+                <ClipboardList size={16} style={{ color: 'var(--primary)' }} />
                 <span>Exit Pipeline</span>
               </h3>
               {resignations.filter(r => r.status !== 'completed').map(r => {
@@ -273,7 +273,7 @@ export default function OffboardingPage() {
                 {/* Exit Pipeline Progress Visual */}
                 <div className="card">
                   <h3 style={{ fontSize: 15, marginBottom: 24, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <ClipboardList size={16} style={{ color: '#6c63ff' }} />
+                    <ClipboardList size={16} style={{ color: 'var(--primary)' }} />
                     <span>My Offboarding Progress</span>
                   </h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -290,7 +290,7 @@ export default function OffboardingPage() {
                               top: 24,
                               bottom: -24,
                               width: 2,
-                              background: isCompleted ? '#6c63ff' : 'var(--bg-input)',
+                              background: isCompleted ? 'var(--primary)' : 'var(--bg-input)',
                               zIndex: 1
                             }}></div>
                           )}
@@ -298,12 +298,12 @@ export default function OffboardingPage() {
                             width: 36,
                             height: 36,
                             borderRadius: '50%',
-                            backgroundColor: isCompleted || isActive ? 'rgba(108, 99, 255, 0.1)' : 'var(--bg-input)',
-                            border: `2px solid ${isCompleted ? '#6c63ff' : isActive ? '#6c63ff' : 'var(--border)'}`,
+                            backgroundColor: isCompleted || isActive ? 'rgba(37, 99, 235, 0.1)' : 'var(--bg-input)',
+                            border: `2px solid ${isCompleted ? 'var(--primary)' : isActive ? 'var(--primary)' : 'var(--border)'}`,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            color: isCompleted ? '#6c63ff' : isActive ? '#6c63ff' : 'var(--text-tertiary)',
+                            color: isCompleted ? 'var(--primary)' : isActive ? 'var(--primary)' : 'var(--text-tertiary)',
                             fontWeight: 700,
                             zIndex: 2
                           }}>
@@ -333,7 +333,7 @@ export default function OffboardingPage() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                 <div className="card">
                   <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <Calendar size={16} style={{ color: '#6c63ff' }} />
+                    <Calendar size={16} style={{ color: 'var(--primary)' }} />
                     <span>Important Timeline</span>
                   </h3>
                   <div style={{ display: 'grid', gap: 16 }}>
@@ -343,7 +343,7 @@ export default function OffboardingPage() {
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
                       <span style={{ color: 'var(--text-tertiary)' }}>Last Working Day</span>
-                      <span style={{ fontWeight: 600, color: 'var(--primary-light)' }}>
+                      <span style={{ fontWeight: 600, color: 'var(--primary)' }}>
                         {myResignation.last_working_day ? formatDate(myResignation.last_working_day) : 'Calculating...'}
                       </span>
                     </div>
@@ -362,7 +362,7 @@ export default function OffboardingPage() {
                 {(myResignation.experience_letter_generated || myResignation.relieving_letter_generated) && (
                   <div className="card">
                     <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <FileText size={16} style={{ color: '#6c63ff' }} />
+                      <FileText size={16} style={{ color: 'var(--primary)' }} />
                       <span>Corporate Letters</span>
                     </h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -387,7 +387,7 @@ export default function OffboardingPage() {
             // NO ACTIVE RESIGNATION PANEL
             <div className="card" style={{ maxWidth: 650, margin: '40px auto', padding: '40px 32px', textAlign: 'center' }}>
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
-                <div style={{ width: 64, height: 64, borderRadius: '50%', backgroundColor: 'rgba(108, 99, 255, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6c63ff' }}>
+                <div style={{ width: 64, height: 64, borderRadius: '50%', backgroundColor: 'rgba(37, 99, 235, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)' }}>
                   <LogOut size={32} />
                 </div>
               </div>

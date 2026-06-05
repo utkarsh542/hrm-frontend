@@ -116,7 +116,7 @@ export default function OnboardingPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(108,99,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6c63ff' }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(37,99,235,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)' }}>
               <Sparkles size={20} strokeWidth={2} />
             </div>
             Smart Onboarding
@@ -131,7 +131,7 @@ export default function OnboardingPage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 28 }}>
         {[
-          { label: 'Total Plans', value: totalPlans, Icon: ClipboardList, color: '#6c63ff' },
+          { label: 'Total Plans', value: totalPlans, Icon: ClipboardList, color: 'var(--primary)' },
           { label: 'Active', value: activePlans, Icon: RotateCw, color: '#f59e0b' },
           { label: 'Completed', value: completedPlans, Icon: CheckCircle, color: '#10b981' },
           { label: 'Avg Progress', value: `${avgProgress}%`, Icon: BarChart3, color: '#3b82f6' },
@@ -153,7 +153,7 @@ export default function OnboardingPage() {
       {/* Plans List */}
       {plans.length === 0 ? (
         <div style={{ textAlign: 'center', padding: 60, background: 'var(--bg-card)', borderRadius: 16, border: '1px solid var(--border)' }}>
-          <div style={{ width: 56, height: 56, borderRadius: 16, background: 'rgba(108,99,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#6c63ff' }}>
+          <div style={{ width: 56, height: 56, borderRadius: 16, background: 'rgba(37,99,235,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: 'var(--primary)' }}>
             <ClipboardList size={28} strokeWidth={1.5} />
           </div>
           <h3 style={{ margin: '0 0 8px' }}>No Onboarding Plans Yet</h3>
@@ -166,7 +166,7 @@ export default function OnboardingPage() {
               onClick={() => selectedPlan?.id === plan.id ? setSelectedPlan(null) : loadPlanDetails(plan.id)}>
               <div style={{ padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                  <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(108,99,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 800, color: '#6c63ff' }}>
+                  <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(37,99,235,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 800, color: 'var(--primary)' }}>
                     {plan.employee_name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                   </div>
                   <div>
@@ -184,9 +184,9 @@ export default function OnboardingPage() {
                     {plan.status.toUpperCase()}
                   </span>
                   <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: plan.progress === 100 ? '#10b981' : '#6c63ff' }}>{plan.progress}%</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: plan.progress === 100 ? '#10b981' : 'var(--primary)' }}>{plan.progress}%</div>
                     <div style={{ width: 100, height: 6, borderRadius: 3, background: 'var(--bg-input)', marginTop: 4 }}>
-                      <div style={{ width: `${plan.progress}%`, height: '100%', borderRadius: 3, background: plan.progress === 100 ? '#10b981' : '#6c63ff', transition: 'width 0.5s' }} />
+                      <div style={{ width: `${plan.progress}%`, height: '100%', borderRadius: 3, background: plan.progress === 100 ? '#10b981' : 'var(--primary)', transition: 'width 0.5s' }} />
                     </div>
                   </div>
                   <span style={{ color: 'var(--text-secondary)', fontSize: 13 }}>{plan.completed_tasks}/{plan.total_tasks} tasks</span>
@@ -207,8 +207,8 @@ export default function OnboardingPage() {
                           gap: 12,
                           padding: '14px 18px',
                           borderRadius: 12,
-                          background: task.status === 'completed' ? 'rgba(108, 99, 255, 0.03)' : 'var(--bg-card)',
-                          border: task.status === 'completed' ? '1px dashed rgba(108, 99, 255, 0.3)' : '1px solid var(--border)',
+                          background: task.status === 'completed' ? 'rgba(37, 99, 235, 0.03)' : 'var(--bg-card)',
+                          border: task.status === 'completed' ? '1px dashed rgba(37, 99, 235, 0.3)' : '1px solid var(--border)',
                           transition: 'all 0.25s ease',
                           opacity: task.status === 'completed' ? 0.85 : 1,
                           boxShadow: task.status === 'completed' ? 'none' : '0 2px 8px rgba(0,0,0,0.1)'
@@ -229,7 +229,7 @@ export default function OnboardingPage() {
                               padding: 0,
                               flexShrink: 0,
                               transition: 'all 0.2s ease',
-                              boxShadow: task.status === 'completed' ? '0 0 10px rgba(108, 99, 255, 0.45)' : 'none',
+                              boxShadow: task.status === 'completed' ? '0 0 10px rgba(37, 99, 235, 0.45)' : 'none',
                             }}
                           >
                             {task.status === 'completed' && (
@@ -241,7 +241,7 @@ export default function OnboardingPage() {
                           <span style={{ padding: '3px 8px', borderRadius: 6, background: cat.bg, color: cat.color, fontSize: 10, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
                             <CatIcon size={11} /> {cat.label}
                           </span>
-                          <span style={{ padding: '2px 6px', borderRadius: 4, background: 'rgba(108,99,255,0.1)', color: '#6c63ff', fontSize: 10, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 3 }}>
+                          <span style={{ padding: '2px 6px', borderRadius: 4, background: 'rgba(37,99,235,0.1)', color: 'var(--primary)', fontSize: 10, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 3 }}>
                             <Clock size={10} /> Day {task.due_day}
                           </span>
                           <div style={{ flex: 1 }}>
@@ -271,7 +271,7 @@ export default function OnboardingPage() {
           <div className="modal-content animate-scale-in" onClick={e => e.stopPropagation()} style={{ maxWidth: 520, padding: 0 }}>
             <div className="modal-header" style={{ padding: '24px 28px', borderBottom: '1px solid var(--border)' }}>
               <h2 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8, fontSize: 18, fontWeight: 700 }}>
-                <Sparkles size={22} style={{ color: '#6c63ff' }} /> Generate AI Onboarding Plan
+                <Sparkles size={22} style={{ color: 'var(--primary)' }} /> Generate AI Onboarding Plan
               </h2>
               <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
             </div>
@@ -392,8 +392,8 @@ export default function OnboardingPage() {
                             padding: '10px 14px', // Generous internal padding to push text away from edges
                             borderRadius: 6, // Match rectangular shape
                             cursor: 'pointer',
-                            background: isSelected ? 'rgba(108, 99, 255, 0.15)' : 'transparent',
-                            border: isSelected ? '1px solid rgba(108, 99, 255, 0.25)' : '1px solid transparent',
+                            background: isSelected ? 'rgba(37, 99, 235, 0.15)' : 'transparent',
+                            border: isSelected ? '1px solid rgba(37, 99, 235, 0.25)' : '1px solid transparent',
                             transition: 'all 0.15s ease'
                           }}
                           onMouseEnter={(e) => {
@@ -408,8 +408,8 @@ export default function OnboardingPage() {
                             width: 32,
                             height: 32,
                             borderRadius: '50%',
-                            background: isSelected ? 'var(--primary-light)' : 'rgba(108, 99, 255, 0.12)',
-                            color: isSelected ? '#ffffff' : '#6c63ff',
+                            background: isSelected ? 'var(--primary-light)' : 'rgba(37, 99, 235, 0.12)',
+                            color: isSelected ? '#ffffff' : 'var(--primary)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -432,8 +432,8 @@ export default function OnboardingPage() {
                           
                           {/* Checked Indicator */}
                           {isSelected && (
-                            <span style={{ color: 'var(--primary-light)', display: 'flex', alignItems: 'center' }}>
-                              <CheckCircle size={14} fill="rgba(108, 99, 255, 0.1)" />
+                            <span style={{ color: 'var(--primary)', display: 'flex', alignItems: 'center' }}>
+                              <CheckCircle size={14} fill="rgba(37, 99, 235, 0.1)" />
                             </span>
                           )}
                         </div>

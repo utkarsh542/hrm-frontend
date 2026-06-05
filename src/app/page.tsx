@@ -6,10 +6,10 @@ import { formatCurrency, timeAgo } from '@/lib/utils';
 import { useRole, RoleGuard } from '@/lib/useRole';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import {
-  Users, Briefcase, Target, LogOut, Palmtree, Building2, ClipboardList,
+  Users, Briefcase, Target, LogOut, Palmtree, Building2, ClipboardList, Clock,
 } from 'lucide-react';
 
-const COLORS = ['#6c63ff', '#8b5cf6', '#3b82f6', '#06b6d4', '#10b981', '#f59e0b', '#ec4899', '#ef4444'];
+const COLORS = ['var(--primary)', '#8b5cf6', '#3b82f6', '#06b6d4', '#10b981', '#f59e0b', '#ec4899', '#ef4444'];
 
 export default function DashboardPage() {
   const { role, isAdminOrHR, isAdminHROrManager } = useRole();
@@ -133,22 +133,33 @@ export default function DashboardPage() {
           <div className="stat-card animate-fade-in stagger-1">
             <div className="stat-icon green"><Palmtree size={22} strokeWidth={1.8} /></div>
             <div className="stat-info">
-              <div className="stat-label">Pending Leaves</div>
-              <div className="stat-value">{stats?.pending_leaves || 0}</div>
+              <div className="stat-label">Leaves Balance</div>
+              <div className="stat-value">
+                {((stats?.casual_leave_balance || 0) + (stats?.sick_leave_balance || 0) + (stats?.earned_leave_balance || 0))}
+              </div>
+              <div className="stat-change" style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>
+                Casual: {stats?.casual_leave_balance || 0} • Sick: {stats?.sick_leave_balance || 0} • Earned: {stats?.earned_leave_balance || 0}
+              </div>
             </div>
           </div>
           <div className="stat-card animate-fade-in stagger-2">
-            <div className="stat-icon orange"><Target size={22} strokeWidth={1.8} /></div>
+            <div className="stat-icon orange"><Clock size={22} strokeWidth={1.8} /></div>
             <div className="stat-info">
-              <div className="stat-label">Interviews Today</div>
-              <div className="stat-value">{stats?.interviews_today || 0}</div>
+              <div className="stat-label">Attendance This Month</div>
+              <div className="stat-value">{stats?.present_days_this_month || 0} days</div>
+              <div className="stat-change" style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>
+                Work Hours: {stats?.work_hours_this_month || 0} hrs
+              </div>
             </div>
           </div>
           <div className="stat-card animate-fade-in stagger-3">
-            <div className="stat-icon blue"><Briefcase size={22} strokeWidth={1.8} /></div>
+            <div className="stat-icon blue"><Target size={22} strokeWidth={1.8} /></div>
             <div className="stat-info">
-              <div className="stat-label">Open Positions</div>
-              <div className="stat-value">{stats?.open_positions || 0}</div>
+              <div className="stat-label">Active Goals</div>
+              <div className="stat-value">{stats?.active_goals_count || 0}</div>
+              <div className="stat-change" style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>
+                Pending & In Progress
+              </div>
             </div>
           </div>
         </div>
@@ -158,18 +169,18 @@ export default function DashboardPage() {
       <RoleGuard roles={['admin', 'hr', 'manager']}>
         <div className="charts-grid">
           <div className="chart-card animate-fade-in stagger-2">
-            <h3 style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Target size={18} style={{ color: '#6c63ff' }} /> Hiring Funnel</h3>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Target size={18} style={{ color: 'var(--primary)' }} /> Hiring Funnel</h3>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={funnel} layout="vertical">
                 <XAxis type="number" tick={{ fill: '#6b6b85', fontSize: 12 }} />
                 <YAxis dataKey="stage" type="category" width={80} tick={{ fill: '#a0a0b8', fontSize: 12 }} />
                 <Tooltip contentStyle={{ background: '#1e1e35', border: '1px solid #2a2a45', borderRadius: 8, color: '#f0f0f5' }} />
-                <Bar dataKey="count" fill="#6c63ff" radius={[0, 6, 6, 0]} barSize={24} />
+                <Bar dataKey="count" fill="var(--primary)" radius={[0, 6, 6, 0]} barSize={24} />
               </BarChart>
             </ResponsiveContainer>
           </div>
           <div className="chart-card animate-fade-in stagger-3">
-            <h3 style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Building2 size={18} style={{ color: '#6c63ff' }} /> Department Distribution</h3>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Building2 size={18} style={{ color: 'var(--primary)' }} /> Department Distribution</h3>
             <ResponsiveContainer width="100%" height={280}>
               <PieChart>
                 <Pie data={deptStats} dataKey="count" nameKey="name" cx="50%" cy="50%"

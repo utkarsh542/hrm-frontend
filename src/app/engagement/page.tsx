@@ -86,7 +86,7 @@ export default function EngagementPage() {
 
   const tabStyle = (t2: string) => ({
     padding: '10px 20px', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700 as const,
-    background: tab === t2 ? '#6c63ff' : 'var(--bg-input)', color: tab === t2 ? '#fff' : 'var(--text-secondary)',
+    background: tab === t2 ? 'var(--primary)' : 'var(--bg-input)', color: tab === t2 ? '#fff' : 'var(--text-secondary)',
     transition: 'all 0.2s', fontFamily: 'Inter, sans-serif', display: 'flex' as const, alignItems: 'center' as const, gap: 6,
   });
 
@@ -118,7 +118,7 @@ export default function EngagementPage() {
         <div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 28 }}>
             {[
-              { label: 'Active Surveys', value: dashboard.active_surveys, Icon: ClipboardList, color: '#6c63ff' },
+              { label: 'Active Surveys', value: dashboard.active_surveys, Icon: ClipboardList, color: 'var(--primary)' },
               { label: 'Total Responses', value: dashboard.total_responses, Icon: MessageCircle, color: '#3b82f6' },
               { label: "Today's Avg Mood", value: dashboard.today_mood_avg || '—', Icon: SmilePlus, color: '#10b981' },
               { label: 'Mood Check-ins', value: dashboard.today_mood_count, Icon: TrendingUp, color: '#f59e0b' },
@@ -139,7 +139,7 @@ export default function EngagementPage() {
 
           {moodTrends && moodTrends.trends && moodTrends.trends.length > 0 && (
             <div style={{ background: 'var(--bg-card)', borderRadius: 16, padding: 24, border: '1px solid var(--border)' }}>
-              <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><TrendingUp size={18} style={{ color: '#6c63ff' }} /> Mood Trends (Last 30 Days)</h3>
+              <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><TrendingUp size={18} style={{ color: 'var(--primary)' }} /> Mood Trends (Last 30 Days)</h3>
               <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 120 }}>
                 {moodTrends.trends.slice(-30).map((t: any, i: number) => (
                   <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
@@ -168,7 +168,7 @@ export default function EngagementPage() {
           </div>
           {surveys.length === 0 ? (
             <div style={{ textAlign: 'center', padding: 60, background: 'var(--bg-card)', borderRadius: 16, border: '1px solid var(--border)' }}>
-              <div style={{ width: 56, height: 56, borderRadius: 16, background: 'rgba(108,99,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#6c63ff' }}>
+              <div style={{ width: 56, height: 56, borderRadius: 16, background: 'rgba(37,99,235,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: 'var(--primary)' }}>
                 <ClipboardList size={28} strokeWidth={1.5} />
               </div>
               <h3>No Surveys Yet</h3>
@@ -231,7 +231,7 @@ export default function EngagementPage() {
         <div className="modal-overlay" onClick={() => { setError(null); setShowSurveyModal(false); }}>
           <div className="modal animate-scale-in" onClick={e => e.stopPropagation()} style={{ maxWidth: 560 }}>
             <h2 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}>
-              <ClipboardList size={20} style={{ color: '#6c63ff' }} /> Create Pulse Survey
+              <ClipboardList size={20} style={{ color: 'var(--primary)' }} /> Create Pulse Survey
             </h2>
             {error && (
               <div style={{

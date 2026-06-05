@@ -55,7 +55,7 @@ export default function ApprovalsPage() {
 
   const tabStyle = (t2: string) => ({
     padding: '10px 20px', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700 as const,
-    background: tab === t2 ? '#6c63ff' : 'var(--bg-input)', color: tab === t2 ? '#fff' : 'var(--text-secondary)',
+    background: tab === t2 ? 'var(--primary)' : 'var(--bg-input)', color: tab === t2 ? '#fff' : 'var(--text-secondary)',
     transition: 'all 0.2s', fontFamily: 'Inter, sans-serif', display: 'flex' as const, alignItems: 'center' as const, gap: 6,
   });
 

@@ -46,7 +46,7 @@ export default function AnalyticsPage() {
     <div className="animate-fade-in" style={{ padding: '24px 32px' }}>
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(108,99,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6c63ff' }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(37,99,235,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)' }}>
             <BarChart3 size={20} strokeWidth={2} />
           </div>
           AI Analytics Command Center
@@ -56,7 +56,7 @@ export default function AnalyticsPage() {
 
       {/* AI Insights Banner */}
       {insights?.executive_summary && (
-        <div style={{ background: 'linear-gradient(135deg, rgba(108,99,255,0.15), rgba(139,92,246,0.1))', borderRadius: 16, padding: '20px 24px', border: '1px solid rgba(108,99,255,0.3)', marginBottom: 24 }}>
+        <div style={{ background: 'linear-gradient(135deg, rgba(37,99,235,0.15), rgba(139,92,246,0.1))', borderRadius: 16, padding: '20px 24px', border: '1px solid rgba(37,99,235,0.3)', marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
             <Sparkles size={18} style={{ color: '#c4b5fd' }} />
             <span style={{ fontWeight: 700, fontSize: 16, color: '#c4b5fd' }}>AI Executive Summary</span>
@@ -69,7 +69,7 @@ export default function AnalyticsPage() {
       {workforce && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16, marginBottom: 28 }}>
           {[
-            { label: 'Total Employees', value: workforce.active_employees, Icon: Users, color: '#6c63ff' },
+            { label: 'Total Employees', value: workforce.active_employees, Icon: Users, color: 'var(--primary)' },
             { label: 'Avg CTC', value: fmt(workforce.avg_ctc), Icon: Wallet, color: '#10b981' },
             { label: 'Attrition Rate', value: `${workforce.attrition_rate}%`, Icon: TrendingDown, color: workforce.attrition_rate > 10 ? '#ef4444' : '#f59e0b' },
             { label: 'New Hires (Month)', value: workforce.new_hires_this_month, Icon: UserPlus, color: '#3b82f6' },
@@ -94,15 +94,15 @@ export default function AnalyticsPage() {
         {/* Department Distribution */}
         {workforce?.department_distribution && (
           <div style={{ background: 'var(--bg-card)', borderRadius: 16, padding: 24, border: '1px solid var(--border)' }}>
-            <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Building2 size={18} style={{ color: '#6c63ff' }} /> Department Distribution</h3>
+            <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Building2 size={18} style={{ color: 'var(--primary)' }} /> Department Distribution</h3>
             <div style={{ display: 'grid', gap: 10 }}>
               {workforce.department_distribution.map((d: any) => (
                 <div key={d.name}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 4 }}>
-                    <span>{d.name}</span><span style={{ fontWeight: 700, color: '#6c63ff' }}>{d.count}</span>
+                    <span>{d.name}</span><span style={{ fontWeight: 700, color: 'var(--primary)' }}>{d.count}</span>
                   </div>
                   <div style={{ height: 8, borderRadius: 4, background: 'var(--bg-input)' }}>
-                    <div style={{ height: '100%', borderRadius: 4, background: '#6c63ff', width: `${(d.count / maxDeptCount) * 100}%`, transition: 'width 0.5s' }} />
+                    <div style={{ height: '100%', borderRadius: 4, background: 'var(--primary)', width: `${(d.count / maxDeptCount) * 100}%`, transition: 'width 0.5s' }} />
                   </div>
                 </div>
               ))}
@@ -113,7 +113,7 @@ export default function AnalyticsPage() {
         {/* Gender Distribution */}
         {workforce?.gender_distribution && (
           <div style={{ background: 'var(--bg-card)', borderRadius: 16, padding: 24, border: '1px solid var(--border)' }}>
-            <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Users size={18} style={{ color: '#6c63ff' }} /> Gender Distribution</h3>
+            <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Users size={18} style={{ color: 'var(--primary)' }} /> Gender Distribution</h3>
             <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginBottom: 16 }}>
               {[
                 { label: 'Male', count: workforce.gender_distribution.male, color: '#3b82f6' },
@@ -137,7 +137,7 @@ export default function AnalyticsPage() {
         {/* Tenure Distribution */}
         {workforce?.tenure_distribution && (
           <div style={{ background: 'var(--bg-card)', borderRadius: 16, padding: 24, border: '1px solid var(--border)' }}>
-            <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Target size={18} style={{ color: '#6c63ff' }} /> Tenure Distribution</h3>
+            <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Target size={18} style={{ color: 'var(--primary)' }} /> Tenure Distribution</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
               {Object.entries(workforce.tenure_distribution).map(([label, count]) => {
                 const colors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
@@ -176,13 +176,13 @@ export default function AnalyticsPage() {
       {/* AI Insights */}
       {insights?.insights && insights.insights.length > 0 && (
         <div style={{ background: 'var(--bg-card)', borderRadius: 16, padding: 24, border: '1px solid var(--border)', marginBottom: 24 }}>
-          <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Sparkles size={18} style={{ color: '#6c63ff' }} /> AI-Powered Insights</h3>
+          <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Sparkles size={18} style={{ color: 'var(--primary)' }} /> AI-Powered Insights</h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
             {insights.insights.map((ins: any, i: number) => {
               const typeC: Record<string, { bg: string; color: string; Icon: any }> = {
                 positive: { bg: 'rgba(16,185,129,0.15)', color: '#10b981', Icon: CheckCircle },
                 warning: { bg: 'rgba(245,158,11,0.15)', color: '#f59e0b', Icon: AlertTriangle },
-                action: { bg: 'rgba(108,99,255,0.15)', color: '#6c63ff', Icon: Target },
+                action: { bg: 'rgba(37,99,235,0.15)', color: 'var(--primary)', Icon: Target },
               };
               const tc = typeC[ins.type] || typeC.action;
               const TIcon = tc.Icon;
@@ -206,7 +206,7 @@ export default function AnalyticsPage() {
       {/* Hiring Analytics */}
       {hiring?.source_effectiveness && hiring.source_effectiveness.length > 0 && (
         <div style={{ background: 'var(--bg-card)', borderRadius: 16, padding: 24, border: '1px solid var(--border)' }}>
-          <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Target size={18} style={{ color: '#6c63ff' }} /> Hiring Source Effectiveness</h3>
+          <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Target size={18} style={{ color: 'var(--primary)' }} /> Hiring Source Effectiveness</h3>
           <div className="data-table" style={{ borderRadius: 12, overflow: 'hidden' }}>
             <table>
               <thead><tr><th>Source</th><th>Applications</th><th>Hired</th><th>Conversion Rate</th></tr></thead>

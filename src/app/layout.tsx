@@ -238,16 +238,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   {currentUser.role === 'admin' && adminSyncStatus !== 'idle' && (
                     <div style={{
                       marginBottom: 20,
-                      background: 'rgba(30, 41, 59, 0.45)',
-                      backdropFilter: 'blur(10px)',
-                      border: '1px solid rgba(99, 102, 241, 0.25)',
+                      background: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
                       borderRadius: 16,
                       padding: '14px 20px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       gap: 16,
-                      boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.2)',
+                      boxShadow: 'var(--shadow-sm)',
                       flexWrap: 'wrap',
                       transition: 'all 0.3s ease'
                     }}>
@@ -257,7 +256,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                             width: 10,
                             height: 10,
                             borderRadius: '50%',
-                            background: adminSyncStatus === 'synced' ? '#10b981' : adminSyncStatus === 'syncing' ? '#fbbf24' : '#ef4444',
+                            background: adminSyncStatus === 'synced' ? 'var(--accent-green)' : adminSyncStatus === 'syncing' ? 'var(--accent-orange)' : 'var(--accent-red)',
                             display: 'inline-block'
                           }}></span>
                           {adminSyncStatus === 'syncing' && (
@@ -266,7 +265,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                               width: 20,
                               height: 20,
                               borderRadius: '50%',
-                              border: '2px solid #fbbf24',
+                              border: '2px solid var(--accent-orange)',
                               animation: 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
                               display: 'inline-block'
                             }}></span>
@@ -277,7 +276,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                               width: 20,
                               height: 20,
                               borderRadius: '50%',
-                              border: '2px solid #10b981',
+                              border: '2px solid var(--accent-green)',
                               animation: 'ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite',
                               display: 'inline-block'
                             }}></span>
@@ -289,8 +288,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                             <span style={{
                               fontSize: 9,
                               padding: '2px 8px',
-                              background: 'rgba(99, 102, 241, 0.2)',
-                              color: '#818cf8',
+                              background: 'var(--primary-light)',
+                              color: 'var(--primary-dark)',
                               borderRadius: 12,
                               fontWeight: 800,
                               letterSpacing: '0.5px'
@@ -306,10 +305,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                       <div style={{ 
                         fontSize: 11, 
                         color: 'var(--text-secondary)', 
-                        background: 'rgba(255, 255, 255, 0.05)', 
+                        background: 'var(--bg-secondary)', 
                         padding: '6px 12px', 
                         borderRadius: 10, 
-                        border: '1px solid rgba(255, 255, 255, 0.08)' 
+                        border: '1px solid var(--border)' 
                       }}>
                         GPS: <strong style={{ color: 'var(--text-primary)' }}>{orgLat.toFixed(5)}</strong>, <strong style={{ color: 'var(--text-primary)' }}>{orgLon.toFixed(5)}</strong> (r: {orgRadius}m)
                       </div>
@@ -325,7 +324,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <div style={{
                 position: 'fixed',
                 inset: 0,
-                background: 'rgba(10, 10, 20, 0.85)',
+                background: 'var(--bg-modal)',
                 backdropFilter: 'blur(12px)',
                 zIndex: 9999,
                 display: 'flex',
@@ -334,30 +333,30 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 padding: 20
               }}>
                 <div style={{
-                  background: 'rgba(30, 20, 30, 0.95)',
-                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--accent-red)',
                   borderRadius: 24,
                   padding: '40px 32px',
                   maxWidth: 480,
                   width: '100%',
                   textAlign: 'center',
-                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1)',
+                  boxShadow: 'var(--shadow-lg)',
                   animation: 'scaleIn 0.3s ease'
                 }}>
                   <div style={{
                     width: 72,
                     height: 72,
                     borderRadius: '50%',
-                    background: 'rgba(239, 68, 68, 0.15)',
+                    background: 'var(--accent-red-light)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: '#ef4444',
+                    color: 'var(--accent-red)',
                     margin: '0 auto 24px'
                   }}>
                     <AlertTriangle size={36} strokeWidth={2} className="animate-pulse" />
                   </div>
-                  <h2 style={{ fontSize: 22, color: '#f87171', fontWeight: 800, margin: '0 0 12px', letterSpacing: '0.5px' }}>
+                  <h2 style={{ fontSize: 22, color: 'var(--accent-red)', fontWeight: 800, margin: '0 0 12px', letterSpacing: '0.5px' }}>
                     GEOFENCE BOUNDARY VIOLATION
                   </h2>
                   <p style={{ color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.6, margin: '0 0 24px' }}>
@@ -365,19 +364,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     You are currently <strong>{Math.round(violationDistance)}m</strong> away from TechCorp office boundary.
                   </p>
                   <div style={{
-                    background: 'rgba(239, 68, 68, 0.08)',
-                    border: '1px solid rgba(239, 68, 68, 0.15)',
+                    background: 'var(--accent-red-light)',
+                    border: '1px solid var(--border)',
                     borderRadius: 16,
                     padding: '16px 20px',
                     fontSize: 14,
-                    color: '#fca5a5',
+                    color: 'var(--accent-red)',
                     fontWeight: 600,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: 12
                   }}>
-                    <span className="spinner-sm" style={{ borderLeftColor: '#ef4444', width: 14, height: 14, display: 'inline-block' }}></span>
+                    <span className="spinner-sm" style={{ borderLeftColor: 'var(--accent-red)', width: 14, height: 14, display: 'inline-block' }}></span>
                     Auto-logging out in {logoutCountdown} second{logoutCountdown !== 1 ? 's' : ''}...
                   </div>
                 </div>

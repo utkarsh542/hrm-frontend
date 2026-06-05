@@ -67,7 +67,7 @@ export default function SmartHirePage() {
     <div className="animate-fade-in" style={{ padding: '24px 32px' }}>
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(108,99,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6c63ff' }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(37,99,235,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)' }}>
             <Sparkles size={20} strokeWidth={2} />
           </div>
           AI Smart Hire
@@ -83,13 +83,13 @@ export default function SmartHirePage() {
           onDrop={e => { e.preventDefault(); setDragOver(false); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); }}
           onClick={() => { const input = document.createElement('input'); input.type = 'file'; input.accept = '.pdf,.docx,.txt'; input.onchange = (e: any) => { if (e.target.files[0]) handleFile(e.target.files[0]); }; input.click(); }}
           style={{
-            border: `2px dashed ${dragOver ? '#6c63ff' : 'var(--border)'}`, borderRadius: 20, padding: '48px 32px',
+            border: `2px dashed ${dragOver ? 'var(--primary)' : 'var(--border)'}`, borderRadius: 20, padding: '48px 32px',
             textAlign: 'center', cursor: 'pointer', transition: 'all 0.3s',
-            background: dragOver ? 'rgba(108,99,255,0.08)' : 'var(--bg-card)',
+            background: dragOver ? 'rgba(37,99,235,0.08)' : 'var(--bg-card)',
             marginBottom: 24,
           }}
         >
-          <div style={{ width: 64, height: 64, borderRadius: 16, background: 'rgba(108,99,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', color: '#6c63ff' }}>
+          <div style={{ width: 64, height: 64, borderRadius: 16, background: 'rgba(37,99,235,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', color: 'var(--primary)' }}>
             <FileUp size={30} strokeWidth={1.5} />
           </div>
           <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>
@@ -105,8 +105,8 @@ export default function SmartHirePage() {
           )}
           {parsing && (
             <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-              <Loader2 size={20} style={{ color: '#6c63ff', animation: 'spin 1s linear infinite' }} />
-              <span style={{ color: '#6c63ff', fontWeight: 600 }}>AI is analyzing the resume...</span>
+              <Loader2 size={20} style={{ color: 'var(--primary)', animation: 'spin 1s linear infinite' }} />
+              <span style={{ color: 'var(--primary)', fontWeight: 600 }}>AI is analyzing the resume...</span>
             </div>
           )}
         </div>
@@ -156,7 +156,7 @@ export default function SmartHirePage() {
               </label>
               <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                 {parsed.skills.split(',').map((s: string, i: number) => (
-                  <span key={i} style={{ padding: '4px 10px', borderRadius: 8, background: 'rgba(108,99,255,0.15)', color: '#6c63ff', fontSize: 12, fontWeight: 600 }}>{s.trim()}</span>
+                  <span key={i} style={{ padding: '4px 10px', borderRadius: 8, background: 'rgba(37,99,235,0.15)', color: 'var(--primary)', fontSize: 12, fontWeight: 600 }}>{s.trim()}</span>
                 ))}
               </div>
             </div>

@@ -98,6 +98,9 @@ export interface Employee {
   phone?: string;
   date_of_birth?: string;
   gender?: string;
+  address?: string;
+  official_address?: string;
+  corresponding_address?: string;
   department_id?: number;
   department_name: string;
   designation?: string;
@@ -108,6 +111,7 @@ export interface Employee {
   casual_leave_balance: number;
   sick_leave_balance: number;
   earned_leave_balance: number;
+  comp_off_balance?: number;
   onboarding_status: string;
   reporting_manager_id?: number;
   avatar_url?: string;
@@ -250,6 +254,12 @@ export interface DashboardStats {
   this_month_payroll: number;
   new_hires_this_month: number;
   attrition_rate: number;
+  casual_leave_balance?: number;
+  sick_leave_balance?: number;
+  earned_leave_balance?: number;
+  present_days_this_month?: number;
+  work_hours_this_month?: number;
+  active_goals_count?: number;
 }
 
 export interface HiringFunnelData {
@@ -280,3 +290,30 @@ export type Pipeline = Record<string, Array<{
   source: string;
   applied_at: string;
 }>>;
+
+
+export interface CompOffRule {
+  id: number;
+  standard_working_hours: number;
+  min_overtime_hours: number;
+  is_active: number;
+}
+
+export interface CompOffRequest {
+  id: number;
+  employee_id: number;
+  attendance_date: string;
+  working_hours: number;
+  overtime_hours: number;
+  reason?: string;
+  manager_status: string;
+  manager_id?: number;
+  manager_action_at?: string;
+  hr_status: string;
+  hr_id?: number;
+  hr_action_at?: string;
+  status: string;
+  created_at: string;
+  employee_name?: string;
+}
+

@@ -52,44 +52,46 @@ export default function PayrollPage() {
         )}
       </div>
 
-      <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
-        <div className="stat-card">
-          <div className="stat-icon blue">
-            <BarChart2 size={24} />
+      {isAdminOrHR && (
+        <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+          <div className="stat-card">
+            <div className="stat-icon blue">
+              <BarChart2 size={24} />
+            </div>
+            <div className="stat-info">
+              <div className="stat-label">Total Runs</div>
+              <div className="stat-value">{runs.length}</div>
+            </div>
           </div>
-          <div className="stat-info">
-            <div className="stat-label">Total Runs</div>
-            <div className="stat-value">{runs.length}</div>
+          <div className="stat-card">
+            <div className="stat-icon green">
+              <Banknote size={24} />
+            </div>
+            <div className="stat-info">
+              <div className="stat-label">Last Gross</div>
+              <div className="stat-value">{runs[0] ? formatCurrency(runs[0].total_gross) : '₹0'}</div>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon red">
+              <TrendingDown size={24} />
+            </div>
+            <div className="stat-info">
+              <div className="stat-label">Last Deductions</div>
+              <div className="stat-value">{runs[0] ? formatCurrency(runs[0].total_deductions) : '₹0'}</div>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon purple">
+              <CreditCard size={24} />
+            </div>
+            <div className="stat-info">
+              <div className="stat-label">Last Net Payout</div>
+              <div className="stat-value">{runs[0] ? formatCurrency(runs[0].total_net) : '₹0'}</div>
+            </div>
           </div>
         </div>
-        <div className="stat-card">
-          <div className="stat-icon green">
-            <Banknote size={24} />
-          </div>
-          <div className="stat-info">
-            <div className="stat-label">Last Gross</div>
-            <div className="stat-value">{runs[0] ? formatCurrency(runs[0].total_gross) : '₹0'}</div>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon red">
-            <TrendingDown size={24} />
-          </div>
-          <div className="stat-info">
-            <div className="stat-label">Last Deductions</div>
-            <div className="stat-value">{runs[0] ? formatCurrency(runs[0].total_deductions) : '₹0'}</div>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon purple">
-            <CreditCard size={24} />
-          </div>
-          <div className="stat-info">
-            <div className="stat-label">Last Net Payout</div>
-            <div className="stat-value">{runs[0] ? formatCurrency(runs[0].total_net) : '₹0'}</div>
-          </div>
-        </div>
-      </div>
+      )}
 
       {/* Payroll Runs */}
       <div className="table-container" style={{ marginBottom: 24 }}>
@@ -97,10 +99,10 @@ export default function PayrollPage() {
           <thead>
             <tr>
               <th>Period</th>
-              <th>Employees</th>
-              <th>Gross Pay</th>
-              <th>Deductions</th>
-              <th>Net Pay</th>
+              {isAdminOrHR && <th>Employees</th>}
+              {isAdminOrHR && <th>Gross Pay</th>}
+              {isAdminOrHR && <th>Deductions</th>}
+              {isAdminOrHR && <th>Net Pay</th>}
               <th>Status</th>
               <th>Actions</th>
             </tr>
@@ -109,73 +111,81 @@ export default function PayrollPage() {
             {runs.map(run => (
               <tr key={run.id}>
                 <td style={{ fontWeight: 600 }}>{MONTHS[run.month - 1]} {run.year}</td>
-                <td>{run.total_employees}</td>
-                <td style={{ color: 'var(--accent-green)' }}>{formatCurrency(run.total_gross)}</td>
-                <td style={{ color: 'var(--accent-red)' }}>{formatCurrency(run.total_deductions)}</td>
-                <td style={{ fontWeight: 700 }}>{formatCurrency(run.total_net)}</td>
+                {isAdminOrHR && <td>{run.total_employees}</td>}
+                {isAdminOrHR && <td style={{ color: 'var(--accent-green)' }}>{formatCurrency(run.total_gross)}</td>}
+                {isAdminOrHR && <td style={{ color: 'var(--accent-red)' }}>{formatCurrency(run.total_deductions)}</td>}
+                {isAdminOrHR && <td style={{ fontWeight: 700 }}>{formatCurrency(run.total_net)}</td>}
                 <td><span className={`badge badge-success`}>{run.status}</span></td>
                 <td>
-                  <button className="btn btn-sm btn-secondary" onClick={() => setSelectedRun(run)}>View Payslips</button>
+                  <button className="btn btn-sm btn-secondary" onClick={() => setSelectedRun(run)}>
+                    {isAdminOrHR ? 'View Payslips' : 'View Payslip'}
+                  </button>
                 </td>
               </tr>
             ))}
             {runs.length === 0 && (
-              <tr><td colSpan={7} style={{ textAlign: 'center', padding: 40, color: 'var(--text-tertiary)' }}>No payroll runs yet. Click "Run Payroll" to process.</td></tr>
+              <tr><td colSpan={isAdminOrHR ? 7 : 3} style={{ textAlign: 'center', padding: 40, color: 'var(--text-tertiary)' }}>No payroll runs yet.</td></tr>
             )}
           </tbody>
         </table>
       </div>
 
       {/* Payslips Detail */}
-      {selectedRun && selectedRun.payslips && selectedRun.payslips.length > 0 && (
+      {selectedRun && (
         <div className="card animate-scale-in">
           <h3 style={{ fontSize: 16, marginBottom: 16, display: 'inline-flex', alignItems: 'center', gap: 8, width: '100%', justifyContent: 'space-between' }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
               <ClipboardList className="text-primary-light" size={20} />
-              Payslips — {MONTHS[selectedRun.month - 1]} {selectedRun.year}
+              {isAdminOrHR ? `Payslips — ${MONTHS[selectedRun.month - 1]} ${selectedRun.year}` : `My Payslip — ${MONTHS[selectedRun.month - 1]} ${selectedRun.year}`}
             </span>
             <button className="btn btn-ghost btn-sm" onClick={() => setSelectedRun(null)}>✕ Close</button>
           </h3>
-          <div className="table-container">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Employee</th>
-                  <th>Code</th>
-                  <th>Basic</th>
-                  <th>HRA</th>
-                  <th>DA</th>
-                  <th>Special</th>
-                  <th>Gross</th>
-                  <th>PF</th>
-                  <th>TDS</th>
-                  <th>Net</th>
-                  <th>Download</th>
-                </tr>
-              </thead>
-              <tbody>
-                {selectedRun.payslips.map(ps => (
-                  <tr key={ps.id}>
-                    <td style={{ fontWeight: 600 }}>{ps.employee_name}</td>
-                    <td style={{ fontFamily: 'monospace', color: 'var(--primary-light)' }}>{ps.employee_code}</td>
-                    <td>{formatCurrency(ps.basic_salary)}</td>
-                    <td>{formatCurrency(ps.hra)}</td>
-                    <td>{formatCurrency(ps.da)}</td>
-                    <td>{formatCurrency(ps.special_allowance)}</td>
-                    <td style={{ color: 'var(--accent-green)' }}>{formatCurrency(ps.total_earnings)}</td>
-                    <td>{formatCurrency(ps.pf_employee)}</td>
-                    <td>{formatCurrency(ps.tds)}</td>
-                    <td style={{ fontWeight: 700 }}>{formatCurrency(ps.net_salary)}</td>
-                    <td>
-                      <a href={api.downloadPayslip(ps.id)} target="_blank" className="btn btn-sm btn-primary" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                        <FileText size={14} /> PDF
-                      </a>
-                    </td>
+          {selectedRun.payslips && selectedRun.payslips.length > 0 ? (
+            <div className="table-container">
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    {isAdminOrHR && <th>Employee</th>}
+                    {isAdminOrHR && <th>Code</th>}
+                    <th>Basic</th>
+                    <th>HRA</th>
+                    <th>DA</th>
+                    <th>Special</th>
+                    <th>Gross</th>
+                    <th>PF</th>
+                    <th>TDS</th>
+                    <th>Net</th>
+                    <th>Download</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {selectedRun.payslips.map(ps => (
+                    <tr key={ps.id}>
+                      {isAdminOrHR && <td style={{ fontWeight: 600 }}>{ps.employee_name}</td>}
+                      {isAdminOrHR && <td style={{ fontFamily: 'monospace', color: 'var(--primary)' }}>{ps.employee_code}</td>}
+                      <td>{formatCurrency(ps.basic_salary)}</td>
+                      <td>{formatCurrency(ps.hra)}</td>
+                      <td>{formatCurrency(ps.da)}</td>
+                      <td>{formatCurrency(ps.special_allowance)}</td>
+                      <td style={{ color: 'var(--accent-green)' }}>{formatCurrency(ps.total_earnings)}</td>
+                      <td>{formatCurrency(ps.pf_employee)}</td>
+                      <td>{formatCurrency(ps.tds)}</td>
+                      <td style={{ fontWeight: 700 }}>{formatCurrency(ps.net_salary)}</td>
+                      <td>
+                        <a href={api.downloadPayslip(ps.id)} target="_blank" className="btn btn-sm btn-primary" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                          <FileText size={14} /> PDF
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div style={{ textAlign: 'center', padding: '32px 16px', color: 'var(--text-secondary)', fontSize: 14 }}>
+              No payslip has been generated for you for this period. Please contact HR if you believe this is an error.
+            </div>
+          )}
         </div>
       )}
 

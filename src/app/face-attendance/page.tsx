@@ -23,7 +23,7 @@ export default function FaceAttendancePage() {
         api.getEmployees(),
         api.getFaceTodayRecords(),
       ]);
-      setEmployees((emps as any[]).filter(e => e.employment_status === 'active'));
+      setEmployees((emps as any[]).filter(e => e.is_active));
       setTodayRecords(recs);
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
@@ -86,7 +86,7 @@ export default function FaceAttendancePage() {
     <div className="animate-fade-in">
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ color: '#6c63ff', display: 'flex', alignItems: 'center' }}>
+          <div style={{ color: 'var(--primary)', display: 'flex', alignItems: 'center' }}>
             <Camera size={28} strokeWidth={2} />
           </div>
           <div>
@@ -132,7 +132,7 @@ export default function FaceAttendancePage() {
         {/* Left: Employee selector + camera */}
         <div className="card">
           <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Camera size={18} style={{ color: '#6c63ff' }} />
+            <Camera size={18} style={{ color: 'var(--primary)' }} />
             <span>Verify & Check In/Out</span>
           </h3>
 
@@ -203,7 +203,7 @@ export default function FaceAttendancePage() {
         {/* Right: Today's records */}
         <div className="card">
           <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <ClipboardList size={18} style={{ color: '#6c63ff' }} />
+            <ClipboardList size={18} style={{ color: 'var(--primary)' }} />
             <span>Today's Records</span>
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 400, overflowY: 'auto' }}>

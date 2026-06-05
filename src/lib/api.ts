@@ -93,14 +93,33 @@ export const api = {
   updateLeave: (id: number, data: any) => request(`/attendance/leaves/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   getLeaveBalance: (employeeId: number) => request(`/attendance/leaves/balance/${employeeId}`),
   getHolidays: () => request('/attendance/holidays/'),
+  createHoliday: (data: { name: string; date: string; type?: string }) => request<any>('/attendance/holidays/', { method: 'POST', body: JSON.stringify(data) }),
+  updateHoliday: (id: number, data: { name?: string; date?: string; type?: string }) => request<any>(`/attendance/holidays/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   getGeofence: () => request('/attendance/geofence'),
   updateGeofence: (latitude: number, longitude: number, radius: number = 100.0) => request('/attendance/geofence/update', { method: 'POST', body: JSON.stringify({ latitude, longitude, radius }) }),
+  
+  // Comp-off
+  getCompOffRule: () => request<any>('/attendance/compoff/rule'),
+  updateCompOffRule: (data: { standard_working_hours?: number; min_overtime_hours?: number }) =>
+    request<any>('/attendance/compoff/rule', { method: 'PUT', body: JSON.stringify(data) }),
+  getEligibleOvertimeDates: () => request<any[]>('/attendance/compoff/eligible-dates'),
+  createCompOffRequest: (data: { attendance_date: string; reason?: string }) =>
+    request<any>('/attendance/compoff/request', { method: 'POST', body: JSON.stringify(data) }),
+  getMyCompOffRequests: () => request<any[]>('/attendance/compoff/my-requests'),
+  getPendingCompOffApprovals: () => request<any[]>('/attendance/compoff/pending-approvals'),
+  actionCompOffRequest: (id: number, action: 'approve' | 'reject') =>
+    request<any>(`/attendance/compoff/action/${id}`, { method: 'POST', body: JSON.stringify({ action }) }),
+  cancelCompOffRequest: (id: number) =>
+    request<any>(`/attendance/compoff/cancel/${id}`, { method: 'POST' }),
 
   // Payroll
   getPayrollRuns: () => request('/payroll/runs'),
   runPayroll: (month: number, year: number) => request('/payroll/run', { method: 'POST', body: JSON.stringify({ month, year }) }),
   getEmployeePayslips: (employeeId: number) => request(`/payroll/payslips/${employeeId}`),
-  downloadPayslip: (payslipId: number) => `${API_BASE}/payroll/payslips/${payslipId}/download`,
+  downloadPayslip: (payslipId: number) => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('hrms_token') : null;
+    return `${API_BASE}/payroll/payslips/${payslipId}/download${token ? `?token=${token}` : ''}`;
+  },
 
   // Performance
   getReviews: (employeeId?: number) => request(`/performance/reviews${employeeId ? `?employee_id=${employeeId}` : ''}`),
@@ -134,7 +153,10 @@ export const api = {
   // Documents
   getDocuments: (params?: string) => request(`/documents/${params ? `?${params}` : ''}`),
   uploadDocument: (formData: FormData) => uploadRequest('/documents/upload', formData),
-  downloadDocument: (id: number) => `${API_BASE}/documents/${id}/download`,
+  downloadDocument: (id: number) => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('hrms_token') : null;
+    return `${API_BASE}/documents/${id}/download${token ? `?token=${token}` : ''}`;
+  },
   deleteDocument: (id: number) => request(`/documents/${id}`, { method: 'DELETE' }),
   getDocumentStats: () => request('/documents/stats/summary'),
 

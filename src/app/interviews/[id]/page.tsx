@@ -189,7 +189,7 @@ export default function LiveInterviewPage() {
   if (phase === 'ready') return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
       <div style={{ maxWidth: 560, width: '100%', textAlign: 'center' }}>
-        <div style={{ color: '#6c63ff', display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+        <div style={{ color: 'var(--primary)', display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
           <Bot size={64} strokeWidth={1.5} />
         </div>
         <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 8 }}>AI Interview Room</h1>
@@ -301,7 +301,7 @@ export default function LiveInterviewPage() {
         {ev.scores && (
           <div className="card" style={{ marginBottom: 24 }}>
             <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <BarChart2 size={16} style={{ color: '#6c63ff' }} />
+              <BarChart2 size={16} style={{ color: 'var(--primary)' }} />
               <span>Dimension Scores</span>
             </h3>
             <div style={{ display: 'grid', gap: 12 }}>
@@ -323,7 +323,7 @@ export default function LiveInterviewPage() {
         {/* AI Feedback */}
         <div className="card" style={{ marginBottom: 24 }}>
           <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Bot size={16} style={{ color: '#6c63ff' }} />
+            <Bot size={16} style={{ color: 'var(--primary)' }} />
             <span>AI Feedback</span>
           </h3>
           <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.7 }}>{ev.feedback}</p>
@@ -332,7 +332,7 @@ export default function LiveInterviewPage() {
         {/* Q&A Review */}
         <div className="card" style={{ marginBottom: 24 }}>
           <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <ClipboardList size={16} style={{ color: '#6c63ff' }} />
+            <ClipboardList size={16} style={{ color: 'var(--primary)' }} />
             <span>Answer Review</span>
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -353,7 +353,7 @@ export default function LiveInterviewPage() {
                 {qa.keywords && qa.keywords.length > 0 && (
                   <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginTop: 6 }}>
                     {qa.keywords.map(k => (
-                      <span key={k} style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: 'rgba(108,99,255,0.15)', color: 'var(--primary-light)' }}>{k}</span>
+                      <span key={k} style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: 'rgba(37,99,235,0.15)', color: 'var(--primary)' }}>{k}</span>
                     ))}
                   </div>
                 )}
@@ -383,7 +383,7 @@ export default function LiveInterviewPage() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div>
           <div style={{ fontSize: 13, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <Bot size={14} style={{ color: '#6c63ff' }} />
+            <Bot size={14} style={{ color: 'var(--primary)' }} />
             <span>AI Interview · {session?.job_title}</span>
           </div>
           <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>{session?.candidate_name}</div>
@@ -413,9 +413,9 @@ export default function LiveInterviewPage() {
       </div>
 
       {/* Question card */}
-      <div className="card" style={{ marginBottom: 20, borderTop: `3px solid ${DIFF_COLOR[q?.difficulty] || '#6c63ff'}` }}>
+      <div className="card" style={{ marginBottom: 20, borderTop: `3px solid ${DIFF_COLOR[q?.difficulty] || 'var(--primary)'}` }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 10, background: `${DIFF_COLOR[q?.difficulty] || '#6c63ff'}20`, color: DIFF_COLOR[q?.difficulty] || '#6c63ff', textTransform: 'uppercase' }}>
+          <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 10, background: `${DIFF_COLOR[q?.difficulty] || 'var(--primary)'}20`, color: DIFF_COLOR[q?.difficulty] || 'var(--primary)', textTransform: 'uppercase' }}>
             {q?.difficulty}
           </span>
           <span style={{ fontSize: 11, color: 'var(--text-tertiary)', textTransform: 'capitalize' }}>{q?.category}</span>
@@ -524,7 +524,7 @@ export default function LiveInterviewPage() {
             {liveScore!.feedback}
           </p>
           {liveScore!.follow_up && (
-            <div style={{ padding: '10px 14px', background: 'rgba(108,99,255,0.08)', borderRadius: 8, fontSize: 13, color: 'var(--primary-light)', marginBottom: 0, display: 'flex', alignItems: 'flex-start', gap: 6 }}>
+            <div style={{ padding: '10px 14px', background: 'rgba(37,99,235,0.08)', borderRadius: 8, fontSize: 13, color: 'var(--primary)', marginBottom: 0, display: 'flex', alignItems: 'flex-start', gap: 6 }}>
               <MessageSquare size={14} style={{ flexShrink: 0, marginTop: 2 }} />
               <span>Follow-up: {liveScore!.follow_up}</span>
             </div>

@@ -55,7 +55,7 @@ export default function SkillsPage() {
 
   const tabStyle = (t2: string) => ({
     padding: '10px 20px', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700 as const,
-    background: tab === t2 ? '#6c63ff' : 'var(--bg-input)', color: tab === t2 ? '#fff' : 'var(--text-secondary)',
+    background: tab === t2 ? 'var(--primary)' : 'var(--bg-input)', color: tab === t2 ? '#fff' : 'var(--text-secondary)',
     transition: 'all 0.2s', fontFamily: 'Inter, sans-serif', display: 'flex' as const, alignItems: 'center' as const, gap: 6,
   });
 
@@ -110,7 +110,7 @@ export default function SkillsPage() {
 
           {matrix.length > 0 && (
             <div style={{ background: 'var(--bg-card)', borderRadius: 16, padding: 24, border: '1px solid var(--border)', overflowX: 'auto' }}>
-              <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><MapPin size={18} style={{ color: '#6c63ff' }} /> Department Skills Heatmap</h3>
+              <h3 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><MapPin size={18} style={{ color: 'var(--primary)' }} /> Department Skills Heatmap</h3>
               {matrix.filter(d => Object.keys(d.skills).length > 0).map(dept => (
                 <div key={dept.department_id} style={{ marginBottom: 16 }}>
                   <div style={{ fontWeight: 700, marginBottom: 8 }}>{dept.department} <span style={{ fontWeight: 400, fontSize: 12, color: 'var(--text-secondary)' }}>({dept.employee_count} employees)</span></div>
@@ -119,8 +119,8 @@ export default function SkillsPage() {
                       const intensity = Math.min(data.avg_proficiency / 5, 1);
                       return (
                         <div key={name} style={{ padding: '6px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-                          background: `rgba(108,99,255,${0.1 + intensity * 0.4})`, color: intensity > 0.5 ? '#fff' : '#c4b5fd',
-                          border: '1px solid rgba(108,99,255,0.3)' }}>
+                          background: `rgba(37,99,235,${0.1 + intensity * 0.4})`, color: intensity > 0.5 ? '#fff' : '#c4b5fd',
+                          border: '1px solid rgba(37,99,235,0.3)' }}>
                           {name} <span style={{ opacity: 0.8 }}>({data.avg_proficiency}/5)</span>
                         </div>
                       );
@@ -166,7 +166,7 @@ export default function SkillsPage() {
                   {p.skills_covered && p.skills_covered.length > 0 && (
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 12 }}>
                       {p.skills_covered.map((s: string) => (
-                        <span key={s} style={{ padding: '2px 8px', borderRadius: 6, fontSize: 10, fontWeight: 600, background: 'rgba(108,99,255,0.15)', color: '#6c63ff' }}>{s}</span>
+                        <span key={s} style={{ padding: '2px 8px', borderRadius: 6, fontSize: 10, fontWeight: 600, background: 'rgba(37,99,235,0.15)', color: 'var(--primary)' }}>{s}</span>
                       ))}
                     </div>
                   )}
@@ -223,7 +223,7 @@ export default function SkillsPage() {
                               <span style={{ padding: '2px 8px', borderRadius: 6, fontSize: 10, fontWeight: 700,
                                 background: c.readiness === 'ready_now' ? 'rgba(16,185,129,0.15)' : c.readiness === '1-2_years' ? 'rgba(245,158,11,0.15)' : 'rgba(239,68,68,0.15)',
                                 color: c.readiness === 'ready_now' ? '#10b981' : c.readiness === '1-2_years' ? '#f59e0b' : '#ef4444' }}>{c.readiness.replace(/_/g, ' ')}</span>
-                              {c.ai_score && <span style={{ fontSize: 12, fontWeight: 700, color: '#6c63ff', display: 'flex', alignItems: 'center', gap: 3 }}><Award size={12} /> {c.ai_score}%</span>}
+                              {c.ai_score && <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: 3 }}><Award size={12} /> {c.ai_score}%</span>}
                             </div>
                           </div>
                         ))}
@@ -241,7 +241,7 @@ export default function SkillsPage() {
       {showSkillModal && (
         <div className="modal-overlay" onClick={() => setShowSkillModal(false)}>
           <div className="modal animate-scale-in" onClick={e => e.stopPropagation()} style={{ maxWidth: 420 }}>
-            <h2 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Target size={20} style={{ color: '#6c63ff' }} /> Add Skill</h2>
+            <h2 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Target size={20} style={{ color: 'var(--primary)' }} /> Add Skill</h2>
             <div className="form-group"><label className="form-label">Skill Name</label>
               <input className="form-input" value={newSkill.name} onChange={e => setNewSkill({ ...newSkill, name: e.target.value })} placeholder="e.g. Python" /></div>
             <div className="form-group"><label className="form-label">Category</label>
@@ -261,7 +261,7 @@ export default function SkillsPage() {
       {showTrainingModal && (
         <div className="modal-overlay" onClick={() => setShowTrainingModal(false)}>
           <div className="modal animate-scale-in" onClick={e => e.stopPropagation()} style={{ maxWidth: 480 }}>
-            <h2 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><BookOpen size={20} style={{ color: '#6c63ff' }} /> Create Training Program</h2>
+            <h2 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><BookOpen size={20} style={{ color: 'var(--primary)' }} /> Create Training Program</h2>
             <div className="form-group"><label className="form-label">Title</label>
               <input className="form-input" value={newProgram.title} onChange={e => setNewProgram({ ...newProgram, title: e.target.value })} /></div>
             <div className="form-group"><label className="form-label">Provider</label>

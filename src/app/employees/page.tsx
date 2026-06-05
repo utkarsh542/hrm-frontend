@@ -19,6 +19,7 @@ export default function EmployeesPage() {
     full_name: '', email: '', phone: '', designation: '', department_id: 0,
     employment_type: 'full_time', ctc: 0, joining_date: new Date().toISOString().split('T')[0],
     gender: '', pan_number: '', bank_account: '', bank_name: '',
+    official_address: '', corresponding_address: '',
   });
 
   // State for newly provisioned user account credentials
@@ -101,6 +102,7 @@ export default function EmployeesPage() {
         full_name: '', email: '', phone: '', designation: '', department_id: 0,
         employment_type: 'full_time', ctc: 0, joining_date: new Date().toISOString().split('T')[0],
         gender: '', pan_number: '', bank_account: '', bank_name: '',
+        official_address: '', corresponding_address: '',
       });
 
       fetchData();
@@ -113,7 +115,7 @@ export default function EmployeesPage() {
     <div className="animate-fade-in">
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ color: '#6c63ff', display: 'flex', alignItems: 'center' }}>
+          <div style={{ color: 'var(--primary)', display: 'flex', alignItems: 'center' }}>
             <Users size={28} strokeWidth={2} />
           </div>
           <h1 style={{ margin: 0 }}>Employee Directory</h1>
@@ -195,7 +197,7 @@ export default function EmployeesPage() {
                     </div>
                   </div>
                 </td>
-                <td style={{ fontFamily: 'monospace', color: 'var(--primary-light)' }}>{emp.employee_id}</td>
+                <td style={{ fontFamily: 'monospace', color: 'var(--primary)' }}>{emp.employee_id}</td>
                 <td>{emp.department_name}</td>
                 <td>{emp.designation}</td>
                 <td><span className="badge badge-info">{emp.employment_type.replace('_', ' ')}</span></td>
@@ -285,6 +287,24 @@ export default function EmployeesPage() {
                   </select>
                 </div>
               </div>
+              <div className="form-group" style={{ marginBottom: 12 }}>
+                <label className="form-label">Official Address</label>
+                <textarea 
+                  className="form-input" 
+                  style={{ minHeight: 60, fontFamily: 'inherit', resize: 'vertical' }} 
+                  value={formData.official_address} 
+                  onChange={e => setFormData({...formData, official_address: e.target.value})} 
+                />
+              </div>
+              <div className="form-group" style={{ marginBottom: 12 }}>
+                <label className="form-label">Correspondence Address</label>
+                <textarea 
+                  className="form-input" 
+                  style={{ minHeight: 60, fontFamily: 'inherit', resize: 'vertical' }} 
+                  value={formData.corresponding_address} 
+                  onChange={e => setFormData({...formData, corresponding_address: e.target.value})} 
+                />
+              </div>
             </div>
             <div className="modal-footer">
               <button className="btn btn-secondary" onClick={() => { setError(null); setShowCreateModal(false); }}>Cancel</button>
@@ -299,7 +319,7 @@ export default function EmployeesPage() {
         <div className="modal-overlay" onClick={() => setNewCredentials(null)}>
           <div className="modal-content" style={{ maxWidth: 450, textAlign: 'center', padding: '30px 24px' }} onClick={e => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
-              <div style={{ width: 60, height: 60, borderRadius: '50%', backgroundColor: 'rgba(108, 99, 255, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6c63ff' }}>
+              <div style={{ width: 60, height: 60, borderRadius: '50%', backgroundColor: 'rgba(37, 99, 235, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)' }}>
                 <ShieldCheck size={36} />
               </div>
             </div>

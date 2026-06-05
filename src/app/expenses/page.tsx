@@ -113,7 +113,7 @@ export default function ExpensesPage() {
     <div className="animate-fade-in">
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ color: '#6c63ff', display: 'flex', alignItems: 'center' }}>
+          <div style={{ color: 'var(--primary)', display: 'flex', alignItems: 'center' }}>
             <CreditCard size={28} strokeWidth={2} />
           </div>
           <h1 style={{ margin: 0 }}>Expense Management</h1>

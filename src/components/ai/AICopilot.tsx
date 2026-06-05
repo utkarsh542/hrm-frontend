@@ -54,7 +54,7 @@ export default function AICopilot() {
           width: 56, height: 56, borderRadius: '50%',
           background: 'linear-gradient(135deg, var(--primary), var(--accent-purple))',
           border: 'none', cursor: 'pointer',
-          boxShadow: '0 4px 20px rgba(108,99,255,0.5)',
+          boxShadow: '0 4px 20px rgba(37,99,235,0.5)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           transition: 'transform 0.2s',
           color: '#fff',
