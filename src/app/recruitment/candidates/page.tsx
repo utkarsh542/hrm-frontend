@@ -9,14 +9,14 @@ import {
 } from 'lucide-react';
 
 const STAGES = [
-  { key: 'applied', label: 'Applied', color: '#3b82f6' },
-  { key: 'screening', label: 'Screening', color: '#f59e0b' },
-  { key: 'shortlisted', label: 'Shortlisted', color: '#8b5cf6' },
-  { key: 'interview', label: 'Interview', color: '#06b6d4' },
-  { key: 'offered', label: 'Offered', color: '#10b981' },
-  { key: 'hired', label: 'Hired', color: '#22c55e' },
-  { key: 'joined', label: 'Joined', color: '#14b8a6' },
-  { key: 'rejected', label: 'Rejected', color: '#ef4444' },
+  { key: 'applied', label: 'Applied', color: 'var(--primary)' },
+  { key: 'screening', label: 'Screening', color: 'var(--accent-orange)' },
+  { key: 'shortlisted', label: 'Shortlisted', color: 'var(--accent-purple)' },
+  { key: 'interview', label: 'Interview', color: 'var(--accent-cyan)' },
+  { key: 'offered', label: 'Offered', color: 'var(--accent-green)' },
+  { key: 'hired', label: 'Hired', color: 'var(--accent-green)' },
+  { key: 'joined', label: 'Joined', color: 'var(--primary-dark)' },
+  { key: 'rejected', label: 'Rejected', color: 'var(--accent-red)' },
 ];
 
 export default function CandidatesPipelinePage() {
@@ -526,7 +526,17 @@ export default function CandidatesPipelinePage() {
                               const prevStage = STAGES[STAGES.findIndex(s => s.key === stage.key) - 1];
                               if (prevStage) handleMove(item.id, prevStage.key);
                             }}
-                            style={{ padding: '3px 6px', fontSize: 9, minHeight: 20, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                            style={{ 
+                              padding: '3px 6px', 
+                              fontSize: 9, 
+                              minHeight: 20, 
+                              display: 'inline-flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'center',
+                              background: 'var(--bg-secondary)',
+                              color: 'var(--text-secondary)',
+                              border: '1px solid var(--border)'
+                            }}
                             title="Move to Previous Stage"
                           >
                             ←
@@ -541,7 +551,18 @@ export default function CandidatesPipelinePage() {
                               e.stopPropagation();
                               handleMove(item.id, 'rejected');
                             }}
-                            style={{ padding: '3px 6px', fontSize: 9, minHeight: 20, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}
+                            style={{ 
+                              padding: '3px 6px', 
+                              fontSize: 9, 
+                              minHeight: 20, 
+                              display: 'inline-flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'center', 
+                              gap: 2,
+                              background: 'var(--accent-red-light)',
+                              color: 'var(--accent-red)',
+                              border: '1px solid rgba(220, 38, 38, 0.15)'
+                            }}
                             title="Reject Candidate"
                           >
                             ✕ Reject
@@ -556,7 +577,17 @@ export default function CandidatesPipelinePage() {
                               e.stopPropagation();
                               handleMove(item.id, 'applied');
                             }}
-                            style={{ padding: '3px 6px', fontSize: 9, minHeight: 20, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                            style={{ 
+                              padding: '3px 6px', 
+                              fontSize: 9, 
+                              minHeight: 20, 
+                              display: 'inline-flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'center',
+                              background: 'var(--primary-light)',
+                              color: 'var(--primary-dark)',
+                              border: '1px solid rgba(37, 99, 235, 0.15)'
+                            }}
                             title="Restore to Applied"
                           >
                             Restore
@@ -571,7 +602,18 @@ export default function CandidatesPipelinePage() {
                               e.stopPropagation();
                               handleRemove(item.id);
                             }}
-                            style={{ padding: '3px 6px', fontSize: 9, minHeight: 20, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}
+                            style={{ 
+                              padding: '3px 6px', 
+                              fontSize: 9, 
+                              minHeight: 20, 
+                              display: 'inline-flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'center', 
+                              gap: 2,
+                              background: 'var(--accent-red-light)',
+                              color: 'var(--accent-red)',
+                              border: '1px solid rgba(220, 38, 38, 0.15)'
+                            }}
                             title="Remove from Pipeline"
                           >
                             ✕ Remove
@@ -592,7 +634,17 @@ export default function CandidatesPipelinePage() {
                                 handleMove(item.id, nextStage.key);
                               }
                             }}
-                            style={{ padding: '3px 6px', fontSize: 9, minHeight: 20, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                            style={{ 
+                              padding: '3px 6px', 
+                              fontSize: 9, 
+                              minHeight: 20, 
+                              display: 'inline-flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'center',
+                              background: 'var(--accent-green-light)',
+                              color: 'var(--accent-green)',
+                              border: '1px solid rgba(5, 150, 105, 0.15)'
+                            }}
                             title="Advance to Next Stage"
                           >
                             →
@@ -639,7 +691,7 @@ export default function CandidatesPipelinePage() {
                 <Bot size={20} />
               </div>
               <div>
-                <h4 style={{ margin: '0 0 4px 0', fontSize: 14, color: '#f0f0f5', fontWeight: 600 }}>Candidate Journey & Interview Rounds Track</h4>
+                <h4 style={{ margin: '0 0 4px 0', fontSize: 14, color: 'var(--text-primary)', fontWeight: 600 }}>Candidate Journey & Interview Rounds Track</h4>
                 <p style={{ margin: 0, fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>
                   Each interview stage (e.g., Round 1 Behavioral, Round 2 Technical) is preserved as a separate scorecard record in the database. 
                   This protects historical assessment grades (like scores and transcripts) from being deleted when advancing candidates to the next round.
@@ -1076,7 +1128,7 @@ export default function CandidatesPipelinePage() {
                   <button 
                     className="btn btn-info" 
                     onClick={openOfferModal}
-                    style={{ background: 'linear-gradient(135deg, var(--primary), #8b5cf6)', color: 'white', border: 'none' }}
+                    style={{ background: 'linear-gradient(135deg, var(--primary), var(--accent-purple))', color: 'white', border: 'none' }}
                   >
                     Draft Offer & Annexure
                   </button>
@@ -1231,7 +1283,6 @@ export default function CandidatesPipelinePage() {
         </div>
       )}
 
-      {/* Floating Glassmorphic Toast Notification */}
       {notification && (
         <div style={{
           position: 'fixed',
@@ -1240,11 +1291,7 @@ export default function CandidatesPipelinePage() {
           zIndex: 9999,
           padding: '16px 20px',
           borderRadius: 12,
-          background: notification.type === 'success' 
-            ? 'rgba(16, 185, 129, 0.15)' 
-            : notification.type === 'error' 
-            ? 'rgba(239, 68, 68, 0.15)' 
-            : 'rgba(59, 130, 246, 0.15)',
+          background: 'var(--bg-card)',
           border: `1px solid ${
             notification.type === 'success' 
               ? 'var(--accent-green)' 
@@ -1252,9 +1299,9 @@ export default function CandidatesPipelinePage() {
               ? 'var(--accent-red)' 
               : 'var(--accent-blue)'
           }`,
-          color: '#ffffff',
+          color: 'var(--text-primary)',
           backdropFilter: 'blur(12px)',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.25)',
+          boxShadow: 'var(--shadow-lg)',
           display: 'flex',
           alignItems: 'center',
           gap: 10,
@@ -1307,16 +1354,16 @@ export default function CandidatesPipelinePage() {
                   <div style={{
                     padding: '12px 16px',
                     borderRadius: '12px',
-                    background: 'rgba(239, 68, 68, 0.12)',
-                    border: '1px solid rgba(239, 68, 68, 0.25)',
-                    color: '#fca5a5',
+                    background: 'var(--accent-red-light)',
+                    border: '1px solid rgba(220, 38, 38, 0.25)',
+                    color: 'var(--accent-red)',
                     display: 'flex',
                     alignItems: 'center',
                     gap: 10,
                     fontSize: 14,
                     fontWeight: 500,
                   }}>
-                    <AlertCircle size={18} style={{ flexShrink: 0, color: '#f87171' }} />
+                    <AlertCircle size={18} style={{ flexShrink: 0, color: 'var(--accent-red)' }} />
                     <span>{interviewError}</span>
                   </div>
                 )}
@@ -1324,16 +1371,16 @@ export default function CandidatesPipelinePage() {
                   <div style={{
                     padding: '12px 16px',
                     borderRadius: '12px',
-                    background: 'rgba(16, 185, 129, 0.12)',
-                    border: '1px solid rgba(16, 185, 129, 0.25)',
-                    color: '#a7f3d0',
+                    background: 'var(--accent-green-light)',
+                    border: '1px solid rgba(5, 150, 105, 0.25)',
+                    color: 'var(--accent-green)',
                     display: 'flex',
                     alignItems: 'center',
                     gap: 10,
                     fontSize: 14,
                     fontWeight: 500,
                   }}>
-                    <CheckCircle2 size={18} style={{ flexShrink: 0, color: '#34d399' }} />
+                    <CheckCircle2 size={18} style={{ flexShrink: 0, color: 'var(--accent-green)' }} />
                     <span>{interviewSuccess}</span>
                   </div>
                 )}
@@ -1454,16 +1501,16 @@ export default function CandidatesPipelinePage() {
                   <div style={{
                     padding: '12px 16px',
                     borderRadius: '12px',
-                    background: 'rgba(239, 68, 68, 0.12)',
-                    border: '1px solid rgba(239, 68, 68, 0.25)',
-                    color: '#fca5a5',
+                    background: 'var(--accent-red-light)',
+                    border: '1px solid rgba(220, 38, 38, 0.25)',
+                    color: 'var(--accent-red)',
                     display: 'flex',
                     alignItems: 'center',
                     gap: 10,
                     fontSize: 14,
                     fontWeight: 500,
                   }}>
-                    <AlertCircle size={18} style={{ flexShrink: 0, color: '#f87171' }} />
+                    <AlertCircle size={18} style={{ flexShrink: 0, color: 'var(--accent-red)' }} />
                     <span>{interviewError}</span>
                   </div>
                 )}
@@ -1471,16 +1518,16 @@ export default function CandidatesPipelinePage() {
                   <div style={{
                     padding: '12px 16px',
                     borderRadius: '12px',
-                    background: 'rgba(16, 185, 129, 0.12)',
-                    border: '1px solid rgba(16, 185, 129, 0.25)',
-                    color: '#a7f3d0',
+                    background: 'var(--accent-green-light)',
+                    border: '1px solid rgba(5, 150, 105, 0.25)',
+                    color: 'var(--accent-green)',
                     display: 'flex',
                     alignItems: 'center',
                     gap: 10,
                     fontSize: 14,
                     fontWeight: 500,
                   }}>
-                    <CheckCircle2 size={18} style={{ flexShrink: 0, color: '#34d399' }} />
+                    <CheckCircle2 size={18} style={{ flexShrink: 0, color: 'var(--accent-green)' }} />
                     <span>{interviewSuccess}</span>
                   </div>
                 )}
@@ -1554,10 +1601,10 @@ export default function CandidatesPipelinePage() {
                     gap: 8,
                     padding: '8px 12px',
                     borderRadius: 8,
-                    background: 'rgba(239, 68, 68, 0.1)',
-                    border: '1px solid rgba(239, 68, 68, 0.2)',
+                    background: 'var(--accent-red-light)',
+                    border: '1px solid rgba(220, 38, 38, 0.15)',
                     fontSize: 13,
-                    color: '#fca5a5'
+                    color: 'var(--accent-red)'
                   }}>
                     <input
                       type="checkbox"
