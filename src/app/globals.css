@@ -107,13 +107,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a {
-  color: var(--primary-light);
+  color: var(--primary);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: var(--primary);
+  color: var(--primary-dark);
 }
 
 /* ============ LAYOUT ============ */
@@ -410,7 +410,7 @@ a:hover {
 
 .header-icon-btn:hover {
   background: var(--bg-card);
-  color: var(--primary-light);
+  color: var(--primary);
   border-color: var(--primary);
 }
 

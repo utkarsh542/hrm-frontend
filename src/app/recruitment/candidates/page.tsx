@@ -406,11 +406,11 @@ export default function CandidatesPipelinePage() {
         <h1 style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
           {activeTab === 'pipeline' ? (
             <>
-              <Users className="text-primary-light" size={28} /> Candidates Pipeline
+              <Users style={{ color: 'var(--primary)' }} size={28} /> Candidates Pipeline
             </>
           ) : (
             <>
-              <Target className="text-primary-light" size={28} /> Interview Schedule
+              <Target style={{ color: 'var(--primary)' }} size={28} /> Interview Schedule
             </>
           )}
         </h1>
@@ -451,9 +451,9 @@ export default function CandidatesPipelinePage() {
             padding: '10px 20px', 
             fontSize: '13px',
             fontWeight: 700,
-            color: activeTab === 'pipeline' ? 'var(--primary-light)' : 'var(--text-tertiary)',
+            color: activeTab === 'pipeline' ? 'var(--primary)' : 'var(--text-tertiary)',
             border: 'none',
-            borderBottom: activeTab === 'pipeline' ? '3px solid var(--primary-light)' : '3px solid transparent',
+            borderBottom: activeTab === 'pipeline' ? '3px solid var(--primary)' : '3px solid transparent',
             background: activeTab === 'pipeline' ? 'rgba(37, 99, 235, 0.08)' : 'transparent',
             display: 'inline-flex',
             alignItems: 'center',
@@ -471,9 +471,9 @@ export default function CandidatesPipelinePage() {
             padding: '10px 20px', 
             fontSize: '13px',
             fontWeight: 700,
-            color: activeTab === 'interviews' ? 'var(--primary-light)' : 'var(--text-tertiary)',
+            color: activeTab === 'interviews' ? 'var(--primary)' : 'var(--text-tertiary)',
             border: 'none',
-            borderBottom: activeTab === 'interviews' ? '3px solid var(--primary-light)' : '3px solid transparent',
+            borderBottom: activeTab === 'interviews' ? '3px solid var(--primary)' : '3px solid transparent',
             background: activeTab === 'interviews' ? 'rgba(37, 99, 235, 0.08)' : 'transparent',
             display: 'inline-flex',
             alignItems: 'center',
@@ -775,12 +775,12 @@ export default function CandidatesPipelinePage() {
                                       gap: 4, 
                                       padding: '2px 8px', 
                                       borderRadius: '6px', 
-                                      background: r.id === interview.id ? 'rgba(37, 99, 235, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                                      border: r.id === interview.id ? '1px solid rgba(37, 99, 235, 0.45)' : '1px solid rgba(255, 255, 255, 0.06)',
-                                      color: r.id === interview.id ? '#ffffff' : 'var(--text-secondary)',
+                                      background: r.id === interview.id ? 'var(--primary-light)' : 'var(--bg-secondary)',
+                                      border: r.id === interview.id ? '1px solid var(--primary)' : '1px solid var(--border)',
+                                      color: r.id === interview.id ? 'var(--primary-dark)' : 'var(--text-secondary)',
                                       fontSize: '10px',
                                       fontWeight: r.id === interview.id ? 700 : 500,
-                                      boxShadow: r.id === interview.id ? '0 0 8px rgba(37, 99, 235, 0.2)' : 'none'
+                                      boxShadow: r.id === interview.id ? 'var(--shadow-glow)' : 'none'
                                     }}
                                     title={`${r.interview_type.toUpperCase()} round by ${r.interviewer_name || 'AI'} - ${r.status.toUpperCase()} ${r.overall_score ? `(${r.overall_score}/5)` : ''}`}
                                   >
@@ -1170,7 +1170,7 @@ export default function CandidatesPipelinePage() {
           <div className="modal-content" style={{ maxWidth: 550, width: '90%', padding: 24 }} onClick={e => e.stopPropagation()}>
             <div className="modal-header" style={{ marginBottom: 20 }}>
               <h2 style={{ display: 'inline-flex', alignItems: 'center', gap: 10, margin: 0, fontSize: 20 }}>
-                <Briefcase className="text-primary-light" size={24} /> Draft Job Offer & Annexure
+                <Briefcase style={{ color: 'var(--primary)' }} size={24} /> Draft Job Offer & Annexure
               </h2>
               <button className="modal-close" onClick={() => setShowOfferModal(false)}>✕</button>
             </div>

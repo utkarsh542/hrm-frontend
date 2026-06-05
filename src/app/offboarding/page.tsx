@@ -232,7 +232,7 @@ export default function OffboardingPage() {
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--text-tertiary)', marginTop: 4 }}>
                       {STATUS_STEPS.map((step, i) => (
-                        <span key={step} style={{ color: i <= currentStep ? 'var(--primary-light)' : undefined, fontWeight: i === currentStep ? 700 : 400 }}>
+                        <span key={step} style={{ color: i <= currentStep ? 'var(--primary)' : undefined, fontWeight: i === currentStep ? 700 : 400 }}>
                           {step.replace(/_/g, ' ')}
                         </span>
                       ))}
@@ -310,7 +310,7 @@ export default function OffboardingPage() {
                             {isCompleted ? <CheckCircle2 size={18} /> : idx + 1}
                           </div>
                           <div style={{ paddingTop: 6 }}>
-                            <div style={{ fontWeight: 600, fontSize: 14, color: isActive ? 'var(--primary-light)' : 'var(--text-primary)' }}>
+                            <div style={{ fontWeight: 600, fontSize: 14, color: isActive ? 'var(--primary)' : 'var(--text-primary)' }}>
                               {step.replace(/_/g, ' ').toUpperCase()}
                             </div>
                             <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>
