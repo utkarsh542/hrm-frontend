@@ -109,6 +109,13 @@ export default function OnboardingPage() {
   const completedPlans = plans.filter(p => p.status === 'completed').length;
   const avgProgress = plans.length > 0 ? Math.round(plans.reduce((s, p) => s + p.progress, 0) / plans.length) : 0;
 
+  const planEmployeeIds = plans.map(p => p.employee_id);
+  const planEmployeeNames = plans.map(p => p.employee_name.toLowerCase().trim());
+  const availableEmployees = employees.filter((emp: any) => 
+    !planEmployeeIds.includes(emp.id) && 
+    !planEmployeeNames.includes(emp.full_name.toLowerCase().trim())
+  );
+
   if (loading) return <div className="animate-fade-in" style={{ padding: 32 }}><p style={{ color: 'var(--text-secondary)' }}>Loading onboarding plans...</p></div>;
 
   return (
@@ -367,11 +374,11 @@ export default function OnboardingPage() {
                   flexDirection: 'column',
                   gap: 4
                 }}>
-                  {employees.filter((emp: any) => 
+                  {availableEmployees.filter((emp: any) => 
                     emp.full_name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                     (emp.designation && emp.designation.toLowerCase().includes(searchTerm.toLowerCase()))
                   ).length > 0 ? (
-                    employees.filter((emp: any) => 
+                    availableEmployees.filter((emp: any) => 
                       emp.full_name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                       (emp.designation && emp.designation.toLowerCase().includes(searchTerm.toLowerCase()))
                     ).map((emp: any) => {
