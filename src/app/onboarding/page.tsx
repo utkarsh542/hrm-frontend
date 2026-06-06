@@ -195,7 +195,7 @@ export default function OnboardingPage() {
               </div>
 
               {selectedPlan?.id === plan.id && selectedPlan.tasks && (
-                <div style={{ borderTop: '1px solid var(--border)', padding: '16px 24px', background: 'rgba(0,0,0,0.2)' }} onClick={e => e.stopPropagation()}>
+                <div style={{ borderTop: '1px solid var(--border)', padding: '16px 24px', background: 'var(--bg-secondary)' }} onClick={e => e.stopPropagation()}>
                   <div style={{ display: 'grid', gap: 8 }}>
                     {(selectedPlan.tasks as OnboardingTask[]).map((task: OnboardingTask) => {
                       const cat = categoryConfig[task.category] || categoryConfig.training;

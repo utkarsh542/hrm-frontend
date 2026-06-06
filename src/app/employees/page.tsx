@@ -319,7 +319,7 @@ export default function EmployeesPage() {
         <div className="modal-overlay" onClick={() => setNewCredentials(null)}>
           <div className="modal-content" style={{ maxWidth: 450, textAlign: 'center', padding: '30px 24px' }} onClick={e => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
-              <div style={{ width: 60, height: 60, borderRadius: '50%', backgroundColor: 'rgba(37, 99, 235, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)' }}>
+              <div style={{ width: 60, height: 60, borderRadius: '50%', backgroundColor: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)' }}>
                 <ShieldCheck size={36} />
               </div>
             </div>
@@ -328,10 +328,10 @@ export default function EmployeesPage() {
               A secure user account has been successfully created for <strong>{newCredentials.fullName}</strong>. Please share these login details:
             </p>
 
-            <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.03)', borderRadius: 12, padding: 16, border: '1px solid rgba(255, 255, 255, 0.05)', marginBottom: 24, textAlign: 'left' }}>
+            <div style={{ backgroundColor: 'var(--bg-secondary)', borderRadius: 12, padding: 16, border: '1px solid var(--border)', marginBottom: 24, textAlign: 'left' }}>
               <div style={{ marginBottom: 16 }}>
                 <label style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-tertiary)', display: 'block', marginBottom: 6 }}>Username / Email</label>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: 8, padding: '10px 12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'var(--bg-input)', borderRadius: 8, padding: '10px 12px', border: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden' }}>
                     <Mail size={16} style={{ color: 'var(--text-tertiary)', flexShrink: 0 }} />
                     <span style={{ fontSize: '14px', fontWeight: 500, fontFamily: 'monospace', textOverflow: 'ellipsis', overflow: 'hidden' }}>{newCredentials.email}</span>
@@ -353,7 +353,7 @@ export default function EmployeesPage() {
 
               <div>
                 <label style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-tertiary)', display: 'block', marginBottom: 6 }}>Temporary Password</label>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: 8, padding: '10px 12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'var(--bg-input)', borderRadius: 8, padding: '10px 12px', border: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <Lock size={16} style={{ color: 'var(--text-tertiary)' }} />
                     <span style={{ fontSize: '14px', fontWeight: 500, fontFamily: 'monospace' }}>{newCredentials.tempPassword}</span>
