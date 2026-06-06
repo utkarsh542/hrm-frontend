@@ -9,7 +9,16 @@ import {
   Users, Briefcase, Target, LogOut, Palmtree, Building2, ClipboardList, Clock,
 } from 'lucide-react';
 
-const COLORS = ['var(--primary)', '#8b5cf6', '#3b82f6', '#06b6d4', '#10b981', '#f59e0b', '#ec4899', '#ef4444'];
+const COLORS = [
+  'var(--primary)',
+  'var(--accent-purple)',
+  'var(--primary-light)',
+  'var(--accent-cyan)',
+  'var(--accent-green)',
+  'var(--accent-orange)',
+  'var(--accent-pink)',
+  'var(--accent-red)'
+];
 
 export default function DashboardPage() {
   const { role, isAdminOrHR, isAdminHROrManager } = useRole();
@@ -174,7 +183,7 @@ export default function DashboardPage() {
               <BarChart data={funnel} layout="vertical">
                 <XAxis type="number" tick={{ fill: '#6b6b85', fontSize: 12 }} />
                 <YAxis dataKey="stage" type="category" width={80} tick={{ fill: '#a0a0b8', fontSize: 12 }} />
-                <Tooltip contentStyle={{ background: '#1e1e35', border: '1px solid #2a2a45', borderRadius: 8, color: '#f0f0f5' }} />
+                <Tooltip contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 8, color: 'var(--text-primary)' }} />
                 <Bar dataKey="count" fill="var(--primary)" radius={[0, 6, 6, 0]} barSize={24} />
               </BarChart>
             </ResponsiveContainer>
@@ -188,7 +197,7 @@ export default function DashboardPage() {
                   label={({ name, payload }: any) => `${name}: ${payload?.count ?? ''}`}>
                   {deptStats.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Pie>
-                <Tooltip contentStyle={{ background: '#1e1e35', border: '1px solid #2a2a45', borderRadius: 8, color: '#f0f0f5' }} />
+                <Tooltip contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 8, color: 'var(--text-primary)' }} />
               </PieChart>
             </ResponsiveContainer>
           </div>

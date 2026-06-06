@@ -117,7 +117,7 @@ export default function SmartHirePage() {
         <div style={{ background: 'var(--bg-card)', borderRadius: 16, padding: 24, border: '1px solid var(--border)', marginBottom: 24 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
             <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ padding: '4px 10px', borderRadius: 8, background: 'rgba(16,185,129,0.15)', color: '#10b981', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ padding: '4px 10px', borderRadius: 8, background: 'var(--accent-green-light)', color: 'var(--accent-green)', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
                 <Sparkles size={12} /> PARSED
               </span>
               AI-Extracted Candidate Data
@@ -193,11 +193,11 @@ export default function SmartHirePage() {
 
       {/* Success */}
       {saved && (
-        <div style={{ background: 'rgba(16,185,129,0.08)', borderRadius: 16, padding: 32, border: '1px solid rgba(16,185,129,0.3)', textAlign: 'center', maxWidth: 600, margin: '40px auto' }}>
-          <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(16,185,129,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#10b981' }}>
+        <div style={{ background: 'var(--accent-green-light)', borderRadius: 16, padding: 32, border: '1px solid var(--accent-green)', textAlign: 'center', maxWidth: 600, margin: '40px auto' }}>
+          <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'var(--accent-green-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: 'var(--accent-green)' }}>
             <PartyPopper size={32} />
           </div>
-          <h2 style={{ fontWeight: 800, fontSize: 22, color: '#10b981', margin: '0 0 8px' }}>
+          <h2 style={{ fontWeight: 800, fontSize: 22, color: 'var(--accent-green)', margin: '0 0 8px' }}>
             Candidate {saved.is_existing ? 'Updated' : 'Created'} Successfully!
           </h2>
           <p style={{ margin: '0 0 24px', color: 'var(--text-secondary)', fontSize: 14 }}>

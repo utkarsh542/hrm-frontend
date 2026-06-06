@@ -25,13 +25,13 @@ interface QAPair {
 }
 
 const DIFF_COLOR: Record<string, string> = {
-  easy: '#10b981', medium: '#f59e0b', hard: '#ef4444',
+  easy: 'var(--accent-green)', medium: 'var(--accent-orange)', hard: 'var(--accent-red)',
 };
 
 const REC_CONFIG: Record<string, { label: string; color: string; Icon: any }> = {
-  hire:       { label: 'Recommend Hire',       color: '#10b981', Icon: CheckCircle2 },
-  next_round: { label: 'Next Round',            color: '#f59e0b', Icon: RefreshCw },
-  reject:     { label: 'Not Recommended',       color: '#ef4444', Icon: XCircle },
+  hire:       { label: 'Recommend Hire',       color: 'var(--accent-green)', Icon: CheckCircle2 },
+  next_round: { label: 'Next Round',            color: 'var(--accent-orange)', Icon: RefreshCw },
+  reject:     { label: 'Not Recommended',       color: 'var(--accent-red)', Icon: XCircle },
 };
 
 export default function LiveInterviewPage() {
@@ -171,8 +171,8 @@ export default function LiveInterviewPage() {
     setListening(true);
   };
 
-  const scoreColor = (s: number) => s >= 4 ? '#10b981' : s >= 3 ? '#f59e0b' : '#ef4444';
-  const timerColor = timeLeft <= 30 ? '#ef4444' : timeLeft <= 60 ? '#f59e0b' : '#10b981';
+  const scoreColor = (s: number) => s >= 4 ? 'var(--accent-green)' : s >= 3 ? 'var(--accent-orange)' : 'var(--accent-red)';
+  const timerColor = timeLeft <= 30 ? 'var(--accent-red)' : timeLeft <= 60 ? 'var(--accent-orange)' : 'var(--accent-green)';
   const progress = ((currentQ + (liveScore ? 1 : 0)) / (questions.length || 1)) * 100;
 
   // ── LOADING ──
@@ -346,7 +346,7 @@ export default function LiveInterviewPage() {
                 <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: qa.feedback ? 8 : 0 }}>{qa.answer || '—'}</p>
                 {qa.feedback && (
                   <p style={{ fontSize: 12, color: 'var(--text-tertiary)', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: 6, margin: 0 }}>
-                    <Lightbulb size={13} style={{ color: '#f59e0b', flexShrink: 0 }} />
+                    <Lightbulb size={13} style={{ color: 'var(--accent-orange)', flexShrink: 0 }} />
                     <span>{qa.feedback}</span>
                   </p>
                 )}
@@ -454,9 +454,9 @@ export default function LiveInterviewPage() {
             <button
               onClick={toggleVoice}
               style={{
-                padding: '10px 16px', borderRadius: 10, border: `1.5px solid ${listening ? '#ef4444' : 'var(--border)'}`,
-                background: listening ? 'rgba(239,68,68,0.1)' : 'var(--bg-input)',
-                color: listening ? '#ef4444' : 'var(--text-secondary)',
+                padding: '10px 16px', borderRadius: 10, border: `1.5px solid ${listening ? 'var(--accent-red)' : 'var(--border)'}`,
+                background: listening ? 'var(--accent-red-light)' : 'var(--bg-input)',
+                color: listening ? 'var(--accent-red)' : 'var(--text-secondary)',
                 cursor: 'pointer', fontSize: 13, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6,
               }}
             >
@@ -524,7 +524,7 @@ export default function LiveInterviewPage() {
             {liveScore!.feedback}
           </p>
           {liveScore!.follow_up && (
-            <div style={{ padding: '10px 14px', background: 'rgba(37,99,235,0.08)', borderRadius: 8, fontSize: 13, color: 'var(--primary)', marginBottom: 0, display: 'flex', alignItems: 'flex-start', gap: 6 }}>
+            <div style={{ padding: '10px 14px', background: 'var(--primary-light)', borderRadius: 8, fontSize: 13, color: 'var(--primary)', marginBottom: 0, display: 'flex', alignItems: 'flex-start', gap: 6 }}>
               <MessageSquare size={14} style={{ flexShrink: 0, marginTop: 2 }} />
               <span>Follow-up: {liveScore!.follow_up}</span>
             </div>

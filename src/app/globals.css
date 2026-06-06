@@ -22,9 +22,13 @@
   --accent-blue: #2563EB;
   --accent-blue-light: #DBEAFE;
   --accent-purple: #6366F1;
+  --accent-purple-light: #EEF2FF;
   --accent-pink: #ec4899;
+  --accent-pink-light: #FDF2F8;
   --accent-cyan: #06b6d4;
+  --accent-cyan-light: #ECFEFF;
   --accent-teal: #14b8a6;
+  --accent-teal-light: #F0FDFA;
 
   /* Light theme backgrounds */
   --bg-primary: #F8FAFC;

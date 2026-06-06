@@ -184,7 +184,7 @@ export default function PerformancePage() {
               <BarChart data={ratingData}>
                 <XAxis dataKey="name" tick={{ fill: '#a0a0b8', fontSize: 12 }} />
                 <YAxis domain={[0, 5]} tick={{ fill: '#6b6b85', fontSize: 12 }} />
-                <Tooltip contentStyle={{ background: '#1e1e35', border: '1px solid #2a2a45', borderRadius: 8, color: '#f0f0f5' }} />
+                <Tooltip contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 8, color: 'var(--text-primary)' }} />
                 <Bar dataKey="rating" fill="var(--primary)" radius={[6, 6, 0, 0]} barSize={40} />
               </BarChart>
             </ResponsiveContainer>

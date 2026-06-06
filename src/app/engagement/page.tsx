@@ -14,11 +14,11 @@ const hdrs = () => {
 };
 
 const MOODS = [
-  { Icon: Frown, label: 'Terrible', value: 1, color: '#ef4444' },
-  { Icon: Frown, label: 'Bad', value: 2, color: '#f97316' },
-  { Icon: Meh, label: 'Okay', value: 3, color: '#f59e0b' },
-  { Icon: Smile, label: 'Good', value: 4, color: '#22c55e' },
-  { Icon: Laugh, label: 'Great', value: 5, color: '#10b981' },
+  { Icon: Frown, label: 'Terrible', value: 1, color: 'var(--accent-red)' },
+  { Icon: Frown, label: 'Bad', value: 2, color: 'var(--accent-orange)' },
+  { Icon: Meh, label: 'Okay', value: 3, color: 'var(--accent-orange)' },
+  { Icon: Smile, label: 'Good', value: 4, color: 'var(--accent-green)' },
+  { Icon: Laugh, label: 'Great', value: 5, color: 'var(--accent-green)' },
 ];
 
 export default function EngagementPage() {
@@ -97,7 +97,7 @@ export default function EngagementPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(16,185,129,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10b981' }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--accent-green-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-green)' }}>
               <HeartPulse size={20} strokeWidth={2} />
             </div>
             Employee Engagement
@@ -119,9 +119,9 @@ export default function EngagementPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 28 }}>
             {[
               { label: 'Active Surveys', value: dashboard.active_surveys, Icon: ClipboardList, color: 'var(--primary)' },
-              { label: 'Total Responses', value: dashboard.total_responses, Icon: MessageCircle, color: '#3b82f6' },
-              { label: "Today's Avg Mood", value: dashboard.today_mood_avg || '—', Icon: SmilePlus, color: '#10b981' },
-              { label: 'Mood Check-ins', value: dashboard.today_mood_count, Icon: TrendingUp, color: '#f59e0b' },
+              { label: 'Total Responses', value: dashboard.total_responses, Icon: MessageCircle, color: 'var(--primary)' },
+              { label: "Today's Avg Mood", value: dashboard.today_mood_avg || '—', Icon: SmilePlus, color: 'var(--accent-green)' },
+              { label: 'Mood Check-ins', value: dashboard.today_mood_count, Icon: TrendingUp, color: 'var(--accent-orange)' },
             ].map((s, i) => (
               <div key={i} style={{ background: 'var(--bg-card)', borderRadius: 16, padding: '20px 24px', border: '1px solid var(--border)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -145,13 +145,13 @@ export default function EngagementPage() {
                   <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
                     <div style={{ fontSize: 9, color: 'var(--text-secondary)' }}>{t.avg_mood}</div>
                     <div style={{ width: '100%', height: `${(t.avg_mood / 5) * 100}%`, borderRadius: 4,
-                      background: t.avg_mood >= 4 ? '#10b981' : t.avg_mood >= 3 ? '#f59e0b' : '#ef4444',
+                      background: t.avg_mood >= 4 ? 'var(--accent-green)' : t.avg_mood >= 3 ? 'var(--accent-orange)' : 'var(--accent-red)',
                       minHeight: 4, transition: 'height 0.3s' }} />
                   </div>
                 ))}
               </div>
               <div style={{ textAlign: 'center', marginTop: 12, fontSize: 14, color: 'var(--text-secondary)' }}>
-                Overall Average: <strong style={{ color: moodTrends.overall_avg >= 4 ? '#10b981' : moodTrends.overall_avg >= 3 ? '#f59e0b' : '#ef4444' }}>{moodTrends.overall_avg}/5</strong>
+                Overall Average: <strong style={{ color: moodTrends.overall_avg >= 4 ? 'var(--accent-green)' : moodTrends.overall_avg >= 3 ? 'var(--accent-orange)' : 'var(--accent-red)' }}>{moodTrends.overall_avg}/5</strong>
               </div>
             </div>
           )}
@@ -184,8 +184,8 @@ export default function EngagementPage() {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <span style={{ padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700,
-                      background: s.status === 'active' ? 'rgba(16,185,129,0.15)' : 'rgba(107,114,128,0.15)',
-                      color: s.status === 'active' ? '#10b981' : '#6b7280' }}>{s.status.toUpperCase()}</span>
+                      background: s.status === 'active' ? 'var(--accent-green-light)' : 'var(--bg-secondary)',
+                      color: s.status === 'active' ? 'var(--accent-green)' : 'var(--text-tertiary)' }}>{s.status.toUpperCase()}</span>
                     <span style={{ fontSize: 13, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 4 }}>
                       <MessageCircle size={13} /> {s.response_count} responses
                     </span>
@@ -238,9 +238,9 @@ export default function EngagementPage() {
                 marginBottom: 16,
                 padding: '12px 16px',
                 borderRadius: '12px',
-                background: 'rgba(239, 68, 68, 0.12)',
-                border: '1px solid rgba(239, 68, 68, 0.25)',
-                color: '#fca5a5',
+                background: 'var(--accent-red-light)',
+                border: '1px solid var(--accent-red)',
+                color: 'var(--accent-red)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 10,
@@ -249,7 +249,7 @@ export default function EngagementPage() {
                 backdropFilter: 'blur(4px)',
                 boxShadow: '0 4px 12px rgba(239, 68, 68, 0.05)'
               }}>
-                <AlertCircle size={18} style={{ flexShrink: 0, color: '#f87171' }} />
+                <AlertCircle size={18} style={{ flexShrink: 0, color: 'var(--accent-red)' }} />
                 <span>{error}</span>
               </div>
             )}

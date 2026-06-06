@@ -25,11 +25,11 @@ interface OnboardingTask {
 }
 
 const categoryConfig: Record<string, { bg: string; color: string; label: string; Icon: any }> = {
-  documentation: { bg: 'rgba(59,130,246,0.15)', color: '#3b82f6', label: 'Documentation', Icon: FileText },
-  training: { bg: 'rgba(139,92,246,0.15)', color: '#8b5cf6', label: 'Training', Icon: BookOpen },
-  access: { bg: 'rgba(245,158,11,0.15)', color: '#f59e0b', label: 'Access', Icon: KeyRound },
-  introduction: { bg: 'rgba(16,185,129,0.15)', color: '#10b981', label: 'Introduction', Icon: Handshake },
-  equipment: { bg: 'rgba(249,115,22,0.15)', color: '#f97316', label: 'Equipment', Icon: Monitor },
+  documentation: { bg: 'var(--primary-light)', color: 'var(--primary)', label: 'Documentation', Icon: FileText },
+  training: { bg: 'var(--accent-purple-light)', color: 'var(--accent-purple)', label: 'Training', Icon: BookOpen },
+  access: { bg: 'var(--accent-orange-light)', color: 'var(--accent-orange)', label: 'Access', Icon: KeyRound },
+  introduction: { bg: 'var(--accent-green-light)', color: 'var(--accent-green)', label: 'Introduction', Icon: Handshake },
+  equipment: { bg: 'var(--accent-orange-light)', color: 'var(--accent-orange)', label: 'Equipment', Icon: Monitor },
 };
 
 export default function OnboardingPage() {
@@ -132,9 +132,9 @@ export default function OnboardingPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 28 }}>
         {[
           { label: 'Total Plans', value: totalPlans, Icon: ClipboardList, color: 'var(--primary)' },
-          { label: 'Active', value: activePlans, Icon: RotateCw, color: '#f59e0b' },
-          { label: 'Completed', value: completedPlans, Icon: CheckCircle, color: '#10b981' },
-          { label: 'Avg Progress', value: `${avgProgress}%`, Icon: BarChart3, color: '#3b82f6' },
+          { label: 'Active', value: activePlans, Icon: RotateCw, color: 'var(--accent-orange)' },
+          { label: 'Completed', value: completedPlans, Icon: CheckCircle, color: 'var(--accent-green)' },
+          { label: 'Avg Progress', value: `${avgProgress}%`, Icon: BarChart3, color: 'var(--primary)' },
         ].map((s, i) => (
           <div key={i} style={{ background: 'var(--bg-card)', borderRadius: 16, padding: '20px 24px', border: '1px solid var(--border)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -184,9 +184,9 @@ export default function OnboardingPage() {
                     {plan.status.toUpperCase()}
                   </span>
                   <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: plan.progress === 100 ? '#10b981' : 'var(--primary)' }}>{plan.progress}%</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: plan.progress === 100 ? 'var(--accent-green)' : 'var(--primary)' }}>{plan.progress}%</div>
                     <div style={{ width: 100, height: 6, borderRadius: 3, background: 'var(--bg-input)', marginTop: 4 }}>
-                      <div style={{ width: `${plan.progress}%`, height: '100%', borderRadius: 3, background: plan.progress === 100 ? '#10b981' : 'var(--primary)', transition: 'width 0.5s' }} />
+                      <div style={{ width: `${plan.progress}%`, height: '100%', borderRadius: 3, background: plan.progress === 100 ? 'var(--accent-green)' : 'var(--primary)', transition: 'width 0.5s' }} />
                     </div>
                   </div>
                   <span style={{ color: 'var(--text-secondary)', fontSize: 13 }}>{plan.completed_tasks}/{plan.total_tasks} tasks</span>
@@ -249,8 +249,8 @@ export default function OnboardingPage() {
                             {task.description && <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2, opacity: task.status === 'completed' ? 0.6 : 1 }}>{task.description}</div>}
                           </div>
                           <span style={{ padding: '2px 8px', borderRadius: 6, fontSize: 10, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 3,
-                            background: task.priority === 'high' ? 'rgba(239,68,68,0.15)' : task.priority === 'medium' ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.15)',
-                            color: task.priority === 'high' ? '#ef4444' : task.priority === 'medium' ? '#f59e0b' : '#10b981' }}>
+                            background: task.priority === 'high' ? 'var(--accent-red-light)' : task.priority === 'medium' ? 'var(--accent-orange-light)' : 'var(--accent-green-light)',
+                            color: task.priority === 'high' ? 'var(--accent-red)' : task.priority === 'medium' ? 'var(--accent-orange)' : 'var(--accent-green)' }}>
                             {task.priority === 'high' && <AlertTriangle size={10} />}
                             {task.priority}
                           </span>
@@ -355,10 +355,10 @@ export default function OnboardingPage() {
                   left: 0,
                   right: 0,
                   marginTop: 6, // Clean breathing space separating input and panel
-                  background: '#151525',
+                  background: 'var(--bg-card)',
                   border: '1px solid var(--border)',
                   borderRadius: 6, // Match sleek rectangular style
-                  boxShadow: '0 12px 32px rgba(0, 0, 0, 0.45)',
+                  boxShadow: 'var(--shadow-lg)',
                   maxHeight: 180, // Nicely bounded height preventing screen overflow
                   overflowY: 'auto',
                   zIndex: 350,
@@ -392,12 +392,12 @@ export default function OnboardingPage() {
                             padding: '10px 14px', // Generous internal padding to push text away from edges
                             borderRadius: 6, // Match rectangular shape
                             cursor: 'pointer',
-                            background: isSelected ? 'rgba(37, 99, 235, 0.15)' : 'transparent',
-                            border: isSelected ? '1px solid rgba(37, 99, 235, 0.25)' : '1px solid transparent',
+                            background: isSelected ? 'var(--primary-light)' : 'transparent',
+                            border: isSelected ? '1px solid var(--primary)' : '1px solid transparent',
                             transition: 'all 0.15s ease'
                           }}
                           onMouseEnter={(e) => {
-                            if (!isSelected) e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
+                            if (!isSelected) e.currentTarget.style.background = 'var(--bg-secondary)';
                           }}
                           onMouseLeave={(e) => {
                             if (!isSelected) e.currentTarget.style.background = 'transparent';
@@ -422,7 +422,7 @@ export default function OnboardingPage() {
                           
                           {/* Rich Employee Meta info */}
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: 13, fontWeight: 700, color: '#ffffff', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
                               {emp.full_name}
                             </div>
                             <div style={{ fontSize: 11, color: 'var(--text-secondary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', marginTop: 2 }}>

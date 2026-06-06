@@ -59,7 +59,7 @@ export default function SkillsPage() {
     transition: 'all 0.2s', fontFamily: 'Inter, sans-serif', display: 'flex' as const, alignItems: 'center' as const, gap: 6,
   });
 
-  const catColors: Record<string, string> = { technical: '#3b82f6', soft: '#8b5cf6', domain: '#10b981', certification: '#f59e0b', language: '#ef4444' };
+  const catColors: Record<string, string> = { technical: 'var(--primary)', soft: 'var(--accent-purple)', domain: 'var(--accent-green)', certification: 'var(--accent-orange)', language: 'var(--accent-red)' };
 
   if (loading) return <div className="animate-fade-in" style={{ padding: 32 }}><p style={{ color: 'var(--text-secondary)' }}>Loading...</p></div>;
 
@@ -68,7 +68,7 @@ export default function SkillsPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(139,92,246,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8b5cf6' }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--accent-purple-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-purple)' }}>
               <Brain size={20} strokeWidth={2} />
             </div>
             Skills & Development
@@ -143,7 +143,7 @@ export default function SkillsPage() {
           </div>
           {programs.length === 0 ? (
             <div style={{ textAlign: 'center', padding: 60, background: 'var(--bg-card)', borderRadius: 16, border: '1px solid var(--border)' }}>
-              <div style={{ width: 56, height: 56, borderRadius: 16, background: 'rgba(139,92,246,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#8b5cf6' }}>
+              <div style={{ width: 56, height: 56, borderRadius: 16, background: 'var(--accent-purple-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: 'var(--accent-purple)' }}>
                 <GraduationCap size={28} strokeWidth={1.5} />
               </div>
               <h3>No Training Programs</h3>
@@ -155,7 +155,7 @@ export default function SkillsPage() {
                 <div key={p.id} style={{ background: 'var(--bg-card)', borderRadius: 16, padding: '20px 24px', border: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
                     <span style={{ fontWeight: 700, fontSize: 16 }}>{p.title}</span>
-                    {p.is_mandatory && <span style={{ padding: '2px 8px', borderRadius: 6, fontSize: 10, fontWeight: 700, background: 'rgba(239,68,68,0.15)', color: '#ef4444', display: 'flex', alignItems: 'center', gap: 3 }}><Shield size={10} /> MANDATORY</span>}
+                    {p.is_mandatory && <span style={{ padding: '2px 8px', borderRadius: 6, fontSize: 10, fontWeight: 700, background: 'var(--accent-red-light)', color: 'var(--accent-red)', display: 'flex', alignItems: 'center', gap: 3 }}><Shield size={10} /> MANDATORY</span>}
                   </div>
                   <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '0 0 12px' }}>{p.description || 'No description'}</p>
                   <div style={{ display: 'flex', gap: 12, fontSize: 12, color: 'var(--text-secondary)' }}>
@@ -187,7 +187,7 @@ export default function SkillsPage() {
           </div>
           {succPlans.length === 0 ? (
             <div style={{ textAlign: 'center', padding: 60, background: 'var(--bg-card)', borderRadius: 16, border: '1px solid var(--border)' }}>
-              <div style={{ width: 56, height: 56, borderRadius: 16, background: 'rgba(245,158,11,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#f59e0b' }}>
+              <div style={{ width: 56, height: 56, borderRadius: 16, background: 'var(--accent-orange-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: 'var(--accent-orange)' }}>
                 <Crown size={28} strokeWidth={1.5} />
               </div>
               <h3>No Succession Plans</h3>
@@ -197,9 +197,9 @@ export default function SkillsPage() {
             <div style={{ display: 'grid', gap: 16 }}>
               {succPlans.map(p => {
                 const critColors: Record<string, { bg: string; color: string }> = {
-                  high: { bg: 'rgba(239,68,68,0.15)', color: '#ef4444' },
-                  medium: { bg: 'rgba(245,158,11,0.15)', color: '#f59e0b' },
-                  low: { bg: 'rgba(16,185,129,0.15)', color: '#10b981' },
+                  high: { bg: 'var(--accent-red-light)', color: 'var(--accent-red)' },
+                  medium: { bg: 'var(--accent-orange-light)', color: 'var(--accent-orange)' },
+                  low: { bg: 'var(--accent-green-light)', color: 'var(--accent-green)' },
                 };
                 const cc = critColors[p.criticality] || critColors.medium;
                 return (
@@ -221,8 +221,8 @@ export default function SkillsPage() {
                             </div>
                             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                               <span style={{ padding: '2px 8px', borderRadius: 6, fontSize: 10, fontWeight: 700,
-                                background: c.readiness === 'ready_now' ? 'rgba(16,185,129,0.15)' : c.readiness === '1-2_years' ? 'rgba(245,158,11,0.15)' : 'rgba(239,68,68,0.15)',
-                                color: c.readiness === 'ready_now' ? '#10b981' : c.readiness === '1-2_years' ? '#f59e0b' : '#ef4444' }}>{c.readiness.replace(/_/g, ' ')}</span>
+                                background: c.readiness === 'ready_now' ? 'var(--accent-green-light)' : c.readiness === '1-2_years' ? 'var(--accent-orange-light)' : 'var(--accent-red-light)',
+                                color: c.readiness === 'ready_now' ? 'var(--accent-green)' : c.readiness === '1-2_years' ? 'var(--accent-orange)' : 'var(--accent-red)' }}>{c.readiness.replace(/_/g, ' ')}</span>
                               {c.ai_score && <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: 3 }}><Award size={12} /> {c.ai_score}%</span>}
                             </div>
                           </div>
@@ -280,7 +280,7 @@ export default function SkillsPage() {
       {showSuccModal && (
         <div className="modal-overlay" onClick={() => setShowSuccModal(false)}>
           <div className="modal animate-scale-in" onClick={e => e.stopPropagation()} style={{ maxWidth: 420 }}>
-            <h2 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Crown size={20} style={{ color: '#f59e0b' }} /> Create Succession Plan</h2>
+            <h2 style={{ margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}><Crown size={20} style={{ color: 'var(--accent-orange)' }} /> Create Succession Plan</h2>
             <div className="form-group"><label className="form-label">Position</label>
               <input className="form-input" value={newPlan.position} onChange={e => setNewPlan({ ...newPlan, position: e.target.value })} placeholder="e.g. VP Engineering" /></div>
             <div className="form-group"><label className="form-label">Department</label>

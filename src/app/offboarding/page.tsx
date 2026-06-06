@@ -91,7 +91,7 @@ export default function OffboardingPage() {
     <div className="animate-fade-in">
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ color: '#ef4444', display: 'flex', alignItems: 'center' }}>
+          <div style={{ color: 'var(--accent-red)', display: 'flex', alignItems: 'center' }}>
             <LogOut size={28} strokeWidth={2} />
           </div>
           <h1 style={{ margin: 0 }}>{isAdminOrHR ? 'Offboarding' : 'My Offboarding'}</h1>
@@ -252,7 +252,7 @@ export default function OffboardingPage() {
                 {/* Resignation Banner */}
                 <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ width: 44, height: 44, borderRadius: '50%', backgroundColor: 'rgba(239, 68, 68, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444' }}>
+                    <div style={{ width: 44, height: 44, borderRadius: '50%', backgroundColor: 'var(--accent-red-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-red)' }}>
                       <Clock size={20} />
                     </div>
                     <div>
@@ -414,7 +414,7 @@ export default function OffboardingPage() {
               <button className="modal-close" onClick={() => setShowResignModal(false)}>✕</button>
             </div>
             <div className="modal-body">
-              <div style={{ display: 'flex', gap: 12, backgroundColor: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.15)', padding: 12, borderRadius: 8, marginBottom: 20, color: '#ef4444' }}>
+              <div style={{ display: 'flex', gap: 12, backgroundColor: 'var(--accent-red-light)', border: '1px solid var(--accent-red)', padding: 12, borderRadius: 8, marginBottom: 20, color: 'var(--accent-red)' }}>
                 <AlertTriangle size={20} style={{ flexShrink: 0, marginTop: 2 }} />
                 <div style={{ fontSize: 12, lineHeight: 1.5 }}>
                   <strong>Important Notice</strong>: Submitting a resignation is a formal request that automatically notifies HR and triggers notice calculations.
@@ -433,7 +433,7 @@ export default function OffboardingPage() {
             </div>
             <div className="modal-footer">
               <button className="btn btn-secondary" onClick={() => setShowResignModal(false)} disabled={submitting}>Cancel</button>
-              <button className="btn btn-primary" onClick={handleSubmitResignation} disabled={submitting} style={{ backgroundColor: '#ef4444', borderColor: '#ef4444' }}>
+              <button className="btn btn-primary" onClick={handleSubmitResignation} disabled={submitting} style={{ backgroundColor: 'var(--accent-red)', borderColor: 'var(--accent-red)' }}>
                 {submitting ? 'Submitting...' : 'Submit Resignation'}
               </button>
             </div>
