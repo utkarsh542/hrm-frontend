@@ -414,22 +414,6 @@ export default function LeavesPage() {
 
   if (loading) return <div className="loading-page"><div className="spinner"></div></div>;
 
-  const tabStyle = (tabId: 'requests' | 'holidays' | 'compoff') => ({
-    padding: '10px 20px',
-    borderRadius: 10,
-    border: 'none',
-    cursor: 'pointer',
-    fontSize: 14,
-    fontWeight: 700 as const,
-    background: activeTab === tabId ? 'var(--primary)' : 'var(--bg-input)',
-    color: activeTab === tabId ? '#fff' : 'var(--text-secondary)',
-    transition: 'all 0.2s',
-    fontFamily: 'Inter, sans-serif',
-    display: 'flex',
-    alignItems: 'center',
-    gap: 6,
-  });
-
   const isHRorAdmin = role === 'admin' || role === 'hr';
 
   return (
@@ -454,14 +438,14 @@ export default function LeavesPage() {
       </div>
 
       {/* Tabs Selector */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
-        <button style={tabStyle('requests')} onClick={() => setActiveTab('requests')}>
+      <div className="tabs">
+        <button className={`tab ${activeTab === 'requests' ? 'active' : ''}`} onClick={() => setActiveTab('requests')}>
           <Palmtree size={15} /> Leave Requests
         </button>
-        <button style={tabStyle('holidays')} onClick={() => setActiveTab('holidays')}>
+        <button className={`tab ${activeTab === 'holidays' ? 'active' : ''}`} onClick={() => setActiveTab('holidays')}>
           <CalendarDays size={15} /> Official Holidays
         </button>
-        <button style={tabStyle('compoff')} onClick={() => setActiveTab('compoff')}>
+        <button className={`tab ${activeTab === 'compoff' ? 'active' : ''}`} onClick={() => setActiveTab('compoff')}>
           <CalendarDays size={15} /> Comp-off (Earn & Config)
         </button>
       </div>
@@ -523,20 +507,20 @@ export default function LeavesPage() {
                 <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Your Available Leave Balances</h3>
                 <p style={{ margin: '2px 0 0 0', fontSize: 11, color: 'var(--text-secondary)' }}>Balances will be automatically adjusted upon approval.</p>
               </div>
-              <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-                <div style={{ textAlign: 'center' }}>
+              <div className="leave-balances-flex">
+                <div className="leave-balance-item">
                   <span style={{ fontSize: 10, color: 'var(--text-tertiary)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Casual Leave</span>
                   <strong style={{ fontSize: 16, color: 'var(--accent-orange)' }}>{balances.casual} days</strong>
                 </div>
-                <div style={{ textAlign: 'center', borderLeft: '1px solid var(--border)', paddingLeft: 24 }}>
+                <div className="leave-balance-item">
                   <span style={{ fontSize: 10, color: 'var(--text-tertiary)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Sick Leave</span>
                   <strong style={{ fontSize: 16, color: 'var(--accent-green)' }}>{balances.sick} days</strong>
                 </div>
-                <div style={{ textAlign: 'center', borderLeft: '1px solid var(--border)', paddingLeft: 24 }}>
+                <div className="leave-balance-item">
                   <span style={{ fontSize: 10, color: 'var(--text-tertiary)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Earned Leave</span>
                   <strong style={{ fontSize: 16, color: '#818cf8' }}>{balances.earned} days</strong>
                 </div>
-                <div style={{ textAlign: 'center', borderLeft: '1px solid var(--border)', paddingLeft: 24 }}>
+                <div className="leave-balance-item">
                   <span style={{ fontSize: 10, color: 'var(--text-tertiary)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Comp-off Balance</span>
                   <strong style={{ fontSize: 16, color: '#38bdf8' }}>{currentEmp?.comp_off_balance || 0} days</strong>
                 </div>

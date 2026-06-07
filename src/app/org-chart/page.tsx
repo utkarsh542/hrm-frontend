@@ -87,7 +87,7 @@ export default function OrgChartPage() {
         </div>
         <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4 }}>{nodes.length} employees · Click a card to view profile</div>
       </div>
-      <div className="card" style={{ overflowX: 'auto', padding: 32 }}>
+      <div className="card org-chart-card" style={{ overflowX: 'auto' }}>
         <div style={{ display: 'flex', justifyContent: 'center', minWidth: 'max-content' }}>
           <RenderTree nodes={roots} all={nodes} />
         </div>

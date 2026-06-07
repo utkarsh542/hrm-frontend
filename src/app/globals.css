@@ -954,6 +954,9 @@ a:hover {
   cursor: pointer;
   transition: all var(--transition-fast);
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .tab:hover {
@@ -1531,4 +1534,89 @@ a:hover {
 .smart-hire-container {
   padding: 24px clamp(12px, 4vw, 32px);
 }
+
+/* Offboarding Responsive Steps */
+.offboarding-steps-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+}
+
+.offboarding-mobile-status {
+  display: none;
+}
+
+.org-chart-card {
+  padding: clamp(12px, 3vw, 32px) !important;
+}
+
+.profile-card-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.profile-card-header .ctc-block {
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .offboarding-steps-labels {
+    display: none !important;
+  }
+  .offboarding-mobile-status {
+    display: block !important;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-top: 8px;
+    text-align: center;
+  }
+  .profile-card-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+  }
+  .profile-card-header .ctc-block {
+    text-align: left !important;
+  }
+}
+
+.leave-balances-flex {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.leave-balance-item {
+  text-align: center;
+}
+
+.leave-balance-item:not(:first-child) {
+  border-left: 1px solid var(--border);
+  padding-left: 24px;
+}
+
+@media (max-width: 600px) {
+  .leave-balances-flex {
+    gap: 12px;
+    justify-content: space-between;
+  }
+  .leave-balance-item {
+    flex: 1 1 45%;
+    min-width: 120px;
+    border-left: none !important;
+    padding-left: 0 !important;
+    text-align: center;
+    background: var(--bg-secondary);
+    padding: 12px 8px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+}
+
+
 

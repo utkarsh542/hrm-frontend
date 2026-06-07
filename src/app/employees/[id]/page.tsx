@@ -97,7 +97,7 @@ export default function EmployeeProfilePage() {
 
       {/* Profile Card */}
       <div className="card" style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
+        <div className="profile-card-header">
           <div className="user-avatar" style={{ width: 72, height: 72, fontSize: 24 }}>
             {getInitials(employee.full_name)}
           </div>
@@ -113,7 +113,7 @@ export default function EmployeeProfilePage() {
               <span className="badge badge-neutral">{employee.onboarding_status}</span>
             </div>
           </div>
-          <div style={{ textAlign: 'right' }}>
+          <div className="ctc-block">
             <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--accent-green)' }}>{formatCurrency(employee.ctc)}</div>
             <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>Annual CTC</div>
           </div>

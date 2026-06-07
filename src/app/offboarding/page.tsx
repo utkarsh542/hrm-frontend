@@ -230,12 +230,15 @@ export default function OffboardingPage() {
                         </div>
                       ))}
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--text-tertiary)', marginTop: 4 }}>
+                    <div className="offboarding-steps-labels">
                       {STATUS_STEPS.map((step, i) => (
                         <span key={step} style={{ color: i <= currentStep ? 'var(--primary)' : undefined, fontWeight: i === currentStep ? 700 : 400 }}>
                           {step.replace(/_/g, ' ')}
                         </span>
                       ))}
+                    </div>
+                    <div className="offboarding-mobile-status">
+                      Status: {r.status.replace(/_/g, ' ').toUpperCase()} (Step {currentStep + 1} of {STATUS_STEPS.length})
                     </div>
                   </div>
                 );

@@ -216,7 +216,7 @@ export default function RecruitmentPage() {
   if (loading) return <div className="loading-page"><div className="spinner"></div></div>;
 
   return (
-    <div className="animate-fade-in page-container">
+    <div className="animate-fade-in">
       <div className="page-header">
         <h1 style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
           <Briefcase style={{ color: 'var(--primary)' }} size={28} /> {isEmployee ? 'Job Openings' : 'Job Postings'}

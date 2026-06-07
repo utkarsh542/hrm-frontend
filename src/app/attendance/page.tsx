@@ -223,22 +223,6 @@ export default function AttendancePage() {
   const checkedOutCount = Array.from(todayRecords.values()).filter(r => r.check_in && r.check_out).length;
   const todayLabel = today.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-  const tabStyle = (tabId: 'today' | 'history') => ({
-    padding: '10px 20px',
-    borderRadius: 10,
-    border: 'none',
-    cursor: 'pointer',
-    fontSize: 14,
-    fontWeight: 700 as const,
-    background: activeTab === tabId ? 'var(--primary)' : 'var(--bg-input)',
-    color: activeTab === tabId ? '#fff' : 'var(--text-secondary)',
-    transition: 'all 0.2s',
-    fontFamily: 'Inter, sans-serif',
-    display: 'flex',
-    alignItems: 'center',
-    gap: 6,
-  });
-
   return (
     <div className="animate-fade-in">
       <div className="page-header" style={{ marginBottom: 20 }}>
@@ -256,11 +240,11 @@ export default function AttendancePage() {
       </div>
 
       {/* Tabs Selector */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
-        <button style={tabStyle('today')} onClick={() => setActiveTab('today')}>
+      <div className="tabs">
+        <button className={`tab ${activeTab === 'today' ? 'active' : ''}`} onClick={() => setActiveTab('today')}>
           <Calendar size={15} /> Daily Status
         </button>
-        <button style={tabStyle('history')} onClick={() => setActiveTab('history')}>
+        <button className={`tab ${activeTab === 'history' ? 'active' : ''}`} onClick={() => setActiveTab('history')}>
           <History size={15} /> Attendance History
         </button>
       </div>

@@ -43,7 +43,7 @@ export default function AnalyticsPage() {
   const maxCompCTC = compensation?.department_compensation ? Math.max(...compensation.department_compensation.map((d: any) => d.avg_ctc), 1) : 1;
 
   return (
-    <div className="animate-fade-in page-container">
+    <div className="animate-fade-in">
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(37,99,235,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)' }}>
