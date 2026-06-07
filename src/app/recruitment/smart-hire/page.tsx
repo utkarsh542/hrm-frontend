@@ -64,7 +64,7 @@ export default function SmartHirePage() {
   };
 
   return (
-    <div className="animate-fade-in" style={{ padding: '24px 32px' }}>
+    <div className="animate-fade-in smart-hire-container">
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(37,99,235,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)' }}>
@@ -124,7 +124,7 @@ export default function SmartHirePage() {
             </h3>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
+          <div className="responsive-grid-2" style={{ gap: 16, marginBottom: 20 }}>
             {[
               { key: 'full_name', label: 'Full Name', value: parsed.full_name },
               { key: 'email', label: 'Email', value: parsed.email },
@@ -173,7 +173,7 @@ export default function SmartHirePage() {
 
           {/* Job match */}
           <div style={{ borderTop: '1px solid var(--border)', paddingTop: 16, marginTop: 8 }}>
-            <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end' }}>
+            <div className="responsive-flex" style={{ display: 'flex', gap: 12, alignItems: 'flex-end' }}>
               <div className="form-group" style={{ margin: 0, flex: 1 }}>
                 <label className="form-label" style={{ fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}>
                   <Briefcase size={12} /> Apply to Job (optional)

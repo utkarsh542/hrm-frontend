@@ -544,7 +544,7 @@ export default function LeavesPage() {
             </div>
           )}
 
-          <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+          <div className="stats-grid">
             <div className="stat-card">
               <div className="stat-icon orange" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Clock size={18} strokeWidth={2} />
@@ -780,7 +780,7 @@ export default function LeavesPage() {
                   <div style={{
                     background: 'var(--bg-input)', border: '1px solid var(--border)',
                     borderRadius: 10, padding: '12px 16px', display: 'grid',
-                    gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, textAlign: 'center'
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(70px, 1fr))', gap: 10, textAlign: 'center'
                   }}>
                     <div>
                       <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>Casual</div>
@@ -833,7 +833,7 @@ export default function LeavesPage() {
                   )}
                 </div>
 
-                <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div className="form-row" style={{ gap: 12 }}>
                   <div className="form-group">
                     <label className="form-label">Start Date</label>
                     <input className="form-input" type="date" value={startDate} onChange={e => setStartDate(e.target.value)} required />
@@ -934,7 +934,7 @@ export default function LeavesPage() {
                   <div style={{
                     background: 'var(--bg-input)', border: '1px solid var(--border)',
                     borderRadius: 10, padding: '12px 16px', display: 'grid',
-                    gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, textAlign: 'center'
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(70px, 1fr))', gap: 10, textAlign: 'center'
                   }}>
                     <div>
                       <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>Casual</div>
@@ -987,7 +987,7 @@ export default function LeavesPage() {
                   )}
                 </div>
 
-                <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div className="form-row" style={{ gap: 12 }}>
                   <div className="form-group">
                     <label className="form-label">Start Date</label>
                     <input className="form-input" type="date" value={editStartDate} onChange={e => setEditStartDate(e.target.value)} required />
@@ -1182,7 +1182,7 @@ export default function LeavesPage() {
           </div>
 
           {/* Top overview metrics */}
-          <div className="stats-grid" style={{ gridTemplateColumns: isAdminHROrManager ? '1fr 1fr' : '1fr' }}>
+          <div className="stats-grid" style={{ gridTemplateColumns: isAdminHROrManager ? 'repeat(auto-fit, minmax(240px, 1fr))' : '1fr' }}>
             <div className="stat-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 20 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div className="stat-icon blue" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -1335,7 +1335,7 @@ export default function LeavesPage() {
           )}
 
           {/* Two Columns: Eligible Overtime Dates & Request History */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: 24 }}>
+          <div className="responsive-grid-2" style={{ gap: 24 }}>
             {/* Eligible Dates */}
             <div className="card">
               <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16 }}>Eligible Overtime Dates</h3>

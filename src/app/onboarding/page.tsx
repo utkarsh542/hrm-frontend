@@ -136,7 +136,7 @@ export default function OnboardingPage() {
       </div>
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 28 }}>
+      <div className="stats-grid" style={{ gap: 16, marginBottom: 28 }}>
         {[
           { label: 'Total Plans', value: totalPlans, Icon: ClipboardList, color: 'var(--primary)' },
           { label: 'Active', value: activePlans, Icon: RotateCw, color: 'var(--accent-orange)' },

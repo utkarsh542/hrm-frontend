@@ -111,7 +111,7 @@ export default function DashboardPage() {
 
       {/* ── Manager stats ── */}
       <RoleGuard roles={['manager']}>
-        <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+        <div className="stats-grid">
           <div className="stat-card animate-fade-in stagger-1">
             <div className="stat-icon blue"><Users size={22} strokeWidth={1.8} /></div>
             <div className="stat-info">
@@ -138,7 +138,7 @@ export default function DashboardPage() {
 
       {/* ── Employee stats ── */}
       <RoleGuard roles={['employee']}>
-        <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+        <div className="stats-grid">
           <div className="stat-card animate-fade-in stagger-1">
             <div className="stat-icon green"><Palmtree size={22} strokeWidth={1.8} /></div>
             <div className="stat-info">

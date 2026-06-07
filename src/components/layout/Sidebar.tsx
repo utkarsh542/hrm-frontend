@@ -47,9 +47,9 @@ const navSections: NavSection[] = [
   },
   {
     title: 'Recruitment',
-    roles: ['admin', 'hr', 'manager'],
+    roles: ['admin', 'hr', 'manager', 'employee'],
     items: [
-      { label: 'Job Postings', icon: <Briefcase size={iconSize} strokeWidth={iconStroke} />, href: '/recruitment', roles: ['admin', 'hr', 'manager'] },
+      { label: 'Job Postings', icon: <Briefcase size={iconSize} strokeWidth={iconStroke} />, href: '/recruitment', roles: ['admin', 'hr', 'manager', 'employee'] },
       { label: 'Candidates', icon: <UserSearch size={iconSize} strokeWidth={iconStroke} />, href: '/recruitment/candidates', roles: ['admin', 'hr', 'manager'] },
       { label: 'Smart Hire AI', icon: <Sparkles size={iconSize} strokeWidth={iconStroke} />, href: '/recruitment/smart-hire', roles: ['admin', 'hr'] },
     ],

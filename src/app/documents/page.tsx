@@ -194,7 +194,7 @@ export default function DocumentsPage() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <div className="responsive-flex" style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
           <div style={{ position: 'relative', flex: 1 }}>
             <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)' }}>
               <HelpCircle size={16} />
@@ -356,11 +356,10 @@ export default function DocumentsPage() {
       {/* Search */}
       <div className="page-filters">
         <input
-          className="filter-input"
+          className="filter-input filter-input-search"
           placeholder="Search documents..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          style={{ width: 280 }}
         />
         {category && (
           <button className="btn btn-ghost btn-sm" onClick={() => setCategory('')}>✕ Clear filter</button>
@@ -376,7 +375,7 @@ export default function DocumentsPage() {
           <p>No documents found. Upload your first document.</p>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
           {docs.map(doc => {
             const DocIcon = ICON_MAP[doc.category] || Folder;
             return (

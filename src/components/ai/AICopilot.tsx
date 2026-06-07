@@ -49,30 +49,15 @@ export default function AICopilot() {
       {/* Floating Button */}
       <button
         onClick={() => setOpen(!open)}
-        style={{
-          position: 'fixed', bottom: 28, right: 28, zIndex: 1000,
-          width: 56, height: 56, borderRadius: '50%',
-          background: 'linear-gradient(135deg, var(--primary), var(--accent-purple))',
-          border: 'none', cursor: 'pointer',
-          boxShadow: '0 4px 20px rgba(37,99,235,0.5)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          transition: 'transform 0.2s',
-          color: '#fff',
-        }}
+        className="ai-copilot-button"
         title="AI HR Copilot"
       >
         {open ? <X size={24} /> : <Bot size={28} />}
       </button>
-
+ 
       {/* Chat Panel */}
       {open && (
-        <div style={{
-          position: 'fixed', bottom: 96, right: 28, zIndex: 999,
-          width: 380, height: 520,
-          background: 'var(--bg-card)', border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-xl)',
-          display: 'flex', flexDirection: 'column', overflow: 'hidden',
-        }}>
+        <div className="ai-copilot-panel">
           {/* Header */}
           <div style={{
             padding: '14px 16px', borderBottom: '1px solid var(--border)',

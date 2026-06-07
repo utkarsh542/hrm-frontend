@@ -93,7 +93,7 @@ export default function EngagementPage() {
   if (loading) return <div className="animate-fade-in" style={{ padding: 32 }}><p style={{ color: 'var(--text-secondary)' }}>Loading engagement data...</p></div>;
 
   return (
-    <div className="animate-fade-in" style={{ padding: '24px 32px' }}>
+    <div className="animate-fade-in" style={{ padding: '24px clamp(12px, 4vw, 32px)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -107,7 +107,7 @@ export default function EngagementPage() {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
+      <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
         <button style={tabStyle('dashboard')} onClick={() => setTab('dashboard')}><BarChart3 size={15} /> Dashboard</button>
         <button style={tabStyle('surveys')} onClick={() => setTab('surveys')}><ClipboardList size={15} /> Surveys</button>
         <button style={tabStyle('mood')} onClick={() => setTab('mood')}><SmilePlus size={15} /> Mood Tracking</button>
@@ -116,7 +116,7 @@ export default function EngagementPage() {
       {/* Dashboard Tab */}
       {tab === 'dashboard' && dashboard && (
         <div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 28 }}>
+          <div className="stats-grid" style={{ gap: 16, marginBottom: 28 }}>
             {[
               { label: 'Active Surveys', value: dashboard.active_surveys, Icon: ClipboardList, color: 'var(--primary)' },
               { label: 'Total Responses', value: dashboard.total_responses, Icon: MessageCircle, color: 'var(--primary)' },
@@ -177,7 +177,7 @@ export default function EngagementPage() {
           ) : (
             <div style={{ display: 'grid', gap: 12 }}>
               {surveys.map(s => (
-                <div key={s.id} style={{ background: 'var(--bg-card)', borderRadius: 12, padding: '16px 20px', border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div key={s.id} style={{ background: 'var(--bg-card)', borderRadius: 12, padding: '16px 20px', border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: 16 }}>{s.title}</div>
                     <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4 }}>{s.description || 'No description'} · {(s.questions || []).length} questions</div>
@@ -203,7 +203,7 @@ export default function EngagementPage() {
           <div style={{ background: 'var(--bg-card)', borderRadius: 16, padding: 32, border: '1px solid var(--border)', textAlign: 'center', marginBottom: 24 }}>
             <h3 style={{ margin: '0 0 8px' }}>How are you feeling today?</h3>
             <p style={{ color: 'var(--text-secondary)', margin: '0 0 24px', fontSize: 14 }}>Your response is anonymous and helps us improve the workplace</p>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginBottom: 20 }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px 12px', flexWrap: 'wrap', marginBottom: 20 }}>
               {MOODS.map(m => {
                 const MIcon = m.Icon;
                 return (

@@ -77,7 +77,7 @@ export default function SkillsPage() {
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
+      <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
         <button style={tabStyle('skills')} onClick={() => setTab('skills')}><Target size={15} /> Skills Matrix</button>
         <button style={tabStyle('training')} onClick={() => setTab('training')}><BookOpen size={15} /> Training</button>
         <button style={tabStyle('succession')} onClick={() => setTab('succession')}><Crown size={15} /> Succession</button>
@@ -150,7 +150,7 @@ export default function SkillsPage() {
               <p style={{ color: 'var(--text-secondary)' }}>Create training programs to upskill your workforce</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
               {programs.map(p => (
                 <div key={p.id} style={{ background: 'var(--bg-card)', borderRadius: 16, padding: '20px 24px', border: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
@@ -214,7 +214,7 @@ export default function SkillsPage() {
                     {p.candidates.length > 0 ? (
                       <div style={{ display: 'grid', gap: 8 }}>
                         {p.candidates.map((c: any) => (
-                          <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', borderRadius: 10, background: 'var(--bg-input)', border: '1px solid var(--border)' }}>
+                          <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', borderRadius: 10, background: 'var(--bg-input)', border: '1px solid var(--border)', flexWrap: 'wrap', gap: 8 }}>
                             <div>
                               <span style={{ fontWeight: 600 }}>{c.employee_name}</span>
                               <span style={{ fontSize: 12, color: 'var(--text-secondary)', marginLeft: 8 }}>{c.designation}</span>

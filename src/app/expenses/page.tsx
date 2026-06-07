@@ -143,7 +143,7 @@ export default function ExpensesPage() {
       )}
 
       {/* Stats */}
-      <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+      <div className="stats-grid">
         {[
           { label: 'Pending', value: stats?.pending || 0, sub: formatCurrency(stats?.pending_amount || 0), color: 'orange' },
           { label: 'Approved', value: stats?.approved || 0, sub: formatCurrency(stats?.approved_amount || 0), color: 'green' },

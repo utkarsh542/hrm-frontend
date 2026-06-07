@@ -108,7 +108,7 @@ export default function ActivitiesPage() {
   if (loading) return <div className="loading-page"><div className="spinner"></div></div>;
 
   return (
-    <div className="animate-fade-in" style={{ padding: '24px 32px' }}>
+    <div className="animate-fade-in activities-container">
       {/* Header */}
       <div className="page-header" style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -205,7 +205,7 @@ export default function ActivitiesPage() {
           </p>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
           {activities.map(act => {
             const catCfg = getCatConfig(act.category);
             const CatIcon = catCfg.Icon;

@@ -61,7 +61,7 @@ export default function AttritionPage() {
         </div>
       </div>
 
-      <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+      <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon blue" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Users size={18} strokeWidth={2} />
@@ -116,7 +116,7 @@ export default function AttritionPage() {
         {filtered.map(emp => (
           <div key={emp.employee_id} className="card" style={{ borderLeft: `4px solid ${RISK_COLOR[emp.risk_level]}` }}>
             <div
-              style={{ display: 'flex', alignItems: 'center', gap: 16, cursor: 'pointer' }}
+              style={{ display: 'flex', alignItems: 'center', gap: 16, cursor: 'pointer', flexWrap: 'wrap' }}
               onClick={() => setExpanded(expanded === emp.employee_id ? null : emp.employee_id)}
             >
               {/* Risk Score Ring */}
@@ -160,7 +160,7 @@ export default function AttritionPage() {
 
             {expanded === emp.employee_id && (
               <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div className="responsive-grid-2" style={{ gap: 16 }}>
                   <div>
                     <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-tertiary)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
                       Risk Factors

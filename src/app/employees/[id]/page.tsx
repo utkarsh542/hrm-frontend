@@ -120,7 +120,7 @@ export default function EmployeeProfilePage() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+      <div className="responsive-grid-2" style={{ gap: 24 }}>
         {/* Personal Info */}
         <div className="card">
           <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>

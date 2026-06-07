@@ -41,7 +41,7 @@ export default function BenchmarkingPage() {
       </div>
 
       {/* Summary stats */}
-      <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+      <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon blue" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Users size={18} strokeWidth={2} />
@@ -83,7 +83,7 @@ export default function BenchmarkingPage() {
 
       {/* Filters */}
       <div className="page-filters">
-        <input className="filter-input" placeholder="Search by name or designation..." value={search} onChange={e => setSearch(e.target.value)} style={{ width: 280 }} />
+        <input className="filter-input filter-input-search" placeholder="Search by name or designation..." value={search} onChange={e => setSearch(e.target.value)} />
         {(['all', 'high', 'medium', 'low'] as const).map(f => (
           <button key={f} className={`btn btn-sm ${filter === f ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setFilter(f)}>
             {f.charAt(0).toUpperCase() + f.slice(1)}

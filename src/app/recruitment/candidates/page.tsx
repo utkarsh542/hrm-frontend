@@ -700,7 +700,7 @@ export default function CandidatesPipelinePage() {
             </div>
           </div>
 
-          <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: 20 }}>
+          <div className="stats-grid" style={{ marginBottom: 20 }}>
             <div className="stat-card">
               <div className="stat-icon blue" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Calendar size={18} strokeWidth={2} />
@@ -890,17 +890,10 @@ export default function CandidatesPipelinePage() {
               <button className="modal-close" onClick={() => setShowDossier(false)}>✕</button>
             </div>
             
-            <div className="modal-body" style={{ 
-              display: 'grid', 
-              gridTemplateColumns: '300px 1fr', 
-              gap: 24, 
-              padding: 24, 
-              maxHeight: '70vh', 
-              overflowY: 'auto' 
-            }}>
+            <div className="modal-body dossier-grid">
               
               {/* Left Column - Candidate Profile Overview */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 20, borderRight: '1px solid var(--border)', paddingRight: 24 }}>
+              <div className="dossier-left">
                 <div>
                   <h3 style={{ fontSize: 13, textTransform: 'uppercase', letterSpacing: 1, color: 'var(--text-tertiary)', marginBottom: 12 }}>Contact Details</h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 14 }}>
@@ -1167,15 +1160,15 @@ export default function CandidatesPipelinePage() {
       {/* Draft Job Offer & Salary Annexure Modal */}
       {showOfferModal && selectedApp && (
         <div className="modal-overlay" style={{ zIndex: 1010 }} onClick={() => setShowOfferModal(false)}>
-          <div className="modal-content" style={{ maxWidth: 550, width: '90%', padding: 24 }} onClick={e => e.stopPropagation()}>
-            <div className="modal-header" style={{ marginBottom: 20 }}>
+          <div className="modal-content" style={{ maxWidth: 550, width: '90%' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
               <h2 style={{ display: 'inline-flex', alignItems: 'center', gap: 10, margin: 0, fontSize: 20 }}>
                 <Briefcase style={{ color: 'var(--primary)' }} size={24} /> Draft Job Offer & Annexure
               </h2>
               <button className="modal-close" onClick={() => setShowOfferModal(false)}>✕</button>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>
                 <label className="form-label" style={{ fontWeight: 600, fontSize: 13, display: 'block', marginBottom: 6 }}>Annual CTC (INR)</label>
                 <input 
@@ -1188,8 +1181,8 @@ export default function CandidatesPipelinePage() {
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <div>
+              <div className="form-row">
+                <div className="form-group" style={{ marginBottom: 0 }}>
                   <label className="form-label" style={{ fontWeight: 600, fontSize: 13, display: 'block', marginBottom: 6 }}>Joining Date</label>
                   <input 
                     type="date"
@@ -1199,7 +1192,7 @@ export default function CandidatesPipelinePage() {
                     style={{ width: '100%' }}
                   />
                 </div>
-                <div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
                   <label className="form-label" style={{ fontWeight: 600, fontSize: 13, display: 'block', marginBottom: 6 }}>Offer Valid Until</label>
                   <input 
                     type="date"
@@ -1264,7 +1257,7 @@ export default function CandidatesPipelinePage() {
               )}
             </div>
 
-            <div className="modal-footer" style={{ marginTop: 24, padding: '16px 0 0 0', borderTop: '1px solid var(--border)' }}>
+            <div className="modal-footer">
               <button className="btn btn-secondary" onClick={() => setShowOfferModal(false)} disabled={sendingOffer}>Cancel</button>
               <button 
                 className="btn btn-primary" 
@@ -1343,290 +1336,286 @@ export default function CandidatesPipelinePage() {
       {/* Schedule Interview Modal */}
       {showScheduleModal && (
         <div className="modal-overlay" style={{ zIndex: 1010 }} onClick={() => { setInterviewError(null); setInterviewSuccess(null); setShowScheduleModal(false); }}>
-          <div className="modal-content" style={{ maxWidth: 500 }} onClick={e => e.stopPropagation()}>
+          <form className="modal-content" style={{ maxWidth: 500 }} onClick={e => e.stopPropagation()} onSubmit={handleScheduleSubmit}>
             <div className="modal-header">
               <h2>Schedule Interview</h2>
-              <button className="modal-close" onClick={() => { setInterviewError(null); setInterviewSuccess(null); setShowScheduleModal(false); }}>✕</button>
+              <button type="button" className="modal-close" onClick={() => { setInterviewError(null); setInterviewSuccess(null); setShowScheduleModal(false); }}>✕</button>
             </div>
-            <form onSubmit={handleScheduleSubmit}>
-              <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {interviewError && (
-                  <div style={{
-                    padding: '12px 16px',
-                    borderRadius: '12px',
-                    background: 'var(--accent-red-light)',
-                    border: '1px solid rgba(220, 38, 38, 0.25)',
-                    color: 'var(--accent-red)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 10,
-                    fontSize: 14,
-                    fontWeight: 500,
-                  }}>
-                    <AlertCircle size={18} style={{ flexShrink: 0, color: 'var(--accent-red)' }} />
-                    <span>{interviewError}</span>
-                  </div>
-                )}
-                {interviewSuccess && (
-                  <div style={{
-                    padding: '12px 16px',
-                    borderRadius: '12px',
-                    background: 'var(--accent-green-light)',
-                    border: '1px solid rgba(5, 150, 105, 0.25)',
-                    color: 'var(--accent-green)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 10,
-                    fontSize: 14,
-                    fontWeight: 500,
-                  }}>
-                    <CheckCircle2 size={18} style={{ flexShrink: 0, color: 'var(--accent-green)' }} />
-                    <span>{interviewSuccess}</span>
-                  </div>
-                )}
+            <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {interviewError && (
+                <div style={{
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  background: 'var(--accent-red-light)',
+                  border: '1px solid rgba(220, 38, 38, 0.25)',
+                  color: 'var(--accent-red)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  fontSize: 14,
+                  fontWeight: 500,
+                }}>
+                  <AlertCircle size={18} style={{ flexShrink: 0, color: 'var(--accent-red)' }} />
+                  <span>{interviewError}</span>
+                </div>
+              )}
+              {interviewSuccess && (
+                <div style={{
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  background: 'var(--accent-green-light)',
+                  border: '1px solid rgba(5, 150, 105, 0.25)',
+                  color: 'var(--accent-green)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  fontSize: 14,
+                  fontWeight: 500,
+                }}>
+                  <CheckCircle2 size={18} style={{ flexShrink: 0, color: 'var(--accent-green)' }} />
+                  <span>{interviewSuccess}</span>
+                </div>
+              )}
 
-                <div className="form-group">
-                  <label className="form-label">Candidate Application *</label>
+              <div className="form-group">
+                <label className="form-label">Candidate Application *</label>
+                <select 
+                  className="form-select" 
+                  value={scheduleForm.application_id} 
+                  onChange={e => setScheduleForm({ ...scheduleForm, application_id: e.target.value })}
+                >
+                  <option value="">Select Candidate</option>
+                  {applications.map(app => (
+                    <option key={app.id} value={app.id}>
+                      {app.candidate_name} — {app.job_title} ({app.status})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Interview Type</label>
                   <select 
                     className="form-select" 
-                    value={scheduleForm.application_id} 
-                    onChange={e => setScheduleForm({ ...scheduleForm, application_id: e.target.value })}
+                    value={scheduleForm.interview_type} 
+                    onChange={e => setScheduleForm({ ...scheduleForm, interview_type: e.target.value })}
                   >
-                    <option value="">Select Candidate</option>
-                    {applications.map(app => (
-                      <option key={app.id} value={app.id}>
-                        {app.candidate_name} — {app.job_title} ({app.status})
-                      </option>
-                    ))}
+                    <option value="technical">Technical</option>
+                    <option value="hr">HR</option>
+                    <option value="manager">Manager</option>
+                    <option value="behavioral">Behavioral</option>
+                    <option value="system_design">System Design</option>
+                    <option value="ai_interview">AI Interview (Automated)</option>
+                    <option value="onsite">Onsite</option>
                   </select>
                 </div>
-
-                <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                  <div className="form-group">
-                    <label className="form-label">Interview Type</label>
-                    <select 
-                      className="form-select" 
-                      value={scheduleForm.interview_type} 
-                      onChange={e => setScheduleForm({ ...scheduleForm, interview_type: e.target.value })}
-                    >
-                      <option value="technical">Technical</option>
-                      <option value="hr">HR</option>
-                      <option value="manager">Manager</option>
-                      <option value="behavioral">Behavioral</option>
-                      <option value="system_design">System Design</option>
-                      <option value="ai_interview">AI Interview (Automated)</option>
-                      <option value="onsite">Onsite</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Round Number</label>
-                    <input 
-                      className="form-input" 
-                      type="number" 
-                      min="1" 
-                      value={scheduleForm.round_number} 
-                      onChange={e => setScheduleForm({ ...scheduleForm, round_number: +e.target.value })} 
-                    />
-                  </div>
-                </div>
-
-                <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                  <div className="form-group">
-                    <label className="form-label">Scheduled Date & Time *</label>
-                    <input 
-                      className="form-input" 
-                      type="datetime-local" 
-                      value={scheduleForm.scheduled_at} 
-                      onChange={e => setScheduleForm({ ...scheduleForm, scheduled_at: e.target.value })} 
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Duration (Minutes)</label>
-                    <select 
-                      className="form-select" 
-                      value={scheduleForm.duration_minutes} 
-                      onChange={e => setScheduleForm({ ...scheduleForm, duration_minutes: +e.target.value })}
-                    >
-                      <option value="30">30 minutes</option>
-                      <option value="45">45 minutes</option>
-                      <option value="60">60 minutes</option>
-                      <option value="90">90 minutes</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                  <div className="form-group">
-                    <label className="form-label">Interviewer Name *</label>
-                    <input 
-                      className="form-input" 
-                      value={scheduleForm.interviewer_name} 
-                      onChange={e => setScheduleForm({ ...scheduleForm, interviewer_name: e.target.value })} 
-                      placeholder="e.g. John Doe"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Interviewer Email (Optional)</label>
-                    <input 
-                      className="form-input" 
-                      value={scheduleForm.interviewer_email} 
-                      onChange={e => setScheduleForm({ ...scheduleForm, interviewer_email: e.target.value })} 
-                      placeholder="e.g. john@company.com"
-                    />
-                  </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Round Number</label>
+                  <input 
+                    className="form-input" 
+                    type="number" 
+                    min="1" 
+                    value={scheduleForm.round_number} 
+                    onChange={e => setScheduleForm({ ...scheduleForm, round_number: +e.target.value })} 
+                  />
                 </div>
               </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => { setInterviewError(null); setInterviewSuccess(null); setShowScheduleModal(false); }}>Cancel</button>
-                <button type="submit" className="btn btn-primary" disabled={scheduling}>
-                  {scheduling ? 'Scheduling...' : 'Schedule Round'}
-                </button>
+
+              <div className="form-row">
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Scheduled Date & Time *</label>
+                  <input 
+                    className="form-input" 
+                    type="datetime-local" 
+                    value={scheduleForm.scheduled_at} 
+                    onChange={e => setScheduleForm({ ...scheduleForm, scheduled_at: e.target.value })} 
+                  />
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Duration (Minutes)</label>
+                  <select 
+                    className="form-select" 
+                    value={scheduleForm.duration_minutes} 
+                    onChange={e => setScheduleForm({ ...scheduleForm, duration_minutes: +e.target.value })}
+                  >
+                    <option value="30">30 minutes</option>
+                    <option value="45">45 minutes</option>
+                    <option value="60">60 minutes</option>
+                    <option value="90">90 minutes</option>
+                  </select>
+                </div>
               </div>
-            </form>
-          </div>
+
+              <div className="form-row">
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Interviewer Name *</label>
+                  <input 
+                    className="form-input" 
+                    value={scheduleForm.interviewer_name} 
+                    onChange={e => setScheduleForm({ ...scheduleForm, interviewer_name: e.target.value })} 
+                    placeholder="e.g. John Doe"
+                  />
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Interviewer Email (Optional)</label>
+                  <input 
+                    className="form-input" 
+                    value={scheduleForm.interviewer_email} 
+                    onChange={e => setScheduleForm({ ...scheduleForm, interviewer_email: e.target.value })} 
+                    placeholder="e.g. john@company.com"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={() => { setInterviewError(null); setInterviewSuccess(null); setShowScheduleModal(false); }}>Cancel</button>
+              <button type="submit" className="btn btn-primary" disabled={scheduling}>
+                {scheduling ? 'Scheduling...' : 'Schedule Round'}
+              </button>
+            </div>
+          </form>
         </div>
       )}
 
       {/* Scorecard Modal */}
       {showScorecardModal && selectedInterview && (
         <div className="modal-overlay" style={{ zIndex: 1010 }} onClick={() => { setInterviewError(null); setInterviewSuccess(null); setShowScorecardModal(false); }}>
-          <div className="modal-content" style={{ maxWidth: 520 }} onClick={e => e.stopPropagation()}>
+          <form className="modal-content" style={{ maxWidth: 520 }} onClick={e => e.stopPropagation()} onSubmit={handleScorecardSubmit}>
             <div className="modal-header">
               <h2>{selectedInterview.status === 'completed' ? 'View / Edit Scorecard' : 'Submit Scorecard'}</h2>
-              <button className="modal-close" onClick={() => { setInterviewError(null); setInterviewSuccess(null); setShowScorecardModal(false); }}>✕</button>
+              <button type="button" className="modal-close" onClick={() => { setInterviewError(null); setInterviewSuccess(null); setShowScorecardModal(false); }}>✕</button>
             </div>
-            <form onSubmit={handleScorecardSubmit}>
-              <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 16, maxHeight: '70vh', overflowY: 'auto', paddingRight: 8 }}>
-                {interviewError && (
-                  <div style={{
-                    padding: '12px 16px',
-                    borderRadius: '12px',
-                    background: 'var(--accent-red-light)',
-                    border: '1px solid rgba(220, 38, 38, 0.25)',
-                    color: 'var(--accent-red)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 10,
-                    fontSize: 14,
-                    fontWeight: 500,
-                  }}>
-                    <AlertCircle size={18} style={{ flexShrink: 0, color: 'var(--accent-red)' }} />
-                    <span>{interviewError}</span>
-                  </div>
-                )}
-                {interviewSuccess && (
-                  <div style={{
-                    padding: '12px 16px',
-                    borderRadius: '12px',
-                    background: 'var(--accent-green-light)',
-                    border: '1px solid rgba(5, 150, 105, 0.25)',
-                    color: 'var(--accent-green)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 10,
-                    fontSize: 14,
-                    fontWeight: 500,
-                  }}>
-                    <CheckCircle2 size={18} style={{ flexShrink: 0, color: 'var(--accent-green)' }} />
-                    <span>{interviewSuccess}</span>
-                  </div>
-                )}
-
-                <div style={{ padding: '10px 14px', background: 'var(--bg-input)', borderRadius: 10, fontSize: 13, border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  <div><strong>Candidate:</strong> {selectedInterview.candidate_name}</div>
-                  <div><strong>Job:</strong> {selectedInterview.job_title}</div>
-                  <div><strong>Round & Type:</strong> Round {selectedInterview.round_number || 1} — {selectedInterview.interview_type.replace('_', ' ').toUpperCase()}</div>
-                  {selectedInterview.interviewer_name && <div><strong>Interviewer:</strong> {selectedInterview.interviewer_name}</div>}
+            <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 16, maxHeight: '70vh', overflowY: 'auto', paddingRight: 8 }}>
+              {interviewError && (
+                <div style={{
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  background: 'var(--accent-red-light)',
+                  border: '1px solid rgba(220, 38, 38, 0.25)',
+                  color: 'var(--accent-red)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  fontSize: 14,
+                  fontWeight: 500,
+                }}>
+                  <AlertCircle size={18} style={{ flexShrink: 0, color: 'var(--accent-red)' }} />
+                  <span>{interviewError}</span>
                 </div>
-
-                <div className="form-group" style={{ margin: 0 }}>
-                  <label className="form-label" style={{ fontWeight: 600 }}>Technical Knowledge Score *</label>
-                  {renderStarRating('technical_score', scorecardForm.technical_score)}
+              )}
+              {interviewSuccess && (
+                <div style={{
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  background: 'var(--accent-green-light)',
+                  border: '1px solid rgba(5, 150, 105, 0.25)',
+                  color: 'var(--accent-green)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  fontSize: 14,
+                  fontWeight: 500,
+                }}>
+                  <CheckCircle2 size={18} style={{ flexShrink: 0, color: 'var(--accent-green)' }} />
+                  <span>{interviewSuccess}</span>
                 </div>
+              )}
 
+              <div style={{ padding: '10px 14px', background: 'var(--bg-input)', borderRadius: 10, fontSize: 13, border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div><strong>Candidate:</strong> {selectedInterview.candidate_name}</div>
+                <div><strong>Job:</strong> {selectedInterview.job_title}</div>
+                <div><strong>Round & Type:</strong> Round {selectedInterview.round_number || 1} — {selectedInterview.interview_type.replace('_', ' ').toUpperCase()}</div>
+                {selectedInterview.interviewer_name && <div><strong>Interviewer:</strong> {selectedInterview.interviewer_name}</div>}
+              </div>
+
+              <div className="form-group" style={{ margin: 0 }}>
+                <label className="form-label" style={{ fontWeight: 600 }}>Technical Knowledge Score *</label>
+                {renderStarRating('technical_score', scorecardForm.technical_score)}
+              </div>
+
+              <div className="form-group" style={{ margin: 0 }}>
+                <label className="form-label" style={{ fontWeight: 600 }}>Communication Skill Score *</label>
+                {renderStarRating('communication_score', scorecardForm.communication_score)}
+              </div>
+
+              <div className="form-group" style={{ margin: 0 }}>
+                <label className="form-label" style={{ fontWeight: 600 }}>Cultural Fit Score *</label>
+                {renderStarRating('cultural_fit_score', scorecardForm.cultural_fit_score)}
+              </div>
+
+              <div className="form-group" style={{ margin: 0 }}>
+                <label className="form-label">Interview General Feedback & Notes *</label>
+                <textarea
+                  className="form-textarea"
+                  required
+                  rows={4}
+                  value={scorecardForm.feedback}
+                  onChange={e => setScorecardForm({ ...scorecardForm, feedback: e.target.value })}
+                  placeholder="Provide specific details about candidate strengths, technical competency gaps, communication skills, or problem-solving behavior..."
+                />
+              </div>
+
+              <div className="form-row">
                 <div className="form-group" style={{ margin: 0 }}>
-                  <label className="form-label" style={{ fontWeight: 600 }}>Communication Skill Score *</label>
-                  {renderStarRating('communication_score', scorecardForm.communication_score)}
+                  <label className="form-label">Interview Status</label>
+                  <select
+                    className="form-select"
+                    value={scorecardForm.status}
+                    onChange={e => setScorecardForm({ ...scorecardForm, status: e.target.value })}
+                  >
+                    <option value="completed">Completed</option>
+                    <option value="scheduled">Scheduled / Pending</option>
+                    <option value="no_show">Candidate No Show</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
                 </div>
-
                 <div className="form-group" style={{ margin: 0 }}>
-                  <label className="form-label" style={{ fontWeight: 600 }}>Cultural Fit Score *</label>
-                  {renderStarRating('cultural_fit_score', scorecardForm.cultural_fit_score)}
+                  <label className="form-label">Interviewer Recommendation</label>
+                  <select
+                    className="form-select"
+                    value={scorecardForm.recommendation}
+                    onChange={e => setScorecardForm({ ...scorecardForm, recommendation: e.target.value })}
+                  >
+                    <option value="next_round">Next Round</option>
+                    <option value="hire">Recommend Hire</option>
+                    <option value="reject">Not Recommended / Reject</option>
+                  </select>
                 </div>
+              </div>
 
-                <div className="form-group" style={{ margin: 0 }}>
-                  <label className="form-label">Interview General Feedback & Notes *</label>
-                  <textarea
-                    className="form-textarea"
-                    required
-                    rows={4}
-                    value={scorecardForm.feedback}
-                    onChange={e => setScorecardForm({ ...scorecardForm, feedback: e.target.value })}
-                    placeholder="Provide specific details about candidate strengths, technical competency gaps, communication skills, or problem-solving behavior..."
+              {scorecardForm.recommendation === 'reject' && (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  padding: '8px 12px',
+                  borderRadius: 8,
+                  background: 'var(--accent-red-light)',
+                  border: '1px solid rgba(220, 38, 38, 0.15)',
+                  fontSize: 13,
+                  color: 'var(--accent-red)'
+                }}>
+                  <input
+                    type="checkbox"
+                    id="autoReject"
+                    checked={scorecardForm.autoRejectApplication}
+                    onChange={e => setScorecardForm({ ...scorecardForm, autoRejectApplication: e.target.checked })}
+                    style={{ cursor: 'pointer' }}
                   />
+                  <label htmlFor="autoReject" style={{ cursor: 'pointer', fontWeight: 500 }}>
+                    Automatically mark candidate application as <strong>REJECTED</strong> in recruitment pipeline
+                  </label>
                 </div>
-
-                <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                  <div className="form-group" style={{ margin: 0 }}>
-                    <label className="form-label">Interview Status</label>
-                    <select
-                      className="form-select"
-                      value={scorecardForm.status}
-                      onChange={e => setScorecardForm({ ...scorecardForm, status: e.target.value })}
-                    >
-                      <option value="completed">Completed</option>
-                      <option value="scheduled">Scheduled / Pending</option>
-                      <option value="no_show">Candidate No Show</option>
-                      <option value="cancelled">Cancelled</option>
-                    </select>
-                  </div>
-                  <div className="form-group" style={{ margin: 0 }}>
-                    <label className="form-label">Interviewer Recommendation</label>
-                    <select
-                      className="form-select"
-                      value={scorecardForm.recommendation}
-                      onChange={e => setScorecardForm({ ...scorecardForm, recommendation: e.target.value })}
-                    >
-                      <option value="next_round">Next Round</option>
-                      <option value="hire">Recommend Hire</option>
-                      <option value="reject">Not Recommended / Reject</option>
-                    </select>
-                  </div>
-                </div>
-
-                {scorecardForm.recommendation === 'reject' && (
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    padding: '8px 12px',
-                    borderRadius: 8,
-                    background: 'var(--accent-red-light)',
-                    border: '1px solid rgba(220, 38, 38, 0.15)',
-                    fontSize: 13,
-                    color: 'var(--accent-red)'
-                  }}>
-                    <input
-                      type="checkbox"
-                      id="autoReject"
-                      checked={scorecardForm.autoRejectApplication}
-                      onChange={e => setScorecardForm({ ...scorecardForm, autoRejectApplication: e.target.checked })}
-                      style={{ cursor: 'pointer' }}
-                    />
-                    <label htmlFor="autoReject" style={{ cursor: 'pointer', fontWeight: 500 }}>
-                      Automatically mark candidate application as <strong>REJECTED</strong> in recruitment pipeline
-                    </label>
-                  </div>
-                )}
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => { setInterviewError(null); setInterviewSuccess(null); setShowScorecardModal(false); }}>Close</button>
-                <button type="submit" className="btn btn-primary" disabled={submittingScorecard}>
-                  {submittingScorecard ? 'Saving Scorecard...' : 'Submit Scorecard'}
-                </button>
-              </div>
-            </form>
-          </div>
+              )}
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={() => { setInterviewError(null); setInterviewSuccess(null); setShowScorecardModal(false); }}>Close</button>
+              <button type="submit" className="btn btn-primary" disabled={submittingScorecard}>
+                {submittingScorecard ? 'Saving Scorecard...' : 'Submit Scorecard'}
+              </button>
+            </div>
+          </form>
         </div>
       )}
     </div>

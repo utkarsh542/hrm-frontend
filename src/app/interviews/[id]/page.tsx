@@ -267,7 +267,7 @@ export default function LiveInterviewPage() {
         </div>
 
         {/* Score cards */}
-        <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: 24 }}>
+        <div className="stats-grid" style={{ marginBottom: 24 }}>
           <div className="stat-card">
             <div className="stat-icon purple" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Star size={18} />

@@ -154,7 +154,7 @@ export default function LoginPage({ onLogin }: Props) {
           </div>
 
           {/* Role Quick Login */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 8 }}>
             {DEMO_CREDS.map(c => {
               const DemoIcon = c.icon;
               return (

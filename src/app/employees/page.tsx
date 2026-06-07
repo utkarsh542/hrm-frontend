@@ -125,7 +125,7 @@ export default function EmployeesPage() {
         )}
       </div>
 
-      <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+      <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon blue" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Users size={18} strokeWidth={2} />
@@ -165,8 +165,8 @@ export default function EmployeesPage() {
       </div>
 
       <div className="page-filters">
-        <input className="filter-input" value={search} onChange={e => setSearch(e.target.value)}
-          placeholder="Search by name, email, or employee ID..." style={{ width: 320 }} />
+        <input className="filter-input filter-input-search-large" value={search} onChange={e => setSearch(e.target.value)}
+          placeholder="Search by name, email, or employee ID..." />
       </div>
 
       <div className="table-container">

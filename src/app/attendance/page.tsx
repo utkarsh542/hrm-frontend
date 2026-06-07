@@ -268,7 +268,7 @@ export default function AttendancePage() {
       {activeTab === 'today' && (
         <>
           {isAdminHROrManager && (
-            <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)', marginBottom: 24 }}>
+            <div className="stats-grid" style={{ marginBottom: 24 }}>
               <div className="stat-card">
                 <div className="stat-icon green" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <UserCheck size={18} strokeWidth={2} />

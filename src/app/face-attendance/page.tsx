@@ -98,7 +98,7 @@ export default function FaceAttendancePage() {
         </div>
       </div>
 
-      <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+      <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon green" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <UserCheck size={18} strokeWidth={2} />
@@ -128,7 +128,7 @@ export default function FaceAttendancePage() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+      <div className="responsive-grid-2" style={{ gap: 24 }}>
         {/* Left: Employee selector + camera */}
         <div className="card">
           <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>

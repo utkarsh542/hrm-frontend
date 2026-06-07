@@ -131,7 +131,7 @@ export default function PerformancePage() {
         </RoleGuard>
       </div>
 
-      <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+      <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon purple">
             <FileText size={24} />
@@ -315,7 +315,7 @@ export default function PerformancePage() {
                     ))}
                   </select>
                 </div>
-                <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div className="form-row" style={{ gap: 12 }}>
                   <div className="form-group">
                     <label className="form-label">Review Cycle</label>
                     <select 
@@ -390,7 +390,7 @@ export default function PerformancePage() {
                   </div>
                 ))}
 
-                <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12 }}>
+                <div className="form-row" style={{ gap: 12 }}>
                   <div className="form-group">
                     <label className="form-label">Recommendation</label>
                     <select 

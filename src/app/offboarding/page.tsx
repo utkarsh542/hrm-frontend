@@ -107,7 +107,7 @@ export default function OffboardingPage() {
       {isAdminOrHR ? (
         // ADMIN / HR INTERFACE
         <>
-          <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+          <div className="stats-grid">
             <div className="stat-card">
               <div className="stat-icon orange" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Clock size={18} strokeWidth={2} />
@@ -247,7 +247,7 @@ export default function OffboardingPage() {
         // EMPLOYEE / USER INTERFACE
         <>
           {myResignation ? (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 24 }}>
+            <div className="responsive-grid-2" style={{ gap: 24 }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                 {/* Resignation Banner */}
                 <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

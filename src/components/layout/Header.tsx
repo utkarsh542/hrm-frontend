@@ -164,11 +164,7 @@ export default function Header({
               {unreadCount > 0 && <span className="badge-dot"></span>}
             </button>
             {showNotifs && (
-              <div style={{
-                position: 'absolute', right: 0, top: '110%', width: 340, maxHeight: 400,
-                background: 'var(--bg-card)', border: '1px solid var(--border)',
-                borderRadius: 16, boxShadow: 'var(--shadow-lg)', overflow: 'auto', zIndex: 200,
-              }}>
+              <div className="header-notification-dropdown">
                 <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontWeight: 700 }}>Notifications</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
